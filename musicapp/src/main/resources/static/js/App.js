@@ -12,7 +12,8 @@ window.App = {
   components: {
     HomePage: window.HomePage,
     MusicList: window.MusicList,
-    ConcertList: window.ConcertList
+    ConcertList: window.ConcertList,
+    MusicChartsPage: window.MusicChartsPage  // Make sure the component name matches
   },
   template: `
     <div>
@@ -26,9 +27,11 @@ window.App = {
             <a class="nav-link" href="#" @click.prevent="setView('HomePage')">Home</a>
             <a class="nav-link" href="#" @click.prevent="setView('MusicList')">Music List</a>
             <a class="nav-link" href="#" @click.prevent="setView('ConcertList')">Concert List</a>
+            <a class="nav-link" href="#" @click.prevent="setView('MusicChartsPage')">Charts</a>
           </div>
         </div>
       </nav>
+      
       <component :is="currentView" @changeView="setView"></component>
 
       <footer class="bg-dark text-white py-4 mt-5">
