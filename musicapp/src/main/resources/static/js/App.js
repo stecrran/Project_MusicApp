@@ -1,13 +1,14 @@
 window.App = {
   data() {
     return {
-      currentView: "HomePage" // Default view
+      currentView: localStorage.getItem("currentView") || "MusicCharts"
     };
   },
   methods: {
     setView(viewName) {
 		console.log(`🔄 Switching view to: ${viewName}`);
       this.currentView = viewName;
+	  localStorage.setItem("currentView", viewName);
     }
   },
   components: {
