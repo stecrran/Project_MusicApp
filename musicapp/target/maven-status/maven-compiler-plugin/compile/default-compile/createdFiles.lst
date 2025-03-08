@@ -1,9 +1,10 @@
-com\tus\musicapp\controller\HomeController.class
+com\tus\musicapp\MusicApplication.class
+com\tus\musicapp\controller\MusicController.class
 com\tus\musicapp\repos\MusicRepository.class
 com\tus\musicapp\controller\ChartController.class
 com\tus\musicapp\service\MusicService.class
-com\tus\musicapp\MusicApplication.class
-com\tus\musicapp\controller\MusicController.class
 com\tus\musicapp\dto\ArtistDTO.class
 com\tus\musicapp\models\Music.class
 com\tus\musicapp\service\LastFmService.class
+com\tus\musicapp\controller\HomeController.class
+com\tus\musicapp\controller\StaticFilesController.class

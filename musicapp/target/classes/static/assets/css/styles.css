@@ -1,27 +1,85 @@
-/* General page styles */
+/* 🎨 General Page Styles */
 body {
-  background-color: #e9ecef; /* Light gray background */
+  background-color: #F0F2F5; /* Soft Gray */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #212529; /* Bootstrap dark text */
+  color: #191414; /* Dark Mode Black */
   margin: 0;
   padding: 0;
   line-height: 1.6;
 }
 
-/* Navbar */
+/* 🎵 Navbar */
 .navbar {
-  background-color: #0d6efd !important; /* Bootstrap primary color */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
+  background-color: #1DB954 !important; /* Spotify Green */
+  background-image: url("/assets/images/navbar-bg.png");
+  background-size: cover;
+  background-position: center;
+  height: 80px;
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Headings */
+/* Navbar Branding */
+.navbar-brand {
+  color: #ffffff !important;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+/* 🎛️ Navbar Buttons */
+.nav-btn {
+  background-color: #477eb5 !important; /* Updated to match the theme */
+  border: 2px solid #3b6ea5 !important; /* Slightly darker border */
+  color: #ffffff !important; /* White text for contrast */
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 6px 12px;
+  min-width: 120px; /* Ensures consistent button size */
+  width: auto; /* Prevent full width */
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+}
+
+/* 🎯 Hover Effect */
+.nav-btn:hover {
+  background-color: #3b6ea5 !important; /* Darker shade on hover */
+  color: #ffffff !important;
+  transform: scale(1.05);
+}
+
+/* 📱 Navbar Responsiveness (When Collapsed) */
+@media (max-width: 992px) { 
+  .navbar-nav {
+    text-align: right; /* Aligns buttons to the right */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Ensures buttons are not full width */
+  }
+
+  .nav-btn {
+    width: auto !important; /* Prevents full-width buttons */
+    min-width: 120px; /* Ensures consistent button size */
+    margin: 5px 0; /* Adds spacing between buttons */
+  }
+}
+
+/* 🔗 Navbar Links */
+.navbar-nav .nav-link {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #FF4F5A !important; /* Accent Red */
+}
+
+/* 🎼 Headings */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
-  color: #0d6efd; /* Bootstrap primary */
+  color: #1DB954; /* Primary Green */
 }
 
-/* Buttons */
+/* 🎵 Buttons */
 .btn {
   border-radius: 8px;
   padding: 10px 20px;
@@ -29,27 +87,34 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 1rem;
 }
 
+/* 🔴 Primary Button */
 .btn-primary {
-  background-color: #198754; /* Bootstrap success */
-  border-color: #198754;
+  background-color: #FF4F5A; /* Accent Red */
+  border-color: #FF4F5A;
   color: #fff;
 }
 
 .btn-primary:hover {
-  background-color: #146c43;
-  border-color: #146c43;
+  background-color: #E63946;
+  border-color: #E63946;
   color: #fff;
 }
 
-/* Cards */
+/* 🎤 Hero Section */
+.p-5 {
+  background-color: #191414 !important; /* Dark Background */
+  color: #FFFFFF !important; /* White Text */
+  border-radius: 12px;
+}
+
+/* 🎵 Cards */
 .card {
   border: none;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   background-color: #ffffff;
-  color: #212529;
+  color: #191414;
 }
 
 .card:hover {
@@ -57,52 +122,27 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* Images */
-img {
-  max-width: 100%;
-  height: auto;
+/* 🎠 Carousel */
+.carousel-img {
+  height: 320px; /* Fixed height */
+  width: 100%; /* Keeps full width */
+  object-fit: contain; /* Ensures consistent sizing without stretching */
   display: block;
-  border-radius: 8px;
+  margin: 0 auto;
 }
 
-/* Forms */
-.form-select, .form-control {
-  border-radius: 8px;
-  background-color: #f8f9fa;
-  color: #212529;
-  border: 1px solid #ced4da;
-}
 
-/* Tables */
-.table {
-  background-color: #ffffff;
-  border-radius: 8px;
-  overflow: hidden;
-  color: #212529;
-}
-
-.table th {
-  background-color: #6c757d; /* Bootstrap secondary */
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.table td, .table th {
-  padding: 14px 18px;
-  border-top: 1px solid #dee2e6;
-}
-
-/* Footer */
+/* 📌 Footer */
 footer {
   margin-top: 50px;
   padding: 25px 0;
-  background-color: #0d6efd;
+  background-color: #1DB954; /* Primary Green */
   color: #ffffff;
   text-align: center;
   font-size: 1rem;
 }
 
-/* Utility */
+/* ✅ Utility */
 .container {
   max-width: 1140px;
 }

@@ -4,10 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MusicApp - Home</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css?v=1">
   <link rel="stylesheet" href="/assets/css/styles.css">
 
   <!-- Vue.js -->
@@ -15,6 +18,36 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
+
+<!-- Navbar (Responsive with Outline Buttons) -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+  <div class="container">
+    <!-- Brand Logo -->
+    <a class="navbar-brand text-white fw-bold" href="#" onclick="changeView('HomePage'); return false;">
+      <img src="/assets/images/music_640.png" alt="Music Icon" width="30" height="30" class="me-2">
+      MusicApp
+    </a>
+
+    <!-- Navbar Toggle Button (Hamburger) -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Links (Collapsible) -->
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <div class="navbar-nav text-end">
+        <button class="btn btn-outline-info nav-btn mx-1" onclick="changeView('HomePage'); return false;">Home</button>
+        <button class="btn btn-outline-info nav-btn mx-1" onclick="changeView('MusicList'); return false;">PlayList</button>
+        <button class="btn btn-outline-info nav-btn mx-1" onclick="changeView('ConcertList'); return false;">Gigs</button>
+        <button class="btn btn-outline-info nav-btn mx-1" onclick="changeView('MusicCharts'); return false;">Charts</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+
+  <!-- Vue App Container (Dynamic Content) -->
   <div id="app" class="container my-4"></div>
 
   <!-- JS Components -->
@@ -22,13 +55,11 @@
   <script src="/pages/HomePage.js"></script>
   <script src="/pages/MusicList.js"></script>
   <script src="/pages/ConcertList.js"></script>
+  <script src="/pages/MusicCharts.js"></script>
   <script src="/js/App.js"></script>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script>
-    Vue.createApp(window.App).mount("#app");
-  </script>
 </body>
 </html>

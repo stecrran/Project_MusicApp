@@ -1,28 +1,22 @@
-// MusicList.js
 window.MusicList = {
   data: function() {
     return {
       musicList: []
     };
   },
-  mounted: function() {
-    var self = this;
-    // Assuming fetchMusic is defined globally.
-    if (typeof window.fetchMusic === "function") {
-      window.fetchMusic()
-        .then(function(data) {
-          self.musicList = data;
-        })
-        .catch(function(error) {
-          console.error("Failed to fetch music:", error);
-        });
-    } else {
-      console.warn("fetchMusic function is not defined.");
+  mounted: async function() {
+    console.log("🔄 Fetching music data...");
+    try {
+      const data = await window.fetchMusic();
+      console.log("✅ Music data received:", data);
+      this.musicList = [...data]; // Ensure reactivity
+    } catch (error) {
+      console.error("❌ Failed to fetch music:", error);
     }
   },
   template: `
     <div class="container mt-5">
-      <h2>Music List</h2>
+      <h2>PlayList</h2>
       <button class="btn btn-secondary mb-3" @click="$emit('changeView', 'HomePage')">🔙 Back to Home</button>
       <table id="musicTable" class="table table-striped">
         <thead>

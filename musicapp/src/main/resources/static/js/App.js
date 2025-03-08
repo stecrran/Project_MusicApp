@@ -1,11 +1,12 @@
 window.App = {
   data() {
     return {
-      currentView: "HomePage"
+      currentView: "HomePage" // Default view
     };
   },
   methods: {
     setView(viewName) {
+		console.log(`🔄 Switching view to: ${viewName}`);
       this.currentView = viewName;
     }
   },
@@ -13,25 +14,10 @@ window.App = {
     HomePage: window.HomePage,
     MusicList: window.MusicList,
     ConcertList: window.ConcertList,
-    MusicChartsPage: window.MusicChartsPage  // Make sure the component name matches
+    MusicCharts: window.MusicCharts 
   },
   template: `
     <div>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
-        <div class="container">
-          <a class="navbar-brand" href="#" @click.prevent="setView('HomePage')">
-            <img src="/assets/images/music_640.png" alt="Music Icon" width="30" height="30" class="me-2">
-            MusicApp
-          </a>
-          <div class="navbar-nav">
-            <a class="nav-link" href="#" @click.prevent="setView('HomePage')">Home</a>
-            <a class="nav-link" href="#" @click.prevent="setView('MusicList')">Music List</a>
-            <a class="nav-link" href="#" @click.prevent="setView('ConcertList')">Concert List</a>
-            <a class="nav-link" href="#" @click.prevent="setView('MusicChartsPage')">Charts</a>
-          </div>
-        </div>
-      </nav>
-      
       <component :is="currentView" @changeView="setView"></component>
 
       <footer class="bg-dark text-white py-4 mt-5">
@@ -45,4 +31,14 @@ window.App = {
       </footer>
     </div>
   `
+};
+
+// ✅ Store Vue instance globally
+window.appInstance = Vue.createApp(window.App).mount("#app");
+
+// ✅ Allow navbar buttons in `index.html` to change views
+window.changeView = function(viewName) {
+  if (window.appInstance) {
+    window.appInstance.setView(viewName);
+  }
 };
