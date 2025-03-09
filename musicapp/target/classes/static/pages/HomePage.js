@@ -1,7 +1,7 @@
 window.HomePage = {
   data() {
     return {
-      images: []
+      images: [] // Store images fetched from backend
     };
   },
   created() {
@@ -12,14 +12,32 @@ window.HomePage = {
       try {
         const response = await fetch("/api/carousel-images"); // Fetch images from backend
         const data = await response.json();
-        
+
         if (Array.isArray(data) && data.length > 0) {
           this.images = data.sort(() => Math.random() - 0.5); // Shuffle images
+          
+          // Wait for Vue to update the DOM before initializing the carousel
+          this.$nextTick(() => {
+            this.initializeCarousel(); 
+          });
         } else {
-          console.error("No images found in carousel folder.");
+          console.error("⚠️ No images found in carousel folder.");
         }
       } catch (error) {
-        console.error("Error loading images:", error);
+        console.error("❌ Error loading images:", error);
+      }
+    },
+    initializeCarousel() {
+      console.log("🎠 Initializing Bootstrap Carousel...");
+      const carouselElement = document.querySelector("#musicCarousel");
+
+      if (carouselElement) {
+        new bootstrap.Carousel(carouselElement, {
+          interval: 3000, // Auto-slide every 3 seconds
+          ride: "carousel"
+        });
+      } else {
+        console.error("❌ Carousel element not found!");
       }
     }
   },
@@ -46,6 +64,7 @@ window.HomePage = {
                   <img :src="image" class="d-block w-100 carousel-img" alt="Music carousel image">
                 </div>
               </div>
+
             </div>
           </div>
 

@@ -1,21 +1,22 @@
 window.App = {
   data() {
     return {
-      currentView: localStorage.getItem("currentView") || "MusicCharts"
+      currentView: localStorage.getItem("currentView") || "HomePage"
     };
   },
   methods: {
     setView(viewName) {
-		console.log(`🔄 Switching view to: ${viewName}`);
+      console.log(`🔄 Switching view to: ${viewName}`);
       this.currentView = viewName;
-	  localStorage.setItem("currentView", viewName);
+      localStorage.setItem("currentView", viewName);
     }
   },
   components: {
     HomePage: window.HomePage,
     MusicList: window.MusicList,
     ConcertList: window.ConcertList,
-    MusicCharts: window.MusicCharts 
+    MusicCharts: window.MusicCharts,
+    UserPlayList: window.UserPlayList 
   },
   template: `
     <div>
@@ -39,7 +40,10 @@ window.appInstance = Vue.createApp(window.App).mount("#app");
 
 // ✅ Allow navbar buttons in `index.html` to change views
 window.changeView = function(viewName) {
+  console.log(`🔄 Navbar clicked: Switching to ${viewName}`);
   if (window.appInstance) {
     window.appInstance.setView(viewName);
+  } else {
+    console.error("❌ Vue instance not found!");
   }
 };
