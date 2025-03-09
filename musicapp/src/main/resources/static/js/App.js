@@ -9,6 +9,9 @@ window.App = {
       console.log(`🔄 Switching view to: ${viewName}`);
       this.currentView = viewName;
       localStorage.setItem("currentView", viewName);
+    },
+    getUserPlayListComponent() {
+      return this.$refs.userPlayList;
     }
   },
   components: {
@@ -16,11 +19,11 @@ window.App = {
     MusicList: window.MusicList,
     ConcertList: window.ConcertList,
     MusicCharts: window.MusicCharts,
-    UserPlayList: window.UserPlayList 
+    UserPlayList: window.UserPlayList
   },
   template: `
     <div>
-      <component :is="currentView" @changeView="setView"></component>
+      <component :is="currentView" ref="userPlayList" @changeView="setView"></component>
 
       <footer class="bg-dark text-white py-4 mt-5">
         <div class="container text-center">
@@ -47,3 +50,21 @@ window.changeView = function(viewName) {
     console.error("❌ Vue instance not found!");
   }
 };
+
+// ✅ Function to access `UserPlayList` component from console
+window.getUserPlayList = function () {
+  if (window.appInstance) {
+    return window.appInstance.$refs.userPlayList;
+  } else {
+    console.error("❌ UserPlayList component not found!");
+    return null;
+  }
+};
+
+// ✅ Ensure Spotify Callback is Processed on Page Load
+window.addEventListener("load", function () {
+  if (window.getUserPlayList()) {
+    console.log("🔄 Running handleSpotifyCallback() on page load...");
+    window.getUserPlayList().handleSpotifyCallback();
+  }
+});
