@@ -17,7 +17,6 @@ window.MusicList = {
   template: `
     <div class="container mt-5">
       <h2>PlayList</h2>
-      <button class="btn btn-secondary mb-3" @click="$emit('changeView', 'HomePage')">🔙 Back to Home</button>
       <table id="musicTable" class="table table-striped">
         <thead>
           <tr>

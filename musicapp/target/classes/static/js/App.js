@@ -1,14 +1,15 @@
 window.App = {
   data() {
     return {
-      currentView: localStorage.getItem("jwt") ? localStorage.getItem("currentView") || "HomePage" : "LoginPage",
+      currentView: this.getInitialView(),
       showSettingsModal: false,
+      userRole: this.extractUserRole(),
       newUser: {
         username: "",
         password: "",
-        roles: ["SPOTIFY_USER"] // Default role
+        roles: []
       },
-      availableRoles: ["ADMIN", "SPOTIFY_USER"], // ✅ Role options
+      availableRoles: ["SPOTIFY_USER", "ADMIN"],
       registrationMessage: ""
     };
   },
@@ -18,6 +19,12 @@ window.App = {
     },
     isAuthenticated() {
       return !!localStorage.getItem("jwt");
+    },
+    isAdmin() {
+      return this.userRole === "ADMIN";
+    },
+    isSpotifyUser() {
+      return this.userRole === "SPOTIFY_USER";
     }
   },
   methods: {
@@ -25,6 +32,43 @@ window.App = {
       console.log(`🔄 Switching view to: ${viewName}`);
       this.currentView = viewName;
       localStorage.setItem("currentView", viewName);
+
+      // ✅ Restart carousel when switching to HomePage
+      if (viewName === "HomePage") {
+        this.startCarousel();
+      }
+    },
+    extractUserRole() {
+      const token = localStorage.getItem("jwt");
+      if (!token) return null;
+
+      try {
+        const base64Url = token.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const jsonPayload = decodeURIComponent(atob(base64).split("").map(c =>
+          "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
+        ).join(""));
+        const decodedToken = JSON.parse(jsonPayload);
+
+        if (decodedToken.roles.includes("ADMIN")) return "ADMIN";
+        if (decodedToken.roles.includes("SPOTIFY_USER")) return "SPOTIFY_USER";
+
+        return null;
+      } catch (error) {
+        console.error("❌ Error decoding JWT:", error);
+        return null;
+      }
+    },
+    getInitialView() {
+      console.log("📌 Checking Initial View...");
+      const jwt = localStorage.getItem("jwt");
+      const savedView = localStorage.getItem("currentView");
+
+      if (!jwt) {
+        console.log("🔴 No JWT found. Redirecting to LoginPage.");
+        return "LoginPage";
+      }
+      return savedView || "HomePage";
     },
     logoutUser() {
       console.log("🔴 Logging out...");
@@ -38,41 +82,48 @@ window.App = {
 	async registerUser() {
 	  try {
 	    const token = localStorage.getItem("jwt");
-
-	    if (!token) {
-	      throw new Error("❌ Unauthorized: No token found. Please log in first.");
-	    }
+	    if (!token) throw new Error("Unauthorized: No token found.");
 
 	    const response = await fetch("/api/admin/register", {
 	      method: "POST",
 	      headers: {
 	        "Content-Type": "application/json",
-	        "Authorization": `Bearer ${token}` // ✅ Send JWT token in request
+	        "Authorization": `Bearer ${token}`
 	      },
-	      body: JSON.stringify(this.newUser)
+	      body: JSON.stringify({
+	        username: this.newUser.username,
+	        password: this.newUser.password,
+	        roles: this.newUser.roles.length > 0 ? this.newUser.roles : ["SPOTIFY_USER"]
+	      })
 	    });
 
-	    if (response.status === 403) {
-	      throw new Error("❌ Forbidden: You do not have permission to register users.");
-	    }
-
-	    if (response.status === 401) {
-	      throw new Error("❌ Unauthorized: Your session may have expired. Please log in again.");
-	    }
-
 	    if (!response.ok) {
+	      if (response.status === 409) {
+	        throw new Error("User already exists. Enter new username.");
+	      }
 	      const errorData = await response.json().catch(() => {});
-	      throw new Error(errorData?.message || "❌ Registration failed.");
+	      throw new Error(errorData?.message || "Registration failed.");
 	    }
 
 	    this.registrationMessage = "✅ User registered successfully!";
-	    this.newUser = { username: "", password: "", roles: ["SPOTIFY_USER"] };
+	    this.newUser = { username: "", password: "", roles: [] };
 	  } catch (error) {
 	    console.error("❌ Registration Error:", error);
 	    this.registrationMessage = `❌ ${error.message}`;
 	  }
 	}
-},
+,
+    startCarousel() {
+      console.log("🔄 Initializing Bootstrap Carousel...");
+      setTimeout(() => {
+        $(".carousel").carousel("cycle");
+      }, 500);
+    }
+  },
+  mounted() {
+    console.log("🎠 Initializing Home Page Carousel...");
+    this.startCarousel();
+  },
   components: {
     LoginPage: window.LoginPage,
     HomePage: window.HomePage,
@@ -83,49 +134,48 @@ window.App = {
   },
   template: `
     <div>
-      <!-- ✅ Navbar -->
-      <nav v-if="showNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
-        <div class="container">
-            <a class="navbar-brand text-white fw-bold" href="#" @click.prevent="setView('HomePage')">
-                <img src="/assets/images/music_640.png" alt="Music Icon" width="30" height="30" class="me-2">
-                MusicApp
-            </a>
+	<!-- ✅ Navbar -->
+	<nav v-if="showNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+	  <div class="container">
+	    <a class="navbar-brand text-white fw-bold d-flex align-items-center" href="#" @click.prevent="setView('HomePage')">
+	      <img src="/assets/images/music_640.png" alt="Music Icon" width="30" height="30" class="me-2">
+	      MusicApp
+	    </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+	    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+	      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+	      <span class="navbar-toggler-icon"></span>
+	    </button>
 
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <div class="navbar-nav text-end">
-                    <button class="btn btn-outline-info nav-btn mx-1" @click="setView('HomePage')">Home</button>
-                    <button class="btn btn-outline-info nav-btn mx-1" @click="setView('MusicList')">PlayList</button>
-                    <button class="btn btn-outline-info nav-btn mx-1" @click="setView('ConcertList')">Gigs</button>
-                    <button class="btn btn-outline-info nav-btn mx-1" @click="setView('MusicCharts')">Charts</button>
-                    <button class="btn btn-outline-info nav-btn mx-1" @click="setView('UserPlayList')">User PlayList</button>
-                    
-                    <!-- ✅ Settings Button -->
-                    <button v-if="isAuthenticated" class="btn btn-sm btn-secondary mx-1" @click="toggleSettingsModal">
-                        <i class="fas fa-cog"></i>
-                    </button>
+	    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+	      <div class="navbar-nav">
+	        <button class="btn btn-outline-light mx-1" @click="setView('HomePage')">🏠 Home</button>
+	        <button class="btn btn-outline-light mx-1" @click="setView('ConcertList')">🎤 Gigs</button>
+	        <button class="btn btn-outline-light mx-1" @click="setView('MusicCharts')">⭐ Charts</button> <!-- ⭐ Star Glyph -->
+	        <button class="btn btn-outline-light mx-1" @click="setView('UserPlayList')">🎵 User PlayList</button>
 
-                    <!-- ✅ Logout Button -->
-                    <button v-if="isAuthenticated" class="btn btn-sm btn-secondary mx-1" @click="logoutUser">
-                        Logout
-                    </button>
-                </div>
-            </div>
-        </div>
-      </nav>
+	        <button class="btn btn-outline-light mx-1" v-if="isAdmin" @click="setView('MusicList')">🎼 PlayList</button>
+	        <button class="btn btn-outline-light mx-1" v-if="isAdmin" @click="toggleSettingsModal">⚙️ Settings</button>
 
-      <component :is="currentView" ref="userPlayList" @changeView="setView"></component>
+	        <button class="btn btn-danger mx-1" v-if="isAuthenticated" @click="logoutUser">
+	          🚪 Logout
+	        </button>
+	      </div>
+	    </div>
+	  </div>
+	</nav>
 
-      <!-- ✅ Settings Modal -->
+
+
+      <!-- ✅ Dynamic View Rendering -->
+      <component :is="currentView"></component>
+
+      <!-- ✅ Settings Modal (Admin Only) -->
       <div v-if="showSettingsModal" class="modal fade show d-block" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">⚙️ Settings</h5>
+              <h5 class="modal-title">⚙️ User Management</h5>
               <button type="button" class="btn-close" @click="toggleSettingsModal"></button>
             </div>
             <div class="modal-body">
@@ -140,10 +190,13 @@ window.App = {
                   <input type="password" class="form-control" v-model="newUser.password" required>
                 </div>
                 <div class="mb-3">
-                  <label class="form-label">Role</label>
+                  <label class="form-label">Select Role</label>
                   <select class="form-select" v-model="newUser.roles" multiple>
-                    <option v-for="role in availableRoles" :key="role" :value="role">{{ role }}</option>
+                    <option v-for="role in availableRoles" :key="role" :value="role">
+                      {{ role }}
+                    </option>
                   </select>
+             
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Register</button>
               </form>
@@ -152,9 +205,21 @@ window.App = {
           </div>
         </div>
       </div>
+
+      <!-- ✅ Footer -->
+      <footer v-if="showNavbar" class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+          <p>Follow us on</p>
+          <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+          <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+          <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
+          <p class="mt-3 mb-0">&copy; 2025 MusicApp. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   `
 };
 
-// ✅ Store Vue instance globally
+// ✅ Mount Vue App
+console.log("🔄 Mounting Vue App...");
 window.appInstance = Vue.createApp(window.App).mount("#app");
