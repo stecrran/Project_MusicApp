@@ -69,7 +69,7 @@ window.UserPlayList = {
           console.log("✅ Token saved successfully!");
           window.history.replaceState({}, document.title, window.location.pathname);
 
-          this.accessToken = newToken; // ✅ Vue `watch` will now detect this change & fetch playlists
+          this.accessToken = newToken;
         } else {
           console.error("❌ No access token found in URL.");
         }
@@ -123,7 +123,7 @@ window.UserPlayList = {
 
       console.log(`🎵 Fetching tracks for playlist ID: ${playlistId}...`);
       this.selectedPlaylist = this.playlists.find(p => p.id === playlistId);
-      this.tracks = []; // Clear previous tracks
+      this.tracks = [];
 
       $.ajax({
         url: `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
@@ -150,6 +150,33 @@ window.UserPlayList = {
           this.error = `❌ API Request Failed: ${xhr.status} - ${xhr.responseText}`;
           console.error("❌ Error Fetching Tracks:", error);
         }
+      });
+    },
+
+    saveSongToDatabase(track) {
+      console.log("💾 Saving song to database:", track);
+
+      fetch("/api/music/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+        },
+        body: JSON.stringify({
+          spotifyId: track.id,
+          title: track.name,
+          artist: track.artist,
+          album: track.album,
+          genre: null,
+          spotifyUrl: track.spotifyUrl
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log("✅ Song saved successfully:", data);
+      })
+      .catch(error => {
+        console.error("❌ Failed to save song:", error);
       });
     },
 
@@ -181,20 +208,6 @@ window.UserPlayList = {
   template: `
     <div class="container mt-4">
       <h1 class="display-4 text-center">User Playlists</h1>
-      <div class="text-center">
-        <div class="text-center mb-3">
-          <a :href="spotifyUrl" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg" 
-                 alt="Spotify Logo" width="150">
-          </a>
-        </div>
-        <button v-if="!accessToken" class="btn btn-success btn-lg" @click="authenticateWithSpotify">
-          🔗 Connect to Spotify
-        </button>
-        <button v-else class="btn btn-danger btn-lg" @click="logoutSpotify">
-          🚪 Logout from Spotify
-        </button>
-      </div>
 
       <div v-if="loading" class="text-center mt-3">
         <p>Loading your playlists...</p>
@@ -219,30 +232,6 @@ window.UserPlayList = {
               <td>{{ playlist.name }}</td>
               <td>{{ playlist.totalTracks }}</td>
               <td><a :href="playlist.spotifyUrl" target="_blank" class="btn btn-success btn-sm">🎵 Open Playlist</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div v-if="selectedPlaylist">
-        <h2 class="text-center mt-4">{{ selectedPlaylist.name }} - Tracks</h2>
-        <table id="tracksTable" class="table table-striped">
-          <thead>
-            <tr>
-              <th>Cover</th>
-              <th>Name</th>
-              <th>Artist</th>
-              <th>Album</th>
-              <th>Play</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="track in tracks" :key="track.id">
-              <td><img :src="track.image" width="50"></td>
-              <td>{{ track.name }}</td>
-              <td>{{ track.artist }}</td>
-              <td>{{ track.album }}</td>
-              <td><a :href="track.spotifyUrl" target="_blank" class="btn btn-primary btn-sm">🎵 Play on Spotify</a></td>
             </tr>
           </tbody>
         </table>

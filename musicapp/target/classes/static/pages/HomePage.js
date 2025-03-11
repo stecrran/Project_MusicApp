@@ -52,12 +52,17 @@ window.HomePage = {
         <div class="row align-items-center">
           
           <!-- Left Section: Text & Buttons -->
-          <div class="col-md-6">
-            <h1 class="display-4">Welcome to MusicApp</h1>
-            <p class="lead">Discover new music, track your favorite artists, and never miss a concert.</p>
-            <div class="mt-4">
-              <button class="btn btn-light btn-lg me-2" @click="$emit('changeView', 'ConcertList')">Explore Concerts</button>
-              <button class="btn btn-outline-light btn-lg" @click="$emit('changeView', 'MusicCharts')">View Music Charts</button>
+          <div class="col-md-6 text-center">
+            <h1 class="mb-4">Discover the Best Music and Concerts</h1>
+            
+            <div class="d-flex justify-content-center gap-3">
+              <button class="btn btn-light btn-lg" @click="$emit('changeView', 'ConcertList')">
+                🎤 Explore Concerts
+              </button>
+              
+              <button class="btn btn-outline-light btn-lg" @click="$emit('changeView', 'MusicCharts')">
+                ⭐ View Music Charts
+              </button>
             </div>
           </div>
 
@@ -69,7 +74,6 @@ window.HomePage = {
                   <img :src="image" class="d-block w-100 carousel-img" alt="Music carousel image">
                 </div>
               </div>
-
             </div>
           </div>
 

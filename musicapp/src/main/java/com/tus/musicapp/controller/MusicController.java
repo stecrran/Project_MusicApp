@@ -1,28 +1,27 @@
 package com.tus.musicapp.controller;
 
-import com.tus.musicapp.model.Music;
-import com.tus.musicapp.service.MusicService;
+import com.tus.musicapp.model.Song;
+import com.tus.musicapp.repos.SongRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("api/music")
+@RequestMapping("/api/music")
 public class MusicController {
 
-	private final MusicService musicService;
-	
-	public MusicController(MusicService musicService) {
-		this.musicService = musicService;
-	}
-	
-	@GetMapping
-	public List<Music> getMusic() {
-		return musicService.getAllMusic();
-	}
-	
-	@PostMapping
-	public Music addMusic(@RequestBody Music music) {
-		return musicService.addMusic(music);
-	}
+    @Autowired
+    private SongRepository songRepository;
+
+    @PostMapping("/save")
+    public ResponseEntity<?> saveSong(@RequestBody Song song) {
+        if (songRepository.existsBySpotifyId(song.getSpotifyId())) {
+            return ResponseEntity.ok("🎵 Song already exists in the database.");
+        }
+
+        Song savedSong = songRepository.save(song);
+        return ResponseEntity.ok(savedSong);
+    }
 }

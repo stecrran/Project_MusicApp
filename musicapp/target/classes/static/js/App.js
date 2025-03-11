@@ -28,16 +28,26 @@ window.App = {
     }
   },
   methods: {
-    setView(viewName) {
-      console.log(`🔄 Switching view to: ${viewName}`);
-      this.currentView = viewName;
-      localStorage.setItem("currentView", viewName);
+	setView(viewName) {
+	  console.log(`🔄 Switching view to: ${viewName}`);
+	  this.currentView = viewName;
+	  localStorage.setItem("currentView", viewName);
 
-      // ✅ Restart carousel when switching to HomePage
-      if (viewName === "HomePage") {
-        this.startCarousel();
-      }
-    },
+	  if (viewName === "UserPlayList") {
+	    console.log("🔄 Ensuring Spotify callback processing...");
+	    this.$nextTick(() => {
+	      const userPlayList = this.$refs.userPlayList;
+	      if (userPlayList && typeof userPlayList.handleSpotifyCallback === "function") {
+	        userPlayList.handleSpotifyCallback();
+	      }
+	    });
+	  }
+
+	  // ✅ Restart carousel when switching to HomePage
+	  if (viewName === "HomePage") {
+	    this.startCarousel();
+	  }
+	},
     extractUserRole() {
       const token = localStorage.getItem("jwt");
       if (!token) return null;
@@ -59,17 +69,18 @@ window.App = {
         return null;
       }
     },
-    getInitialView() {
-      console.log("📌 Checking Initial View...");
-      const jwt = localStorage.getItem("jwt");
-      const savedView = localStorage.getItem("currentView");
+	getInitialView() {
+	  console.log("📌 Checking Initial View...");
+	  const jwt = localStorage.getItem("jwt");
 
-      if (!jwt) {
-        console.log("🔴 No JWT found. Redirecting to LoginPage.");
-        return "LoginPage";
-      }
-      return savedView || "HomePage";
-    },
+	  if (!jwt) {
+	    console.log("🔴 No JWT found. Redirecting to LoginPage.");
+	    return "LoginPage";
+	  }
+
+	  console.log("✅ User is logged in. Defaulting to UserPlayList.");
+	  return "UserPlayList"; // ✅ Always redirect to UserPlayList on login
+	},
     logoutUser() {
       console.log("🔴 Logging out...");
       localStorage.clear();
@@ -167,8 +178,8 @@ window.App = {
 
 
 
-      <!-- ✅ Dynamic View Rendering -->
-      <component :is="currentView"></component>
+	<!-- ✅ Dynamic View Rendering (Ensures Buttons Work) -->
+	<component :is="currentView" @changeView="setView"></component>
 
       <!-- ✅ Settings Modal (Admin Only) -->
       <div v-if="showSettingsModal" class="modal fade show d-block" tabindex="-1">
