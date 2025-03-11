@@ -1,15 +1,23 @@
 window.App = {
   data() {
     return {
-      currentView: localStorage.getItem("jwt") ? localStorage.getItem("currentView") || "HomePage" : "LoginPage"
+      currentView: localStorage.getItem("jwt") ? localStorage.getItem("currentView") || "HomePage" : "LoginPage",
+      showSettingsModal: false,
+      newUser: {
+        username: "",
+        password: "",
+        roles: ["SPOTIFY_USER"] // Default role
+      },
+      availableRoles: ["ADMIN", "SPOTIFY_USER"], // ✅ Role options
+      registrationMessage: ""
     };
   },
   computed: {
     showNavbar() {
-      return this.currentView !== "LoginPage";  // ✅ Hide navbar on LoginPage
+      return this.currentView !== "LoginPage";
     },
     isAuthenticated() {
-      return !!localStorage.getItem("jwt"); // ✅ Checks if user is logged in
+      return !!localStorage.getItem("jwt");
     }
   },
   methods: {
@@ -17,11 +25,6 @@ window.App = {
       console.log(`🔄 Switching view to: ${viewName}`);
       this.currentView = viewName;
       localStorage.setItem("currentView", viewName);
-      
-      // ✅ Ensure callback runs when switching to UserPlayList
-      if (viewName === "UserPlayList") {
-        this.runSpotifyCallback();
-      }
     },
     logoutUser() {
       console.log("🔴 Logging out...");
@@ -29,20 +32,47 @@ window.App = {
       this.setView("LoginPage");
       window.location.reload();
     },
-    getUserPlayListComponent() {
-      return this.$refs.userPlayList;
+    toggleSettingsModal() {
+      this.showSettingsModal = !this.showSettingsModal;
     },
-    runSpotifyCallback() {
-      const userPlayList = this.getUserPlayListComponent();
-      if (userPlayList && typeof userPlayList.handleSpotifyCallback === "function") {
-        console.log("🔄 Running handleSpotifyCallback()...");
-        userPlayList.handleSpotifyCallback();
-      } else {
-        console.warn("⚠️ UserPlayList component not available yet. Retrying...");
-        setTimeout(this.runSpotifyCallback, 500);
-      }
-    }
-  },
+	async registerUser() {
+	  try {
+	    const token = localStorage.getItem("jwt");
+
+	    if (!token) {
+	      throw new Error("❌ Unauthorized: No token found. Please log in first.");
+	    }
+
+	    const response = await fetch("/api/admin/register", {
+	      method: "POST",
+	      headers: {
+	        "Content-Type": "application/json",
+	        "Authorization": `Bearer ${token}` // ✅ Send JWT token in request
+	      },
+	      body: JSON.stringify(this.newUser)
+	    });
+
+	    if (response.status === 403) {
+	      throw new Error("❌ Forbidden: You do not have permission to register users.");
+	    }
+
+	    if (response.status === 401) {
+	      throw new Error("❌ Unauthorized: Your session may have expired. Please log in again.");
+	    }
+
+	    if (!response.ok) {
+	      const errorData = await response.json().catch(() => {});
+	      throw new Error(errorData?.message || "❌ Registration failed.");
+	    }
+
+	    this.registrationMessage = "✅ User registered successfully!";
+	    this.newUser = { username: "", password: "", roles: ["SPOTIFY_USER"] };
+	  } catch (error) {
+	    console.error("❌ Registration Error:", error);
+	    this.registrationMessage = `❌ ${error.message}`;
+	  }
+	}
+},
   components: {
     LoginPage: window.LoginPage,
     HomePage: window.HomePage,
@@ -53,7 +83,7 @@ window.App = {
   },
   template: `
     <div>
-      <!-- ✅ Conditionally Render Navbar -->
+      <!-- ✅ Navbar -->
       <nav v-if="showNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
         <div class="container">
             <a class="navbar-brand text-white fw-bold" href="#" @click.prevent="setView('HomePage')">
@@ -74,9 +104,14 @@ window.App = {
                     <button class="btn btn-outline-info nav-btn mx-1" @click="setView('MusicCharts')">Charts</button>
                     <button class="btn btn-outline-info nav-btn mx-1" @click="setView('UserPlayList')">User PlayList</button>
                     
-                    <!-- ✅ Logout Button (Only shown when logged in) -->
-					<button v-if="isAuthenticated" class="btn btn-sm btn-secondary mx-1" @click="logoutUser">
-					    Logout
+                    <!-- ✅ Settings Button -->
+                    <button v-if="isAuthenticated" class="btn btn-sm btn-secondary mx-1" @click="toggleSettingsModal">
+                        <i class="fas fa-cog"></i>
+                    </button>
+
+                    <!-- ✅ Logout Button -->
+                    <button v-if="isAuthenticated" class="btn btn-sm btn-secondary mx-1" @click="logoutUser">
+                        Logout
                     </button>
                 </div>
             </div>
@@ -85,47 +120,41 @@ window.App = {
 
       <component :is="currentView" ref="userPlayList" @changeView="setView"></component>
 
-      <footer v-if="showNavbar" class="bg-dark text-white py-4 mt-5">
-        <div class="container text-center">
-          <p>Follow us on</p>
-          <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
-          <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
-          <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
-          <p class="mt-3 mb-0">&copy; 2025 MusicApp. All rights reserved.</p>
+      <!-- ✅ Settings Modal -->
+      <div v-if="showSettingsModal" class="modal fade show d-block" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">⚙️ Settings</h5>
+              <button type="button" class="btn-close" @click="toggleSettingsModal"></button>
+            </div>
+            <div class="modal-body">
+              <h6>Register New User</h6>
+              <form @submit.prevent="registerUser">
+                <div class="mb-3">
+                  <label class="form-label">Username</label>
+                  <input type="text" class="form-control" v-model="newUser.username" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Password</label>
+                  <input type="password" class="form-control" v-model="newUser.password" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Role</label>
+                  <select class="form-select" v-model="newUser.roles" multiple>
+                    <option v-for="role in availableRoles" :key="role" :value="role">{{ role }}</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Register</button>
+              </form>
+              <p v-if="registrationMessage" class="mt-3">{{ registrationMessage }}</p>
+            </div>
+          </div>
         </div>
-      </footer>
+      </div>
     </div>
   `
 };
 
 // ✅ Store Vue instance globally
 window.appInstance = Vue.createApp(window.App).mount("#app");
-
-// ✅ Ensure user remains logged in
-window.addEventListener("load", function () {
-  if (!localStorage.getItem("jwt")) {
-    window.appInstance.setView("LoginPage");
-  }
-});
-
-// ✅ Ensure Spotify Callback is Processed on Page Load
-window.addEventListener("load", function () {
-  console.log("🔄 Page Loaded - Checking for Spotify Callback...");
-  setTimeout(() => {
-    const userPlayList = window.appInstance.getUserPlayListComponent();
-    if (userPlayList) {
-      console.log("🔄 Running handleSpotifyCallback() on page load...");
-      userPlayList.handleSpotifyCallback();
-    } else {
-      console.warn("⚠️ UserPlayList not ready. Retrying...");
-      setTimeout(() => {
-        const retryPlayList = window.appInstance.getUserPlayListComponent();
-        if (retryPlayList) {
-          retryPlayList.handleSpotifyCallback();
-        } else {
-          console.error("❌ UserPlayList component is still not available.");
-        }
-      }, 500);
-    }
-  }, 500);
-});

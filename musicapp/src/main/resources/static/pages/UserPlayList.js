@@ -6,17 +6,23 @@ window.UserPlayList = {
       selectedPlaylist: null,
       loading: false,
       error: null,
-      accessToken: null,
-      fallbackImage: "/assets/images/music_640.png"
+      accessToken: localStorage.getItem("spotify_token") || null,
+      fallbackImage: "/assets/images/music_640.png",
+      spotifyUrl: "https://open.spotify.com/"
     };
   },
   created() {
     console.log("✅ UserPlayList component is created!");
+    this.handleSpotifyCallback();
     this.checkSpotifyAuth();
   },
-  mounted() {
-    this.initializeDataTable("#playlistsTable");
-    this.initializeDataTable("#tracksTable");
+  watch: {
+    accessToken(newToken) {
+      if (newToken) {
+        console.log("🔄 Token changed, fetching playlists...");
+        this.fetchUserPlaylists();
+      }
+    }
   },
   methods: {
     checkSpotifyAuth() {
@@ -26,42 +32,47 @@ window.UserPlayList = {
       if (storedToken && tokenExpiry && Date.now() < parseInt(tokenExpiry)) {
         console.log("🔑 Using stored access token.");
         this.accessToken = storedToken;
-        this.fetchUserPlaylists();
       } else {
         console.log("🔑 No valid token found. Waiting for user login.");
+        localStorage.removeItem("spotify_token");
+        localStorage.removeItem("spotify_token_expiry");
+        this.accessToken = null;
       }
     },
 
     authenticateWithSpotify() {
       console.log("🟢 Starting Spotify Authentication...");
       const clientId = "95ac7e92f6d2415d82a2992f37e23a5b";
-      const redirectUri = encodeURIComponent("http://localhost:9091/");
+      const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
       const scope = encodeURIComponent("user-read-private playlist-read-private playlist-read-collaborative");
 
       const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}`;
 
       console.log("🔑 Redirecting to Spotify login:", authUrl);
-      window.location.replace(authUrl);
+      window.location.assign(authUrl);
     },
 
     handleSpotifyCallback() {
       console.log("🔄 Checking for Spotify token in URL...");
-      const urlParams = new URLSearchParams(window.location.hash.substring(1));
-      const newToken = urlParams.get("access_token");
 
-      if (newToken) {
-        console.log("✅ New token found:", newToken);
-        const expiresIn = 3600 * 1000;
-        localStorage.setItem("spotify_token", newToken);
-        localStorage.setItem("spotify_token_expiry", Date.now() + expiresIn);
+      if (window.location.hash.includes("access_token")) {
+        const urlParams = new URLSearchParams(window.location.hash.substring(1));
+        const newToken = urlParams.get("access_token");
 
-        this.accessToken = newToken;
-        console.log("✅ Token saved successfully!");
+        if (newToken) {
+          console.log("✅ New token found:", newToken);
+          const expiresIn = 3600 * 1000;
 
-        this.fetchUserPlaylists();
-        window.history.replaceState({}, document.title, window.location.pathname);
-      } else {
-        console.error("❌ No access token found in URL.");
+          localStorage.setItem("spotify_token", newToken);
+          localStorage.setItem("spotify_token_expiry", Date.now() + expiresIn);
+
+          console.log("✅ Token saved successfully!");
+          window.history.replaceState({}, document.title, window.location.pathname);
+
+          this.accessToken = newToken; // ✅ Vue `watch` will now detect this change & fetch playlists
+        } else {
+          console.error("❌ No access token found in URL.");
+        }
       }
     },
 
@@ -85,12 +96,14 @@ window.UserPlayList = {
             id: playlist.id,
             name: playlist.name,
             totalTracks: playlist.tracks.total,
-            image: (playlist.images && playlist.images.length > 0) ? playlist.images[0].url : this.fallbackImage,  // ✅ Fix: Check for `playlist.images` before accessing
+            image: (playlist.images && playlist.images.length > 0) ? playlist.images[0].url : this.fallbackImage,
             spotifyUrl: playlist.external_urls.spotify
           }));
 
           console.log("🎶 Fetched Playlists:", this.playlists);
-          this.updateDataTable("#playlistsTable");
+          this.$nextTick(() => {
+            this.initializeDataTable("#playlistsTable");
+          });
         },
         error: (xhr, status, error) => {
           this.error = `❌ API Request Failed: ${xhr.status} - ${xhr.responseText}`;
@@ -110,6 +123,7 @@ window.UserPlayList = {
 
       console.log(`🎵 Fetching tracks for playlist ID: ${playlistId}...`);
       this.selectedPlaylist = this.playlists.find(p => p.id === playlistId);
+      this.tracks = []; // Clear previous tracks
 
       $.ajax({
         url: `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
@@ -123,12 +137,14 @@ window.UserPlayList = {
             name: item.track.name,
             artist: item.track.artists.map(a => a.name).join(", "),
             album: item.track.album.name,
-            image: item.track.album.images?.[0]?.url || this.fallbackImage,  // ✅ Fix for missing images
+            image: item.track.album.images?.[0]?.url || this.fallbackImage,
             spotifyUrl: item.track.external_urls.spotify
           }));
 
           console.log("🎶 Fetched Tracks:", this.tracks);
-          this.updateDataTable("#tracksTable");
+          this.$nextTick(() => {
+            this.initializeDataTable("#tracksTable");
+          });
         },
         error: (xhr, status, error) => {
           this.error = `❌ API Request Failed: ${xhr.status} - ${xhr.responseText}`;
@@ -138,22 +154,16 @@ window.UserPlayList = {
     },
 
     initializeDataTable(tableId) {
-      $(document).ready(function () {
+      if ($.fn.DataTable.isDataTable(tableId)) {
+        $(tableId).DataTable().clear().destroy();
+      }
+      this.$nextTick(() => {
         $(tableId).DataTable({
           paging: true,
           searching: true,
           ordering: true,
           destroy: true
         });
-      });
-    },
-
-    updateDataTable(tableId) {
-      if ($.fn.DataTable.isDataTable(tableId)) {
-        $(tableId).DataTable().clear().destroy();
-      }
-      this.$nextTick(() => {
-        this.initializeDataTable(tableId);
       });
     },
 
@@ -172,6 +182,12 @@ window.UserPlayList = {
     <div class="container mt-4">
       <h1 class="display-4 text-center">User Playlists</h1>
       <div class="text-center">
+        <div class="text-center mb-3">
+          <a :href="spotifyUrl" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg" 
+                 alt="Spotify Logo" width="150">
+          </a>
+        </div>
         <button v-if="!accessToken" class="btn btn-success btn-lg" @click="authenticateWithSpotify">
           🔗 Connect to Spotify
         </button>
@@ -188,7 +204,6 @@ window.UserPlayList = {
       </div>
 
       <div v-else>
-        <h2 class="text-center">Your Spotify Playlists</h2>
         <table id="playlistsTable" class="table table-striped">
           <thead>
             <tr>

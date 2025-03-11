@@ -32,40 +32,35 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        
-        http
-          .csrf(csrf -> csrf.disable())
-           // Allow H2 console to be displayed in a frame by disabling frame options
-           .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
-          .exceptionHandling(exception ->
-              exception.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-          )
-          .sessionManagement(session ->
-              session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-          )
-          .authorizeHttpRequests(auth -> auth
-            
-          // Allow components for specific roles
-                .antMatchers("/components/aside_menu.js").hasAnyAuthority("ADMIN", "NETWORK_MANAGEMENT_ENGINEER","CUSTOMER_SERVICE_REP","SUPPORT_ENGINEER")
-                .antMatchers("/components/admin/**").hasAuthority("ADMIN")
-                .antMatchers("/components/customer_service/**").hasAuthority("CUSTOMER_SERVICE_REP")
-                .antMatchers("/components/support_engineer/**").hasAuthority("SUPPORT_ENGINEER")
-                .antMatchers("/components/network_management/**").hasAuthority("NETWORK_MANAGEMENT_ENGINEER")
+    	http
+        .csrf(csrf -> csrf.disable()) // Disable CSRF (needed for REST APIs)
+        .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable())) // Allow H2 Console
+        .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(auth -> auth
+            // ✅ ALLOW STATIC FILES (Vue frontend)
+            .antMatchers("/", "/index.html", "/js/**", "/pages/**", "/assets/**", "/favicon.ico").permitAll()
+            .antMatchers("/api/carousel-images").authenticated()
+            // ✅ Allow Authentication & H2 Console
+            .antMatchers("/api/auth/**").permitAll()
+            .antMatchers("/api/music/**").permitAll()
+            .antMatchers("/h2-console/**").permitAll()
 
-                // Permit access to the H2 console and login endpoint
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/api/auth/login").permitAll()
-                .antMatchers("/**").permitAll()
+            // ✅ Restrict Admin Registration to Admins
+            .antMatchers("/api/admin/register").hasAuthority("ADMIN") 
 
+            // ✅ Restrict Components by Role
+            //.antMatchers("/pages/admin/**").hasAuthority("ADMIN")
 
-                .anyRequest().authenticated()
+            // ✅ Require authentication for everything else
+            .anyRequest().authenticated()
+        );
 
-          );
-        
-        // Add JWT filter before processing username/password authentication.
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-        
-        return http.build();
+    // ✅ Ensure JWT filter is applied before username/password authentication
+    http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
+
     }
     
     @Bean
@@ -85,5 +80,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

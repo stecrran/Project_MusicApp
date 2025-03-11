@@ -1,6 +1,5 @@
 package com.tus.musicapp.service;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.tus.musicapp.exceptions.UsernameAlreadyExistsException;
 import com.tus.musicapp.model.Role;
 import com.tus.musicapp.model.User;
 import com.tus.musicapp.repos.UserRepository;
@@ -52,28 +50,28 @@ public class UserService {
     }
     
     public User registerUser(User user) {
-        // Normalize the username to lower case before checking and saving
-         user.setUsername(user.getUsername().toLowerCase());
+        user.setUsername(user.getUsername().toLowerCase());
+
         // Check if username already exists
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
         }
-        
+
         // Encrypt the password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        
-        // Use the helper method to assign roles correctly
-        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
-            user.setRoles(assignRoles(user.getRoles()));
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A role must be selected.");
+
+        // Validate roles
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "At least one role must be assigned.");
         }
-        
+
+        // Assign valid roles
+        user.setRoles(assignRoles(user.getRoles()));
+
         return userRepository.save(user);
     }
-    
 
-    //For the users table in the front end
+    // Retrieve all users
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -99,8 +97,6 @@ public class UserService {
         userRepository.delete(userToDelete);
     }
 
-
-
     // Update user details
     public User updateUser(Long id, User updatedUser) {
         User existingUser = userRepository.findById(id)
@@ -110,34 +106,34 @@ public class UserService {
         String currentUsername = auth.getName();
         User currentUser = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Current user not found"));
-    
+
         // Prevent admin from removing their own admin role
         if (currentUser.getId().equals(id) && currentUser.getRoles().contains(Role.ADMIN) && 
             (updatedUser.getRoles() == null || !updatedUser.getRoles().contains(Role.ADMIN))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Admins cannot remove their own admin role.");
         }
-    
+
+        // Update password if provided
         if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
-    
+
+        // Update roles
         if (updatedUser.getRoles() != null && !updatedUser.getRoles().isEmpty()) {
             existingUser.setRoles(assignRoles(updatedUser.getRoles()));
         }
-    
+
         return userRepository.save(existingUser);
     }
-    
-        
-    //Helper method to assign roles to user
+
+    // Assign roles while ensuring only valid values
     private Set<Role> assignRoles(Set<Role> selectedRoles) {
-    Set<Role> roles = new HashSet<>();
-    if (selectedRoles.contains(Role.ADMIN)) {
-        roles.add(Role.SPOTIFY_USER);
-        roles.add(Role.ADMIN);
+        Set<Role> validRoles = new HashSet<>();
+        for (Role role : selectedRoles) {
+            if (role == Role.ADMIN || role == Role.SPOTIFY_USER) {
+                validRoles.add(role);
+            }
+        }
+        return validRoles;
     }
-
-    return roles;
-}
-
 }

@@ -1,7 +1,8 @@
 window.HomePage = {
   data() {
     return {
-      images: [] // Store images fetched from backend
+      images: [],
+      error: null
     };
   },
   created() {
@@ -9,35 +10,39 @@ window.HomePage = {
   },
   methods: {
     async loadImages() {
-      try {
-        const response = await fetch("/api/carousel-images"); // Fetch images from backend
-        const data = await response.json();
+      console.log("🔄 Fetching carousel images...");
 
-        if (Array.isArray(data) && data.length > 0) {
-          this.images = data.sort(() => Math.random() - 0.5); // Shuffle images
-          
-          // Wait for Vue to update the DOM before initializing the carousel
-          this.$nextTick(() => {
-            this.initializeCarousel(); 
-          });
-        } else {
-          console.error("⚠️ No images found in carousel folder.");
+      const token = localStorage.getItem("jwt"); // ✅ Get JWT token from localStorage
+      if (!token) {
+        console.error("❌ No JWT token found. User not authenticated.");
+        this.error = "Unauthorized. Please log in.";
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:9091/api/carousel-images", {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`, // ✅ Send JWT token
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            throw new Error("❌ Unauthorized. Please log in again.");
+          }
+          if (response.status === 403) {
+            throw new Error("❌ Access forbidden.");
+          }
+          throw new Error(`❌ API error: ${response.status}`);
         }
+
+        this.images = await response.json();
+        console.log("✅ Carousel images loaded:", this.images);
       } catch (error) {
         console.error("❌ Error loading images:", error);
-      }
-    },
-    initializeCarousel() {
-      console.log("🎠 Initializing Bootstrap Carousel...");
-      const carouselElement = document.querySelector("#musicCarousel");
-
-      if (carouselElement) {
-        new bootstrap.Carousel(carouselElement, {
-          interval: 3000, // Auto-slide every 3 seconds
-          ride: "carousel"
-        });
-      } else {
-        console.error("❌ Carousel element not found!");
+        this.error = error.message;
       }
     }
   },
