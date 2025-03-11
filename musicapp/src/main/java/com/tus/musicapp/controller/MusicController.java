@@ -1,6 +1,6 @@
 package com.tus.musicapp.controller;
 
-import com.tus.musicapp.models.Music;
+import com.tus.musicapp.model.Music;
 import com.tus.musicapp.service.MusicService;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,67 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MusicApp - Home</title>
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicApp - Home</title>
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css?v=1">
-  <link rel="stylesheet" href="/assets/css/styles.css">
+    <!-- ✅ Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-  <!-- Vue.js -->
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- ✅ DataTables CSS (Placed before Bootstrap for correct styling) -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+    <!-- ✅ Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- ✅ FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css?v=1">
+
+    <!-- ✅ Custom Styles -->
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <!-- ✅ jQuery (Required for DataTables) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- ✅ DataTables JavaScript (Must be after jQuery) -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+    <!-- ✅ Vue.js (Before Vue components) -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
 
-<!-- Navbar (Responsive with Outline Buttons) -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
-  <div class="container">
-    <!-- Brand Logo -->
-    <a class="navbar-brand text-white fw-bold" href="#" onclick="changeView('HomePage'); return false;">
-      <img src="/assets/images/music_640.png" alt="Music Icon" width="30" height="30" class="me-2">
-      MusicApp
-    </a>
+    <!-- ✅ Vue App Container (Dynamic Content) -->
+    <div id="app" class="container my-4"></div>
 
-    <!-- Navbar Toggle Button (Hamburger) -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <!-- ✅ JavaScript Components (Ensure Vue is loaded first) -->
+    <script src="/js/api.js" defer></script>
+    <script src="/pages/LoginPage.js"></script>
+    <script src="/pages/HomePage.js" defer></script>
+    <script src="/pages/MusicList.js" defer></script>
+    <script src="/pages/ConcertList.js" defer></script>
+    <script src="/pages/MusicCharts.js" defer></script>
+    <script src="/pages/UserPlayList.js" defer></script>
+    <script src="/js/App.js" defer></script>
 
-    <!-- Navbar Links (Collapsible) -->
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <div class="navbar-nav text-end">
-        <button class="btn btn-outline-info nav-btn mx-1" onclick="changeView('HomePage'); return false;">Home</button>
-        <button class="btn btn-outline-info nav-btn mx-1" onclick="changeView('MusicList'); return false;">PlayList</button>
-        <button class="btn btn-outline-info nav-btn mx-1" onclick="changeView('ConcertList'); return false;">Gigs</button>
-        <button class="btn btn-outline-info nav-btn mx-1" onclick="changeView('MusicCharts'); return false;">Charts</button>
-        <button class="btn btn-outline-info nav-btn mx-1" onclick="changeView('UserPlayList'); return false;">User PlayList</button>
-      </div>
-    </div>
-  </div>
-</nav>
-
-
-
-  <!-- Vue App Container (Dynamic Content) -->
-  <div id="app" class="container my-4"></div>
-
-  <!-- JS Components -->
-  <script src="/js/api.js"></script>
-  <script src="/pages/HomePage.js"></script>
-  <script src="/pages/MusicList.js"></script>
-  <script src="/pages/ConcertList.js"></script>
-  <script src="/pages/MusicCharts.js"></script>
-  <script src="/pages/UserPlayList.js"></script>
-  <script src="/js/App.js"></script>
-
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- ✅ Bootstrap JS (Ensure it's loaded after jQuery to avoid conflicts) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
 
 </body>
 </html>

@@ -1,6 +1,6 @@
 package com.tus.musicapp.service;
 
-import com.tus.musicapp.models.Music;
+import com.tus.musicapp.model.Music;
 import com.tus.musicapp.repos.MusicRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
