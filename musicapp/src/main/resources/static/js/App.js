@@ -9,24 +9,9 @@ window.App = {
       console.log(`🔄 Switching view to: ${viewName}`);
       this.currentView = viewName;
       localStorage.setItem("currentView", viewName);
-
-      // ✅ Ensure callback runs when switching to UserPlayList
-      if (viewName === "UserPlayList") {
-        this.runSpotifyCallback();
-      }
     },
     getUserPlayListComponent() {
       return this.$refs.userPlayList;
-    },
-    runSpotifyCallback() {
-      const userPlayList = this.getUserPlayListComponent();
-      if (userPlayList && typeof userPlayList.handleSpotifyCallback === "function") {
-        console.log("🔄 Running handleSpotifyCallback()...");
-        userPlayList.handleSpotifyCallback();
-      } else {
-        console.warn("⚠️ UserPlayList component not available yet. Retrying...");
-        setTimeout(this.runSpotifyCallback, 500); // ✅ Retry after 500ms
-      }
     }
   },
   components: {
@@ -69,7 +54,7 @@ window.changeView = function(viewName) {
 // ✅ Function to access `UserPlayList` component from console
 window.getUserPlayList = function () {
   if (window.appInstance) {
-    return window.appInstance.getUserPlayListComponent();
+    return window.appInstance.$refs.userPlayList;
   } else {
     console.error("❌ UserPlayList component not found!");
     return null;
@@ -78,14 +63,8 @@ window.getUserPlayList = function () {
 
 // ✅ Ensure Spotify Callback is Processed on Page Load
 window.addEventListener("load", function () {
-  console.log("🔄 Page Loaded - Checking for Spotify Callback...");
-  setTimeout(() => {
-    if (window.getUserPlayList()) {
-      console.log("🔄 Running handleSpotifyCallback() on page load...");
-      window.getUserPlayList().handleSpotifyCallback();
-    } else {
-      console.warn("⚠️ UserPlayList not ready. Retrying...");
-      setTimeout(window.getUserPlayList().handleSpotifyCallback, 500); // ✅ Retry if not ready
-    }
-  }, 500);
+  if (window.getUserPlayList()) {
+    console.log("🔄 Running handleSpotifyCallback() on page load...");
+    window.getUserPlayList().handleSpotifyCallback();
+  }
 });
