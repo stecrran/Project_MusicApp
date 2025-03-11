@@ -30,10 +30,11 @@ window.UserPlayList = {
       const tokenExpiry = localStorage.getItem("spotify_token_expiry");
 
       if (storedToken && tokenExpiry && Date.now() < parseInt(tokenExpiry)) {
-        console.log("🔑 Using stored access token.");
+        console.log("🔑 Using stored access token:", storedToken);
         this.accessToken = storedToken;
+        this.fetchUserPlaylists(); // ✅ Fetch playlists immediately
       } else {
-        console.log("🔑 No valid token found. Waiting for user login.");
+        console.log("🔑 No valid token found. User must log in.");
         localStorage.removeItem("spotify_token");
         localStorage.removeItem("spotify_token_expiry");
         this.accessToken = null;
@@ -61,28 +62,48 @@ window.UserPlayList = {
 
         if (newToken) {
           console.log("✅ New token found:", newToken);
-          const expiresIn = 3600 * 1000;
+          const expiresIn = 3600 * 1000; // Token expires in 1 hour
 
+          // ✅ Store token in localStorage
           localStorage.setItem("spotify_token", newToken);
           localStorage.setItem("spotify_token_expiry", Date.now() + expiresIn);
 
           console.log("✅ Token saved successfully!");
+          
+          // ✅ Remove token from URL (prevents page refresh issue)
           window.history.replaceState({}, document.title, window.location.pathname);
 
+          // ✅ Update Vue state & fetch playlists
           this.accessToken = newToken;
+          this.fetchUserPlaylists();
         } else {
           console.error("❌ No access token found in URL.");
         }
       }
     },
+    
+    logoutSpotify() {
+      console.log("🚪 Logging out from Spotify...");
+      localStorage.removeItem("spotify_token");
+      localStorage.removeItem("spotify_token_expiry");
+
+      this.accessToken = null;
+      this.playlists = [];
+      this.tracks = [];
+      this.selectedPlaylist = null;
+      this.error = null;
+
+      console.log("🔴 Logged out successfully.");
+    },
 
     fetchUserPlaylists() {
       if (!this.accessToken) {
+        console.error("❌ No valid Spotify access token.");
         this.error = "❌ No valid Spotify access token.";
         return;
       }
 
-      console.log("🎵 Fetching User Playlists from Spotify...");
+      console.log("🎵 Fetching User Playlists with token:", this.accessToken);
       this.loading = true;
 
       $.ajax({
@@ -92,6 +113,14 @@ window.UserPlayList = {
           "Authorization": `Bearer ${this.accessToken}`
         },
         success: (data) => {
+          console.log("✅ Received playlist data:", data);
+
+          if (!data.items || data.items.length === 0) {
+            console.warn("⚠️ No playlists found.");
+            this.error = "⚠️ No playlists available.";
+            return;
+          }
+
           this.playlists = data.items.map(playlist => ({
             id: playlist.id,
             name: playlist.name,
@@ -100,14 +129,11 @@ window.UserPlayList = {
             spotifyUrl: playlist.external_urls.spotify
           }));
 
-          console.log("🎶 Fetched Playlists:", this.playlists);
-          this.$nextTick(() => {
-            this.initializeDataTable("#playlistsTable");
-          });
+          console.log("🎶 Processed Playlists:", this.playlists);
         },
         error: (xhr, status, error) => {
+          console.error("❌ Error Fetching Playlists:", xhr.responseText);
           this.error = `❌ API Request Failed: ${xhr.status} - ${xhr.responseText}`;
-          console.error("❌ Error Fetching Playlists:", error);
         },
         complete: () => {
           this.loading = false;
@@ -132,23 +158,22 @@ window.UserPlayList = {
           "Authorization": `Bearer ${this.accessToken}`
         },
         success: (data) => {
+          console.log("✅ Tracks Data:", data);
+
           this.tracks = data.items.map(item => ({
             id: item.track.id,
             name: item.track.name,
             artist: item.track.artists.map(a => a.name).join(", "),
             album: item.track.album.name,
             image: item.track.album.images?.[0]?.url || this.fallbackImage,
-            spotifyUrl: item.track.external_urls.spotify
+            spotifyUrl: item.track.external_urls.spotify,
+            durationMs: item.track.duration_ms
           }));
 
-          console.log("🎶 Fetched Tracks:", this.tracks);
-          this.$nextTick(() => {
-            this.initializeDataTable("#tracksTable");
-          });
+          console.log("🎶 Updated Tracks:", this.tracks);
         },
         error: (xhr, status, error) => {
-          this.error = `❌ API Request Failed: ${xhr.status} - ${xhr.responseText}`;
-          console.error("❌ Error Fetching Tracks:", error);
+          console.error("❌ Error Fetching Tracks:", xhr.responseText);
         }
       });
     },
@@ -167,7 +192,8 @@ window.UserPlayList = {
           title: track.name,
           artist: track.artist,
           album: track.album,
-          genre: null,
+          genre: "Unknown",
+          durationMs: track.durationMs || 0, // Ensure durationMs is included
           spotifyUrl: track.spotifyUrl
         })
       })
@@ -178,64 +204,46 @@ window.UserPlayList = {
       .catch(error => {
         console.error("❌ Failed to save song:", error);
       });
-    },
-
-    initializeDataTable(tableId) {
-      if ($.fn.DataTable.isDataTable(tableId)) {
-        $(tableId).DataTable().clear().destroy();
-      }
-      this.$nextTick(() => {
-        $(tableId).DataTable({
-          paging: true,
-          searching: true,
-          ordering: true,
-          destroy: true
-        });
-      });
-    },
-
-    logoutSpotify() {
-      console.log("🚪 Logging out from Spotify...");
-      localStorage.removeItem("spotify_token");
-      localStorage.removeItem("spotify_token_expiry");
-      this.accessToken = null;
-      this.playlists = [];
-      this.tracks = [];
-      this.selectedPlaylist = null;
-      this.error = null;
     }
   },
   template: `
     <div class="container mt-4">
       <h1 class="display-4 text-center">User Playlists</h1>
 
-      <div v-if="loading" class="text-center mt-3">
-        <p>Loading your playlists...</p>
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
+      <div class="text-center">
+        <button v-if="!accessToken" class="btn btn-success btn-lg" @click="authenticateWithSpotify">
+          🔗 Connect to Spotify
+        </button>
+        <button v-else class="btn btn-danger btn-lg" @click="logoutSpotify">
+          🚪 Logout from Spotify
+        </button>
       </div>
 
-      <div v-else>
-        <table id="playlistsTable" class="table table-striped">
-          <thead>
-            <tr>
-              <th>Cover</th>
-              <th>Name</th>
-              <th>Total Tracks</th>
-              <th>Play</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="playlist in playlists" :key="playlist.id" @click="fetchPlaylistTracks(playlist.id)" style="cursor: pointer;">
-              <td><img :src="playlist.image" width="50"></td>
-              <td>{{ playlist.name }}</td>
-              <td>{{ playlist.totalTracks }}</td>
-              <td><a :href="playlist.spotifyUrl" target="_blank" class="btn btn-success btn-sm">🎵 Open Playlist</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <table class="table table-striped" v-if="playlists.length > 0">
+        <thead>
+          <tr>
+            <th>Cover</th>
+            <th>Name</th>
+            <th>Total Tracks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="playlist in playlists" :key="playlist.id" @click="fetchPlaylistTracks(playlist.id)">
+            <td><img :src="playlist.image" width="50"></td>
+            <td>{{ playlist.name }}</td>
+            <td>{{ playlist.totalTracks }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-striped" v-if="selectedPlaylist">
+        <tbody>
+          <tr v-for="track in tracks" :key="track.id">
+            <td>{{ track.name }} - {{ track.artist }}</td>
+            <td><a :href="track.spotifyUrl" target="_blank" @click.prevent="saveSongToDatabase(track)">🎵 Play on Spotify</a></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   `
 };

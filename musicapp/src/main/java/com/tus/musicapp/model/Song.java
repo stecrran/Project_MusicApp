@@ -3,30 +3,46 @@ package com.tus.musicapp.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "music")
+@Table(name = "music") // Ensure this matches your MySQL table name
 public class Song {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-    private String album;
-    private String artist;
-    private String genre;
+    @Column(nullable = false, unique = true)
     private String spotifyId;
 
-    // ✅ Default Constructor (Required by JPA)
-    public Song() {
-    }
+    @Column(nullable = false)
+    private String title;
 
-    // ✅ New Constructor (Fixes the Error)
-    public Song(String title, String album, String artist, String genre, String spotifyId) {
-        this.title = title;
-        this.album = album;
-        this.artist = artist;
-        this.genre = genre;
+    @Column(nullable = false)
+    private String artist;
+
+    @Column(nullable = false)
+    private String album;
+
+    @Column(nullable = false)
+    private String genre;
+
+    @Column(nullable = false)
+    private int durationMs;
+
+    @Column(nullable = false)
+    private String spotifyUrl;
+
+    // ✅ Default Constructor (Required by JPA)
+    public Song() {}
+
+    // ✅ Constructor Matching Expected Parameters
+    public Song(String spotifyId, String title, String artist, String album, String genre, int durationMs, String spotifyUrl) {
         this.spotifyId = spotifyId;
+        this.title = title;
+        this.artist = artist;
+        this.album = album;
+        this.genre = genre;
+        this.durationMs = durationMs;
+        this.spotifyUrl = spotifyUrl;
     }
 
     // ✅ Getters & Setters
@@ -34,8 +50,12 @@ public class Song {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getSpotifyId() {
+        return spotifyId;
+    }
+
+    public void setSpotifyId(String spotifyId) {
+        this.spotifyId = spotifyId;
     }
 
     public String getTitle() {
@@ -46,20 +66,20 @@ public class Song {
         this.title = title;
     }
 
-    public String getAlbum() {
-        return album;
-    }
-
-    public void setAlbum(String album) {
-        this.album = album;
-    }
-
     public String getArtist() {
         return artist;
     }
 
     public void setArtist(String artist) {
         this.artist = artist;
+    }
+
+    public String getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(String album) {
+        this.album = album;
     }
 
     public String getGenre() {
@@ -70,11 +90,19 @@ public class Song {
         this.genre = genre;
     }
 
-    public String getSpotifyId() {
-        return spotifyId;
+    public int getDurationMs() {
+        return durationMs;
     }
 
-    public void setSpotifyId(String spotifyId) {
-        this.spotifyId = spotifyId;
+    public void setDurationMs(int durationMs) {
+        this.durationMs = durationMs;
+    }
+
+    public String getSpotifyUrl() {
+        return spotifyUrl;
+    }
+
+    public void setSpotifyUrl(String spotifyUrl) {
+        this.spotifyUrl = spotifyUrl;
     }
 }

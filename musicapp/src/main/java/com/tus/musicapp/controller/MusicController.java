@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/music")
 public class MusicController {
@@ -21,7 +19,18 @@ public class MusicController {
             return ResponseEntity.ok("🎵 Song already exists in the database.");
         }
 
-        Song savedSong = songRepository.save(song);
+        // ✅ Create a new Song object with the correct constructor
+        Song newSong = new Song(
+            song.getSpotifyId(),
+            song.getTitle(),
+            song.getArtist(),
+            song.getAlbum(),
+            song.getGenre(),
+            song.getDurationMs(),
+            song.getSpotifyUrl()
+        );
+
+        Song savedSong = songRepository.save(newSong);
         return ResponseEntity.ok(savedSong);
     }
 }
