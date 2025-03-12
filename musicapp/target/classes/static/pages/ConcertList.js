@@ -8,7 +8,7 @@ window.ConcertList = {
       selectedCountry: 'IE',
       countries: [
         { name: 'Ireland', code: 'IE' },
-        { name: 'Great Britain', code: 'GB' },
+        { name: 'UK', code: 'GB' },
         { name: 'Germany', code: 'DE' },
         { name: 'Spain', code: 'ES' },
         { name: 'Netherlands', code: 'NL' },

@@ -65,7 +65,7 @@ window.LoginPage = {
         this.$emit("changeView", "MusicList");
         window.location.reload();
       } catch (error) {
-        this.errorMessage = `Error: ${error.message}`;
+        this.errorMessage = `${error.message}`;
       } finally {
         this.isLoading = false;
       }

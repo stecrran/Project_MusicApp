@@ -149,8 +149,7 @@ window.App = {
 	<nav v-if="showNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
 	  <div class="container">
 	    <a class="navbar-brand text-white fw-bold d-flex align-items-center" href="#" @click.prevent="setView('HomePage')">
-	      <img src="/assets/images/music_640.png" alt="Music Icon" width="30" height="30" class="me-2">
-	      MusicApp
+	      <img src="/assets/images/musicLogo.png" alt="Music Icon" width="260" height="140" class="me-2">
 	    </a>
 
 	    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
