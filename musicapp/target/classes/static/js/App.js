@@ -2,7 +2,7 @@ window.App = {
   data() {
     return {
       currentView: this.getInitialView(),
-      showSettingsModal: false,
+      showSettingsModal: false, // ✅ Ensure modal is correctly managed
       userRole: this.extractUserRole(),
       newUser: {
         username: "",
@@ -28,26 +28,25 @@ window.App = {
     }
   },
   methods: {
-	setView(viewName) {
-	  console.log(`🔄 Switching view to: ${viewName}`);
-	  this.currentView = viewName;
-	  localStorage.setItem("currentView", viewName);
+    setView(viewName) {
+      console.log(`🔄 Switching view to: ${viewName}`);
+      this.currentView = viewName;
+      localStorage.setItem("currentView", viewName);
 
-	  if (viewName === "UserPlayList") {
-	    console.log("🔄 Ensuring Spotify callback processing...");
-	    this.$nextTick(() => {
-	      const userPlayList = this.$refs.userPlayList;
-	      if (userPlayList && typeof userPlayList.handleSpotifyCallback === "function") {
-	        userPlayList.handleSpotifyCallback();
-	      }
-	    });
-	  }
+      if (viewName === "UserPlayList") {
+        console.log("🔄 Ensuring Spotify callback processing...");
+        this.$nextTick(() => {
+          const userPlayList = this.$refs.userPlayList;
+          if (userPlayList && typeof userPlayList.handleSpotifyCallback === "function") {
+            userPlayList.handleSpotifyCallback();
+          }
+        });
+      }
 
-	  // ✅ Restart carousel when switching to HomePage
-	  if (viewName === "HomePage") {
-	    this.startCarousel();
-	  }
-	},
+      if (viewName === "HomePage") {
+        this.startCarousel();
+      }
+    },
     extractUserRole() {
       const token = localStorage.getItem("jwt");
       if (!token) return null;
@@ -58,6 +57,7 @@ window.App = {
         const jsonPayload = decodeURIComponent(atob(base64).split("").map(c =>
           "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
         ).join(""));
+
         const decodedToken = JSON.parse(jsonPayload);
 
         if (decodedToken.roles.includes("ADMIN")) return "ADMIN";
@@ -69,18 +69,18 @@ window.App = {
         return null;
       }
     },
-	getInitialView() {
-	  console.log("📌 Checking Initial View...");
-	  const jwt = localStorage.getItem("jwt");
+    getInitialView() {
+      console.log("📌 Checking Initial View...");
+      const jwt = localStorage.getItem("jwt");
 
-	  if (!jwt) {
-	    console.log("🔴 No JWT found. Redirecting to LoginPage.");
-	    return "LoginPage";
-	  }
+      if (!jwt) {
+        console.log("🔴 No JWT found. Redirecting to LoginPage.");
+        return "LoginPage";
+      }
 
-	  console.log("✅ User is logged in. Defaulting to UserPlayList.");
-	  return "UserPlayList"; // ✅ Always redirect to UserPlayList on login
-	},
+      console.log("✅ User is logged in. Defaulting to UserPlayList.");
+      return "UserPlayList";
+    },
     logoutUser() {
       console.log("🔴 Logging out...");
       localStorage.clear();
@@ -88,42 +88,42 @@ window.App = {
       window.location.reload();
     },
     toggleSettingsModal() {
+      console.log("⚙️ Toggling Settings Modal...");
       this.showSettingsModal = !this.showSettingsModal;
     },
-	async registerUser() {
-	  try {
-	    const token = localStorage.getItem("jwt");
-	    if (!token) throw new Error("Unauthorized: No token found.");
+    async registerUser() {
+      try {
+        const token = localStorage.getItem("jwt");
+        if (!token) throw new Error("Unauthorized: No token found.");
 
-	    const response = await fetch("/api/admin/register", {
-	      method: "POST",
-	      headers: {
-	        "Content-Type": "application/json",
-	        "Authorization": `Bearer ${token}`
-	      },
-	      body: JSON.stringify({
-	        username: this.newUser.username,
-	        password: this.newUser.password,
-	        roles: this.newUser.roles.length > 0 ? this.newUser.roles : ["SPOTIFY_USER"]
-	      })
-	    });
+        const response = await fetch("/api/admin/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            username: this.newUser.username,
+            password: this.newUser.password,
+            roles: this.newUser.roles.length > 0 ? this.newUser.roles : ["SPOTIFY_USER"]
+          })
+        });
 
-	    if (!response.ok) {
-	      if (response.status === 409) {
-	        throw new Error("User already exists. Enter new username.");
-	      }
-	      const errorData = await response.json().catch(() => {});
-	      throw new Error(errorData?.message || "Registration failed.");
-	    }
+        if (!response.ok) {
+          if (response.status === 409) {
+            throw new Error("User already exists. Enter new username.");
+          }
+          const errorData = await response.json().catch(() => {});
+          throw new Error(errorData?.message || "Registration failed.");
+        }
 
-	    this.registrationMessage = "✅ User registered successfully!";
-	    this.newUser = { username: "", password: "", roles: [] };
-	  } catch (error) {
-	    console.error("❌ Registration Error:", error);
-	    this.registrationMessage = `❌ ${error.message}`;
-	  }
-	}
-,
+        this.registrationMessage = "✅ User registered successfully!";
+        this.newUser = { username: "", password: "", roles: [] };
+      } catch (error) {
+        console.error("❌ Registration Error:", error);
+        this.registrationMessage = `❌ ${error.message}`;
+      }
+    },
     startCarousel() {
       console.log("🔄 Initializing Bootstrap Carousel...");
       setTimeout(() => {
@@ -145,42 +145,40 @@ window.App = {
   },
   template: `
     <div>
-	<!-- ✅ Navbar -->
-	<nav v-if="showNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
-	  <div class="container">
-	    <a class="navbar-brand text-white fw-bold d-flex align-items-center" href="#" @click.prevent="setView('HomePage')">
-	      <img src="/assets/images/musicLogo.png" alt="Music Icon" width="260" height="140" class="me-2">
-	    </a>
+      <!-- ✅ Navbar -->
+      <nav v-if="showNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+          <a class="navbar-brand d-flex align-items-center" href="#" @click.prevent="setView('HomePage')">
+            <img src="/assets/images/musicLogo.png" alt="Music Icon" class="logo-fixed">
+          </a>
 
-	    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-	      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-	      <span class="navbar-toggler-icon"></span>
-	    </button>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
 
-	    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-	      <div class="navbar-nav">
-	        <button class="btn btn-outline-light mx-1" @click="setView('HomePage')">🏠 Home</button>
-	        <button class="btn btn-outline-light mx-1" @click="setView('ConcertList')">🎤 Gigs</button>
-	        <button class="btn btn-outline-light mx-1" @click="setView('MusicCharts')">⭐ Charts</button> <!-- ⭐ Star Glyph -->
-	        <button class="btn btn-outline-light mx-1" @click="setView('UserPlayList')">🎵 User PlayList</button>
+          <div class="collapse navbar-collapse justify-content-end custom-dropdown" id="navbarNav">
+            <div class="navbar-nav">
+              <button class="btn btn-outline-light mx-1" @click="setView('HomePage')">🏠 Home</button>
+              <button class="btn btn-outline-light mx-1" @click="setView('ConcertList')">🎤 Gigs</button>
+              <button class="btn btn-outline-light mx-1" @click="setView('MusicCharts')">⭐ Charts</button>
+              <button class="btn btn-outline-light mx-1" @click="setView('UserPlayList')">🎵 User PlayList</button>
 
-	        <button class="btn btn-outline-light mx-1" v-if="isAdmin" @click="setView('MusicList')">🎼 PlayList</button>
-	        <button class="btn btn-outline-light mx-1" v-if="isAdmin" @click="toggleSettingsModal">⚙️ Settings</button>
+              <button class="btn btn-outline-light mx-1" v-if="isAdmin" @click="setView('MusicList')">🎼 PlayList</button>
+              <button class="btn btn-outline-light mx-1" v-if="isAdmin" @click="toggleSettingsModal">⚙️ Settings</button>
 
-	        <button class="btn btn-danger mx-1" v-if="isAuthenticated" @click="logoutUser">
-	          🚪 Logout
-	        </button>
-	      </div>
-	    </div>
-	  </div>
-	</nav>
+              <button class="btn btn-danger mx-1" v-if="isAuthenticated" @click="logoutUser">
+                🚪 Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
 
+      <!-- ✅ Dynamic View Rendering -->
+      <component :is="currentView" @changeView="setView"></component>
 
-
-	<!-- ✅ Dynamic View Rendering (Ensures Buttons Work) -->
-	<component :is="currentView" @changeView="setView"></component>
-
-      <!-- ✅ Settings Modal (Admin Only) -->
+      <!-- ✅ Settings Modal -->
       <div v-if="showSettingsModal" class="modal fade show d-block" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -189,7 +187,6 @@ window.App = {
               <button type="button" class="btn-close" @click="toggleSettingsModal"></button>
             </div>
             <div class="modal-body">
-              <h6>Register New User</h6>
               <form @submit.prevent="registerUser">
                 <div class="mb-3">
                   <label class="form-label">Username</label>
@@ -206,7 +203,6 @@ window.App = {
                       {{ role }}
                     </option>
                   </select>
-             
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Register</button>
               </form>
@@ -215,18 +211,17 @@ window.App = {
           </div>
         </div>
       </div>
-
-      <!-- ✅ Footer -->
-      <footer v-if="showNavbar" class="bg-dark text-white py-4 mt-5">
-        <div class="container text-center">
-          <p>Follow us on</p>
-          <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
-          <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
-          <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
-          <p class="mt-3 mb-0">&copy; 2025 MusicApp. All rights reserved.</p>
-        </div>
-      </footer>
-    </div>
+	    <!-- ✅ Footer -->
+	    <footer v-if="showNavbar" class="bg-dark text-white py-4 mt-5">
+	      <div class="container text-center">
+	        <p>Follow us on</p>
+	        <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+	        <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+	        <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
+	        <p class="mt-3 mb-0">&copy; 2025 MusicApp. All rights reserved.</p>
+	      </div>
+	    </footer>
+	  </div>
   `
 };
 

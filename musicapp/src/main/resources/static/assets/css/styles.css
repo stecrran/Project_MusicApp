@@ -1,58 +1,12 @@
 /* 🎨 General Page Styles */
 body {
-  background-color: #F0F2F5; /* Soft Gray */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #191414; /* Dark Mode Black */
-  margin: 0;
-  padding: 0;
-  line-height: 1.6;
-}
-
-/* 🎵 Navbar */
-.navbar {
-  background-color: #1DB954 !important; /* Spotify Green */
-  background-image: url("/assets/images/navbar-bg.png");
-  background-size: cover;
-  background-position: center;
-  height: 80px;
-  padding: 10px 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* ✅ Smaller & Grey Logout Button */
-#logoutBtn {
-  background-color: #6c757d !important; /* Grey */
-  border: none !important;
-  color: #ffffff !important;
-  font-size: 0.85rem;
-  padding: 5px 12px;
-  transition: all 0.3s ease-in-out;
-}
-
-#logoutBtn:hover {
-  background-color: #5a6268 !important; /* Darker Grey */
-  transform: scale(1.05);
-}
-
-/* Navbar Branding */
-.navbar-brand {
-  color: #ffffff !important;
-  font-weight: bold;
-  font-size: 1.5rem;
-}
-
-/* 🎛️ Navbar Buttons */
-.nav-btn {
-  background-color: #477eb5 !important; /* Updated to match the theme */
-  border: 2px solid #3b6ea5 !important; /* Slightly darker border */
-  color: #ffffff !important; /* White text for contrast */
-  font-size: 1rem;
-  font-weight: bold;
-  padding: 6px 12px;
-  min-width: 120px; /* Ensures consistent button size */
-  width: auto; /* Prevent full width */
-  text-align: center;
-  transition: all 0.3s ease-in-out;
+	background-color: #F0F2F5;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	color: #191414;
+	margin: 0;
+	padding: 0;
+	line-height: 1.6;
+	padding-top: 100px; /* ✅ Adjusted to match navbar height */
 }
 
 /* ✅ Login Page Background */
@@ -63,6 +17,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.logo-small {
+    max-height: 80px; 
+    width: auto; 
+    display: block;
+    margin: 0 auto; 
 }
 
 /* ✅ Modern Glassmorphism Login Card */
@@ -76,62 +37,159 @@ body {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* ✅ Resize the logo */
-.logo-small {
-    max-height: 50px; 
-    width: auto; 
-    display: block;
-    margin: 0 auto; 
+
+
+/* ✅ Fixed Navbar Logo */
+.logo-fixed {
+	height: 100px; /* ✅ Adjusted to fit inside navbar */
+	width: auto;
+	position: relative;
+	object-fit: contain; /* Ensures no stretching */
 }
 
-/* ✅ Styled Form Inputs */
-.form-control {
-    font-size: 1rem;
-    padding: 12px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
-    transition: all 0.3s ease-in-out;
+/* 🎵 Navbar */
+.navbar {
+	background-color: #1DB954 !important; /* Spotify Green */
+	background-image: url("/assets/images/navbar-bg.png");
+	background-size: cover;
+	background-position: center;
+	padding: 10px 20px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100px; /* ✅ Fixed height */
+	z-index: 1000; /* Keeps it on top */
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
-.form-control:focus {
-    border-color: #1DB954; /* Spotify Green */
-    box-shadow: 0 0 5px rgba(29, 185, 84, 0.5);
+/* ✅ Navbar Fixes */
+.navbar-brand {
+	display: flex;
+	align-items: center;
+	color: #ffffff !important;
+	font-weight: bold;
+	font-size: 1.5rem;
+	margin-left: 10px;
 }
 
-/* ✅ Buttons */
+/* ✅ Burger Icon Fix (No White Background) */
+.navbar-toggler {
+	border: none !important;
+	background: none !important; /* Removes background */
+	padding: 5px;
+}
+.navbar-toggler:focus {
+	box-shadow: none !important; /* Removes outline */
+}
+
+/* ✅ Fix Burger Menu (Dropdown Buttons) */
+@media (max-width: 992px) {
+	.custom-dropdown {
+		text-align: right !important;
+		position: absolute;
+		right: 10px;
+		top: 100px; /* ✅ Ensures dropdown appears directly below navbar */
+		background: transparent !important; /* Removes white background */
+		box-shadow: none !important;
+		border-radius: 0;
+	}
+
+	.custom-dropdown .navbar-nav {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		padding: 10px;
+	}
+
+	.custom-dropdown .btn {
+		width: auto;
+		padding: 8px 12px;
+		font-size: 14px;
+		margin-bottom: 5px;
+		background-color: #2b8a3e !important; /* Darker Green */
+		color: white !important;
+		border: none;
+	}
+}
+
+/* ✅ Navbar Buttons */
+.navbar-nav .btn {
+	background-color: lightgreen !important;
+	color: black !important;
+	border: none;
+	padding: 5px 10px;
+	font-size: 14px;
+	transition: all 0.3s ease-in-out;
+}
+
+.navbar-nav .btn:hover {
+	background-color: #47a447 !important; /* Slightly darker green */
+}
+
+.navbar-nav .btn-danger {
+	background-color: red !important;
+	color: white !important;
+	border: none !important;
+	padding: 5px 10px;
+	font-size: 14px;
+}
+
+.navbar-nav .btn-danger:hover {
+	background-color: darkred !important;
+	transform: scale(1.05);
+}
+
+/* ✅ Ensure Consistent Button Sizes */
 .btn {
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-weight: 600;
-  font-size: 1rem;
+	border-radius: 8px;
+	padding: 10px 20px;
+	font-weight: 600;
+	font-size: 1rem;
+	transition: all 0.3s ease-in-out;
 }
 
-/* 🔴 Primary Button */
-.btn-primary {
-  background-color: #FF4F5A; /* Accent Red */
-  border-color: #FF4F5A;
-  color: #fff;
+/* ✅ Gear Cog Settings Button */
+.navbar-nav .btn-settings {
+	background: none !important;
+	border: none;
+	font-size: 1.5rem;
+	color: white;
+	padding: 5px;
+	transition: all 0.3s ease-in-out;
 }
 
-.btn-primary:hover {
-  background-color: #E63946;
-  border-color: #E63946;
-  color: #fff;
+.navbar-nav .btn-settings:hover {
+	transform: scale(1.2);
 }
 
-/* 🎵 Cards */
-.card {
-  border: none;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
-  color: #191414;
+/* 📌 Footer */
+footer {
+	margin-top: 50px;
+	padding: 25px 0;
+	background-color: #1DB954; /* Primary Green */
+	color: #ffffff;
+	text-align: center;
+	font-size: 1rem;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+/* ✅ Utility */
+.container {
+	max-width: 1140px;
+}
+.text-muted {
+	color: #6c757d !important;
+}
+
+/* ✅ Smooth Hover Effects */
+button, .btn {
+	transition: all 0.3s ease-in-out;
+}
+button:hover, .btn:hover {
+	transform: scale(1.05);
 }
 
 /* 🎠 Carousel */
@@ -141,39 +199,4 @@ body {
   object-fit: contain; /* Ensures consistent sizing without stretching */
   display: block;
   margin: 0 auto;
-}
-
-/* 📌 Footer */
-footer {
-  margin-top: 50px;
-  padding: 25px 0;
-  background-color: #1DB954; /* Primary Green */
-  color: #ffffff;
-  text-align: center;
-  font-size: 1rem;
-}
-
-/* ✅ Utility */
-.container {
-  max-width: 1140px;
-}
-
-.text-muted {
-  color: #6c757d !important;
-}
-
-/* ✅ Center text in alert */
-.alert {
-    font-size: 0.9rem;
-    border-radius: 10px;
-    text-align: center;
-}
-
-/* ✅ Smooth hover effects */
-button, .btn {
-    transition: all 0.3s ease-in-out;
-}
-
-button:hover, .btn:hover {
-    transform: scale(1.05);
 }

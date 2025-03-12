@@ -38,12 +38,26 @@ window.HomePage = {
           throw new Error(`❌ API error: ${response.status}`);
         }
 
-        this.images = await response.json();
-        console.log("✅ Carousel images loaded:", this.images);
+        let images = await response.json();
+
+        // ✅ Shuffle images randomly before assigning them
+        images = this.shuffleArray(images);
+
+        this.images = images;
+        console.log("✅ Carousel images randomized & loaded:", this.images);
       } catch (error) {
         console.error("❌ Error loading images:", error);
         this.error = error.message;
       }
+    },
+
+    // 🎲 Fisher-Yates Shuffle Algorithm to Randomize Images
+    shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
     }
   },
   template: `
