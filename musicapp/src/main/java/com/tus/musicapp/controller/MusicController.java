@@ -1,57 +1,58 @@
 package com.tus.musicapp.controller;
 
+import com.tus.musicapp.dto.MusicCreationDto;
+import com.tus.musicapp.dto.SongDto;
+import com.tus.musicapp.mapper.SongMapper;
 import com.tus.musicapp.model.Song;
-import com.tus.musicapp.repos.SongRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.tus.musicapp.service.SongService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/music")
 public class MusicController {
 
-    @Autowired
-    private SongRepository songRepository;
+    private final SongService songService;
+    private final SongMapper songMapper;
 
-    // ✅ Get all songs from the database
-    @GetMapping
-    public ResponseEntity<List<Song>> getAllSongs() {
-        List<Song> songs = songRepository.findAll();
-        return ResponseEntity.ok(songs);
+    public MusicController(SongService songService, SongMapper songMapper) {
+        this.songService = songService;
+        this.songMapper = songMapper;
     }
 
-    // ✅ Save a song (if it doesn't exist)
+    // ✅ Get all songs using DTOs
+    @GetMapping
+    public ResponseEntity<List<SongDto>> getAllSongs() {
+        List<SongDto> songs = songService.findAll()
+                                         .stream()
+                                         .map(songMapper::toDto)
+                                         .collect(Collectors.toList());
+        return ResponseEntity.ok(songs); 
+
+    }
+
+    // ✅ Save a song using DTO
     @PostMapping("/save")
-    public ResponseEntity<?> saveSong(@RequestBody Song song) {
+    public ResponseEntity<?> saveSong(@Valid @RequestBody MusicCreationDto musicCreationDto) {
         try {
-            if (songRepository.existsBySpotifyId(song.getSpotifyId())) {
-                Map<String, String> response = new HashMap<>();
-                response.put("message", "🎵 Song already exists in the database.");
-                return ResponseEntity.ok(response);
+            if (songService.existsBySpotifyId(musicCreationDto.getSpotifyId())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("🎵 Song already exists in the database.");
             }
 
-            // ✅ Ensure the new song is properly constructed
-            Song newSong = new Song(
-                song.getSpotifyId(),
-                song.getTitle(),
-                song.getArtist(),
-                song.getAlbum(),
-                song.getGenre(),
-                song.getDurationMs(),
-                song.getSpotifyUrl()
-            );
-
-            Song savedSong = songRepository.save(newSong);
-            return ResponseEntity.ok(savedSong);
+            Song song = songMapper.toEntity(musicCreationDto);
+            Song savedSong = songService.saveSong(song);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(songMapper.toDto(savedSong));
 
         } catch (Exception e) {
-            // ✅ Log error and return 500 response
-            System.err.println("❌ Error saving song: " + e.getMessage());
-            return ResponseEntity.internalServerError().body("Server Error: " + e.getMessage());
+            return ResponseEntity.internalServerError()
+                                 .body("❌ Error saving song: " + e.getMessage());
         }
     }
 
@@ -59,15 +60,15 @@ public class MusicController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSong(@PathVariable Long id) {
         try {
-            if (!songRepository.existsById(id)) {
-                return ResponseEntity.status(404).body("❌ Song not found.");
+            if (!songService.existsById(id)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("❌ Song not found.");
             }
-
-            songRepository.deleteById(id);
-            return ResponseEntity.ok("🗑 Song deleted successfully.");
-
+            songService.deleteById(id);
+            return ResponseEntity.ok("✅ Song deleted successfully.");
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("❌ Error deleting song: " + e.getMessage());
+            return ResponseEntity.internalServerError()
+                                 .body("❌ Error deleting song: " + e.getMessage());
         }
     }
 }

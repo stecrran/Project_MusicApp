@@ -20,7 +20,6 @@ public class ArtistDTO {
     }
 
     // Getters and Setters
-
     public String getName() {
         return name;
     }

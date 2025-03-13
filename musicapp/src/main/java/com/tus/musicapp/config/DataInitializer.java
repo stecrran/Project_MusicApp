@@ -20,11 +20,11 @@ public class DataInitializer implements CommandLineRunner {
     private PasswordEncoder passwordEncoder;
     
     private String declareAdmin = "admin";
-    private String declareNetworkEngineer = "network";
+    private String declareSpotifyUser = "network";
     
     @Override
     public void run(String... args) throws Exception {
-        // Check if an admin user already exists
+        // Check if an admin already exists
         if (userRepository.findByUsername(declareAdmin).isEmpty()) {
             User admin = new User();
             admin.setUsername(declareAdmin);
@@ -35,14 +35,14 @@ public class DataInitializer implements CommandLineRunner {
             userRepository.save(admin);
         }
 
-        if (userRepository.findByUsername(declareNetworkEngineer).isEmpty()) {
-            User networkEngineer = new User();
-            networkEngineer.setUsername(declareNetworkEngineer);
+        if (userRepository.findByUsername(declareSpotifyUser).isEmpty()) {
+            User spotifyUser = new User();
+            spotifyUser.setUsername(declareSpotifyUser);
             // Change the default password as needed for your environment
-            networkEngineer.setPassword(passwordEncoder.encode(declareNetworkEngineer));
-            networkEngineer.setRoles(Set.of(Role.ADMIN, Role.SPOTIFY_USER));
+            spotifyUser.setPassword(passwordEncoder.encode(declareSpotifyUser));
+            spotifyUser.setRoles(Set.of(Role.ADMIN, Role.SPOTIFY_USER));
             
-            userRepository.save(networkEngineer);
+            userRepository.save(spotifyUser);
         }
     }
 }

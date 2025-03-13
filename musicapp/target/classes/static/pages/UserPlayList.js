@@ -309,9 +309,9 @@ window.UserPlayList = {
 			}
 
 			this.saveSongToDatabase(this.selectedTrack);
-			// ✅ Close the modal before opening Spotify
+			// ✅ Close the modal before opening Spotify - using timeout instead of instant 'open Spotify url'
 			$("#playModal").modal("hide");
-			window.open(this.selectedTrack.spotifyUrl, "_blank");
+			//window.open(this.selectedTrack.spotifyUrl, "_blank");
 
 			setTimeout(() => {
 				window.open(this.selectedTrack.spotifyUrl, "_blank");
