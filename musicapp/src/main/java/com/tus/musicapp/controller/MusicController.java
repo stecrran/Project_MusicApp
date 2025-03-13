@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/music")
 public class MusicController {
@@ -13,6 +15,16 @@ public class MusicController {
     @Autowired
     private SongRepository songRepository;
 
+
+     // Get all songs from the database
+    @GetMapping
+    public ResponseEntity<List<Song>> getAllSongs() {
+        List<Song> songs = songRepository.findAll();
+        return ResponseEntity.ok(songs);
+    }
+
+
+    // Save a song (if it doesn't exist)
     @PostMapping("/save")
     public ResponseEntity<?> saveSong(@RequestBody Song song) {
         if (songRepository.existsBySpotifyId(song.getSpotifyId())) {
