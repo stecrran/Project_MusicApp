@@ -88,12 +88,15 @@ public class UserService {
 
         User userToDelete = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-
-        // **First, clear roles before deleting the user**
+        
+        /*
+         * FK Constraint on user_roles and users
+         * First - clear roles before deleting the user
+         */
         userToDelete.getRoles().clear();
         userRepository.save(userToDelete);
 
-        // **Then delete the user**
+        // Then - delete the user
         userRepository.delete(userToDelete);
     }
 

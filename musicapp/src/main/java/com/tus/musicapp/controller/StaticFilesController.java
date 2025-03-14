@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class StaticFilesController {
 
+	// Manage images
     @GetMapping("/carousel-images")
     public List<String> getCarouselImages() throws IOException {
         File folder = new ClassPathResource("static/assets/images/carousel/").getFile();

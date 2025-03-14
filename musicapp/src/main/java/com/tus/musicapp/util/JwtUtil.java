@@ -13,7 +13,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret:IfNOTFoundInPropertyMakeThisMySecretKey}")
+	@Value("${jwt.secret}")
     private String secret;
 
     public static final long JWT_EXPIRATION_MS = 3600000; // Token expires in 1 hour

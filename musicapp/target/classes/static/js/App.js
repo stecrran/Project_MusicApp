@@ -2,7 +2,7 @@ window.App = {
   data() {
     return {
       currentView: this.getInitialView(),
-      showSettingsModal: false, // ✅ Ensure modal is correctly managed
+      showSettingsModal: false, 
       userRole: this.extractUserRole(),
       newUser: {
         username: "",
@@ -164,7 +164,7 @@ window.App = {
               <button class="btn btn-outline-light mx-1" @click="setView('MusicCharts')">⭐ Charts</button>
               <button class="btn btn-outline-light mx-1" @click="setView('UserPlayList')">🎵 User PlayList</button>
 
-              <button class="btn btn-outline-light mx-1" v-if="isAdmin" @click="setView('MusicList')">🎼 PlayList</button>
+              <button class="btn btn-outline-light mx-1" @click="setView('MusicList')">🎼 PlayList</button>
               <button class="btn btn-outline-light mx-1" v-if="isAdmin" @click="toggleSettingsModal">⚙️ Settings</button>
 
               <button class="btn btn-danger mx-1" v-if="isAuthenticated" @click="logoutUser">

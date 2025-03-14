@@ -47,7 +47,7 @@ public class SpotifyService {
 
             String genre = genres.isEmpty() ? "Unknown" : String.join(", ", genres);
 
-            // Save to Database with seven parameters
+            // Save to Database with all seven parameters
             Song song = new Song(spotifyTrackId, trackName, artistName, albumName, genre, durationMs, spotifyUrl);
             return songRepository.save(song);
 

@@ -3,7 +3,7 @@ package com.tus.musicapp.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "music") // Ensure the table name matches your database
+@Table(name = "music") 
 public class Music {
 
 	@Id
@@ -22,7 +22,6 @@ public class Music {
 	@Column(nullable = false)
 	private String title;
 
-	// Constructors
 	public Music() {
 	}
 
@@ -33,7 +32,6 @@ public class Music {
 		this.title = title;
 	}
 
-	// Getters and Setters
 	public Long getId() {
 		return id;
 	}

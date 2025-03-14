@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-03-13T13:01:32+0000",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.38.0.v20240524-2033, environment: Java 21.0.6 (Eclipse Adoptium)"
+    date = "2025-03-14T18:49:54+0000",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.39.0.v20240820-0604, environment: Java 23.0.1 (Oracle Corporation)"
 )
 @Component
 public class SongMapperImpl implements SongMapper {

@@ -26,11 +26,25 @@ window.UserPlayList = {
 			}
 		}
 	},
+
 	mounted() {
-		$('#playModal').on('hidden.bs.modal', function() {
-			$(this).attr("aria-hidden", "true");
-		});
+	  $('#playModal').on('hidden.bs.modal', function() {
+	    $(this).attr("aria-hidden", "true").attr("inert", ""); // Make modal non-interactive
+
+	    // ✅ Move focus back to the last active element (e.g., Playlist table)
+	    setTimeout(() => {
+	      $('#playlistTable').focus(); // Ensure focus is on an interactive, visible element
+	    }, 50);
+	  });
+
+	  $('#playModal').on('shown.bs.modal', function() {
+	    $(this).removeAttr("aria-hidden").removeAttr("inert"); // Make modal interactive again
+
+	    // ✅ Move focus to the first interactive element inside modal
+	    $(this).find('.btn-close').focus();
+	  });
 	},
+	
 	methods: {
 		checkSpotifyAuth() {
 			const storedToken = localStorage.getItem("spotify_token");
@@ -201,7 +215,7 @@ window.UserPlayList = {
 									data: "spotifyUrl",
 									title: "Play",
 									render: (data, type, row) =>
-									    `<button class="btn btn-primary play-btn" data-url="${data}" 
+										`<button class="btn btn-primary play-btn" data-url="${data}" 
 									     data-track='${JSON.stringify(row).replace(/'/g, "&apos;").replace(/"/g, "&quot;")}'>🎵 Play</button>`
 
 								}
@@ -315,7 +329,7 @@ window.UserPlayList = {
 
 			setTimeout(() => {
 				window.open(this.selectedTrack.spotifyUrl, "_blank");
-			}, 300); 
+			}, 300);
 		}
 	},
 	template: `

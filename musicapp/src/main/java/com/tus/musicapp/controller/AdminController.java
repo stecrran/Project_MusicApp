@@ -45,11 +45,4 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-     // Update a user by ID
-     @PreAuthorize("hasAuthority('ADMIN')")
-     @PutMapping("/users/{id}")
-     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-         User user = userService.updateUser(id, updatedUser);
-         return ResponseEntity.ok(user);
-     }
 }

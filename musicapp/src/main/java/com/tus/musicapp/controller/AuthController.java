@@ -82,7 +82,6 @@ public class AuthController {
         })
         .collect(Collectors.toList());
         
-        // Use the three-argument constructor
         return ResponseEntity.ok(new AuthResponse(jwt, userDetails.getUsername(), roles));
     }
 

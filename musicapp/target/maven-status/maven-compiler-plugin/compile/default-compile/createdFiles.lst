@@ -13,7 +13,6 @@ com\tus\musicapp\controller\SpotifyController.class
 com\tus\musicapp\controller\AuthController.class
 com\tus\musicapp\service\UserService.class
 com\tus\musicapp\repos\MusicRepository.class
-com\tus\musicapp\util\JwtSecretGenerator.class
 com\tus\musicapp\config\DataInitializer.class
 com\tus\musicapp\service\MusicService.class
 com\tus\musicapp\config\AppConfig.class

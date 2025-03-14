@@ -3,7 +3,7 @@ package com.tus.musicapp.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "music") // Ensure this matches your MySQL table name
+@Table(name = "music") 
 public class Song {
 
     @Id
@@ -45,7 +45,6 @@ public class Song {
         this.spotifyUrl = spotifyUrl;
     }
 
-    // ✅ Getters & Setters
     public Long getId() {
         return id;
     }
