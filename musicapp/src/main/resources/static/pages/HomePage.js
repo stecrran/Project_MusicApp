@@ -67,7 +67,10 @@ window.HomePage = {
           
           <!-- Left Section: Text & Buttons -->
           <div class="col-md-6 text-center">
-            <h1 class="mb-4">Discover the Best Music and Concerts</h1>
+		  <h1 class="mb-4 fw-bold text-center" style="color: #0eed5d;">
+		    Welcome to uMusicApp <br><br>
+		    <span class="d-block">Discover the Best Music and Concerts</span>
+		  </h1>
             
             <div class="d-flex justify-content-center gap-3">
               <button class="btn btn-light btn-lg" @click="$emit('changeView', 'ConcertList')">

@@ -20,7 +20,7 @@ public class DataInitializer implements CommandLineRunner {
     private PasswordEncoder passwordEncoder;
     
     private String declareAdmin = "admin";
-    private String declareSpotifyUser = "network";
+    private String declareSpotifyUser = "spotify_user";
     
     @Override
     public void run(String... args) throws Exception {
@@ -40,7 +40,7 @@ public class DataInitializer implements CommandLineRunner {
             spotifyUser.setUsername(declareSpotifyUser);
             // Change the default password as needed for your environment
             spotifyUser.setPassword(passwordEncoder.encode(declareSpotifyUser));
-            spotifyUser.setRoles(Set.of(Role.ADMIN, Role.SPOTIFY_USER));
+            spotifyUser.setRoles(Set.of(Role.SPOTIFY_USER));
             
             userRepository.save(spotifyUser);
         }

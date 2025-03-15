@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-03-14T18:49:54+0000",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.39.0.v20240820-0604, environment: Java 23.0.1 (Oracle Corporation)"
+    date = "2025-03-15T02:50:34+0000",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (Oracle Corporation)"
 )
 @Component
 public class SongMapperImpl implements SongMapper {
@@ -22,14 +22,14 @@ public class SongMapperImpl implements SongMapper {
 
         SongDto songDto = new SongDto();
 
-        songDto.setAlbum( song.getAlbum() );
-        songDto.setArtist( song.getArtist() );
-        songDto.setDurationMs( song.getDurationMs() );
-        songDto.setGenre( song.getGenre() );
         songDto.setId( song.getId() );
         songDto.setSpotifyId( song.getSpotifyId() );
-        songDto.setSpotifyUrl( song.getSpotifyUrl() );
         songDto.setTitle( song.getTitle() );
+        songDto.setArtist( song.getArtist() );
+        songDto.setAlbum( song.getAlbum() );
+        songDto.setGenre( song.getGenre() );
+        songDto.setDurationMs( song.getDurationMs() );
+        songDto.setSpotifyUrl( song.getSpotifyUrl() );
 
         return songDto;
     }

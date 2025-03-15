@@ -16,7 +16,6 @@ com\tus\musicapp\repos\MusicRepository.class
 com\tus\musicapp\config\DataInitializer.class
 com\tus\musicapp\service\MusicService.class
 com\tus\musicapp\config\AppConfig.class
-com\tus\musicapp\dto\ArtistDTO.class
 com\tus\musicapp\config\JwtAuthenticationEntryPoint.class
 com\tus\musicapp\controller\GlobalExceptionHandler.class
 com\tus\musicapp\controller\AdminController.class

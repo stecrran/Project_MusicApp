@@ -345,7 +345,7 @@ window.UserPlayList = {
           </button>
       </div>
 
-      <table id="playlistTable" class="display table table-striped" style="width:100%">
+      <table id="playlistTable" class="display table table-striped" style="width:100%" v-if="accessToken">
           <thead>
               <tr>
                   <th>Cover</th>
@@ -355,7 +355,7 @@ window.UserPlayList = {
           </thead>
       </table>
 
-      <table id="trackTable" class="display table table-striped" style="width:100%" v-if="selectedPlaylist">
+      <table id="trackTable" class="display table table-striped" style="width:100%" v-if="selectedPlaylist && accessToken">
           <thead>
               <tr>
                   <th>Track Name</th>
