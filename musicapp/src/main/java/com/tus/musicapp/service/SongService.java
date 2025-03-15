@@ -4,7 +4,9 @@ import com.tus.musicapp.model.Song;
 import com.tus.musicapp.repos.SongRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SongService {
@@ -38,4 +40,11 @@ public class SongService {
     public boolean existsById(Long id) {
         return songRepository.existsById(id);
     }
+    
+    public Map<String, Long> getGenreCount() {
+        return songRepository.findAll()
+            .stream()
+            .collect(Collectors.groupingBy(Song::getGenre, Collectors.counting()));
+    }
+    
 }

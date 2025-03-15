@@ -248,67 +248,61 @@ window.UserPlayList = {
 			});
 		},
 
-		async fetchArtistGenre(artistId) {
-			if (!artistId) {
-				console.error("❌ Missing artistId. Cannot fetch genre.");
-				return "Unknown";
-			}
+		fetchArtistGenre(artistId) {
+		    if (!artistId) {
+		        console.error("❌ Missing artistId. Cannot fetch genre.");
+		        return Promise.resolve("Unknown");
+		    }
 
-			const url = `https://api.spotify.com/v1/artists/${artistId}`;
-			console.log("🎵 Fetching genre for artist ID:", artistId);
+		    console.log("🎵 Fetching genre for artist ID:", artistId);
 
-			const response = await fetch(url, {
-				headers: { "Authorization": `Bearer ${this.accessToken}` }
-			});
-
-			if (response.ok) {
-				const artistData = await response.json();
-				console.log("✅ Received artist data:", artistData);
-				return artistData.genres.length > 0 ? artistData.genres.join(", ") : "Unknown";
-			} else {
-				const errorText = await response.text();
-				console.error("❌ Failed to fetch artist genre:", response.status, errorText);
-				return "Unknown";
-			}
+		    return $.ajax({
+		        url: `https://api.spotify.com/v1/artists/${artistId}`,
+		        type: "GET",
+		        headers: {
+		            "Authorization": `Bearer ${this.accessToken}`
+		        }
+		    }).then(response => {
+		        console.log("✅ Received artist data:", response);
+		        return response.genres.length > 0 ? response.genres.join(", ") : "Unknown";
+		    }).fail((xhr) => {
+		        console.error("❌ Failed to fetch artist genre:", xhr.responseText);
+		        return "Unknown";
+		    });
 		},
 
-		async saveSongToDatabase(track) {
-			console.log("💾 Fetching genre for artist:", track.artist);
+		saveSongToDatabase(track) {
+		    console.log("💾 Fetching genre for artist:", track.artist);
 
-			if (!track.artistId) {
-				console.warn("⚠️ No artistId found. Skipping genre fetch.");
-				track.genre = "Unknown";
-			} else {
-				track.genre = await this.fetchArtistGenre(track.artistId);
-			}
+		    const genrePromise = track.artistId ? this.fetchArtistGenre(track.artistId) : Promise.resolve("Unknown");
 
-			console.log("💾 Saving song with genre:", track.genre);
+		    genrePromise.then((genre) => {
+		        track.genre = genre;
+		        console.log("💾 Saving song with genre:", track.genre);
 
-			fetch("/api/music/save", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${localStorage.getItem("jwt")}`
-				},
-				body: JSON.stringify({
-					spotifyId: track.id,
-					title: track.name,
-					artist: track.artist,
-					album: track.album,
-					genre: track.genre, // ✅ Now correctly includes the fetched genre
-					durationMs: track.durationMs || 0,
-					spotifyUrl: track.spotifyUrl
-				})
-			})
-				.then(response => response.json())
-				.then(data => {
-					console.log("✅ Song saved successfully:", data);
-				})
-				.catch(error => {
-					console.error("❌ Failed to save song:", error);
-				});
-		}
-		,
+		        $.ajax({
+		            url: "/api/music/save",
+		            type: "POST",
+		            contentType: "application/json",
+		            headers: {
+		                "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+		            },
+		            data: JSON.stringify({
+		                spotifyId: track.id,
+		                title: track.name,
+		                artist: track.artist,
+		                album: track.album,
+		                genre: track.genre, // ✅ Now correctly includes the fetched genre
+		                durationMs: track.durationMs || 0,
+		                spotifyUrl: track.spotifyUrl
+		            })
+		        }).done((response) => {
+		            console.log("✅ Song saved successfully:", response);
+		        }).fail((xhr) => {
+		            console.error("❌ Failed to save song:", xhr.responseText);
+		        });
+		    });
+		},
 
 		openPlayModal(track) {
 			this.selectedTrack = track;

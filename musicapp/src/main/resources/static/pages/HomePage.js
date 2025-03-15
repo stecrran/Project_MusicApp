@@ -9,7 +9,7 @@ window.HomePage = {
     this.loadImages();
   },
   methods: {
-    async loadImages() {
+    loadImages() {
       console.log("🔄 Fetching carousel images...");
 
       const token = localStorage.getItem("jwt"); // ✅ Get JWT token from localStorage
@@ -19,38 +19,30 @@ window.HomePage = {
         return;
       }
 
-      try {
-        const response = await fetch("http://localhost:9091/api/carousel-images", {
-          method: "GET",
-          headers: {
-            "Authorization": `Bearer ${token}`, // ✅ Send JWT token
-            "Content-Type": "application/json"
-          }
-        });
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error("❌ Unauthorized. Please log in again.");
-          }
-          if (response.status === 403) {
-            throw new Error("❌ Access forbidden.");
-          }
-          throw new Error(`❌ API error: ${response.status}`);
+      // ✅ Use jQuery AJAX
+      $.ajax({
+        url: "http://localhost:9091/api/carousel-images",
+        type: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`
         }
+      })
+      .done((response) => {
+        console.log("✅ Carousel images fetched:", response);
 
-        let images = await response.json();
-
-        // ✅ Shuffle images randomly before assigning them
-        images = this.shuffleArray(images);
-
-        this.images = images;
-        console.log("✅ Carousel images randomized & loaded:", this.images);
-      } catch (error) {
-        console.error("❌ Error loading images:", error);
-        this.error = error.message;
-      }
+        // ✅ Shuffle images before setting them
+        this.images = this.shuffleArray(response);
+      })
+      .fail((xhr) => {
+        let errorMessage = "❌ API request failed.";
+        if (xhr.status === 401) errorMessage = "❌ Unauthorized. Please log in again.";
+        if (xhr.status === 403) errorMessage = "❌ Access forbidden.";
+        
+        console.error(errorMessage, xhr.responseText);
+        this.error = errorMessage;
+      });
     },
-
+	
     // 🎲 Fisher-Yates Shuffle Algorithm to Randomize Images
     shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {

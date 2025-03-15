@@ -94,75 +94,78 @@ window.App = {
 			window.location.reload();
 		},
 		
-		async fetchUsers() {
-			if (!this.isAdmin) return;
-			try {
-				const token = localStorage.getItem("jwt");
-				const response = await fetch("/api/admin/users", {
-					method: "GET",
-					headers: { "Authorization": `Bearer ${token}` }
-				});
-				if (!response.ok) throw new Error("Failed to load users.");
-				this.users = await response.json();
-			} catch (error) {
-				console.error("❌ Error loading users:", error);
-			}
+		fetchUsers() {
+		    if (!this.isAdmin) return;
+		    const token = localStorage.getItem("jwt");
+
+		    $.ajax({
+		        url: "/api/admin/users",
+		        type: "GET",
+		        headers: { Authorization: `Bearer ${token}` },
+		        success: (data) => {
+		            this.users = data;
+		        },
+		        error: (xhr) => {
+		            console.error("❌ Error loading users:", xhr.responseText);
+		        }
+		    });
 		},
 		
-		async deleteUser(userId, username) {
-			if (username === "Admin") {
-				alert("❌ You cannot delete the 'Admin' user!");
-				return;
-			}
-			if (!confirm("Are you sure you want to delete this user?")) return;
-			try {
-				const token = localStorage.getItem("jwt");
-				const response = await fetch(`/api/admin/users/${userId}`, {
-					method: "DELETE",
-					headers: { "Authorization": `Bearer ${token}` }
-				});
-				if (response.ok) {
-					this.users = this.users.filter(user => user.id !== userId);
-					alert(`✅ User '${username}' deleted successfully.`);
-				} else {
-					throw new Error("Failed to delete user.");
-				}
-			} catch (error) {
-				alert(`❌ Error deleting user: ${error.message}`);
-				console.error("❌ Error deleting user:", error);
-			}
+		deleteUser(userId, username) {
+		    if (username === "Admin") {
+		        alert("❌ You cannot delete the 'Admin' user!");
+		        return;
+		    }
+		    if (!confirm("Are you sure you want to delete this user?")) return;
+		    
+		    const token = localStorage.getItem("jwt");
+
+		    $.ajax({
+		        url: `/api/admin/users/${userId}`,
+		        type: "DELETE",
+		        headers: { Authorization: `Bearer ${token}` },
+		        success: () => {
+		            this.users = this.users.filter(user => user.id !== userId);
+		            alert(`✅ User '${username}' deleted successfully.`);
+		        },
+		        error: (xhr) => {
+		            alert(`❌ Error deleting user: ${xhr.responseText}`);
+		            console.error("❌ Error deleting user:", xhr.responseText);
+		        }
+		    });
 		},
 		
-		async registerUser() {
-			try {
-				const token = localStorage.getItem("jwt");
-				if (!token) throw new Error("Unauthorized: No token found.");
-				const response = await fetch("/api/admin/register", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						"Authorization": `Bearer ${token}`
-					},
-					body: JSON.stringify({
-						username: this.newUser.username,
-						password: this.newUser.password,
-						roles: this.newUser.roles
-					})
-				});
-				if (!response.ok) {
-					if (response.status === 409) {
-						throw new Error("User already exists. Enter new username.");
-					}
-					const errorData = await response.json().catch(() => { });
-					throw new Error(errorData?.message || "Registration failed.");
-				}
-				this.registrationMessage = "✅ User registered successfully!";
-				this.newUser = { username: "", password: "", roles: [] };
-				this.fetchUsers();
-			} catch (error) {
-				console.error("❌ Registration Error:", error);
-				this.registrationMessage = `❌ ${error.message}`;
-			}
+
+		registerUser() {
+		    const token = localStorage.getItem("jwt");
+		    if (!token) {
+		        alert("❌ Unauthorized: No token found.");
+		        return;
+		    }
+
+		    $.ajax({
+		        url: "/api/admin/register",
+		        type: "POST",
+		        contentType: "application/json",
+		        headers: { Authorization: `Bearer ${token}` },
+		        data: JSON.stringify({
+		            username: this.newUser.username,
+		            password: this.newUser.password,
+		            roles: this.newUser.roles
+		        }),
+		        success: () => {
+		            this.registrationMessage = "✅ User registered successfully!";
+		            this.newUser = { username: "", password: "", roles: [] };
+		            this.fetchUsers();
+		        },
+		        error: (xhr) => {
+		            if (xhr.status === 409) {
+		                alert("❌ User already exists. Enter new username.");
+		            } else {
+		                alert(`❌ Registration failed: ${xhr.responseText}`);
+		            }
+		        }
+		    });
 		},
 		
 		toggleSettingsModal() {

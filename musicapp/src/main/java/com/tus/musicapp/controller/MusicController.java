@@ -4,6 +4,7 @@ import com.tus.musicapp.dto.MusicCreationDto;
 import com.tus.musicapp.dto.SongDto;
 import com.tus.musicapp.mapper.SongMapper;
 import com.tus.musicapp.model.Song;
+import com.tus.musicapp.repos.SongRepository;
 import com.tus.musicapp.service.SongService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.*;
+import java.util.function.Function;
 
 @RestController
 @RequestMapping("/api/music")
@@ -19,11 +23,14 @@ public class MusicController {
 
     private final SongService songService;
     private final SongMapper songMapper;
+    private final SongRepository songRepository;
 
-    public MusicController(SongService songService, SongMapper songMapper) {
+    public MusicController(SongService songService, SongMapper songMapper, SongRepository songRepository) {
         this.songService = songService;
         this.songMapper = songMapper;
+        this.songRepository = songRepository;
     }
+
 
     // ✅ Get all songs using DTOs
     @GetMapping
@@ -71,4 +78,22 @@ public class MusicController {
                                  .body("❌ Error deleting song: " + e.getMessage());
         }
     }
+    
+    // ✅ Get Genre Count (using 'SongService')
+    @GetMapping("/genre-count")
+    public ResponseEntity<Map<String, Long>> getGenreCount() {
+        List<Song> songs = songRepository.findAll();
+
+        // ✅ Handle nulls, split genres, and count occurrences
+        Map<String, Long> genreCount = songs.stream()
+            .map(Song::getGenre)  // Extract genre string
+            .filter(Objects::nonNull) // Avoid NullPointerException
+            .flatMap(genre -> Arrays.stream(genre.split(",\\s*"))) // ✅ Ensure correct Stream<String>
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        return ResponseEntity.ok(genreCount);
+    }
+
+
+
 }
