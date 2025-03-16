@@ -1,6 +1,9 @@
 package com.tus.musicapp.dto;
 
 import lombok.Data;
+
+import java.util.Set;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -27,4 +30,6 @@ public class MusicCreationDto {
 
     @NotBlank(message = "Spotify URL is required")
     private String spotifyUrl;
+    
+    private Set<String> usernames; // ✅ List of users who will be associated with this music
 }

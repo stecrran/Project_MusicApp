@@ -104,6 +104,7 @@ window.App = {
 		        headers: { Authorization: `Bearer ${token}` },
 		        success: (data) => {
 		            this.users = data;
+					this.$forceUpdate(); // Ensure Vue updates the UI
 		        },
 		        error: (xhr) => {
 		            console.error("❌ Error loading users:", xhr.responseText);
@@ -171,7 +172,10 @@ window.App = {
 		toggleSettingsModal() {
 			console.log("⚙️ Toggling Settings Modal...");
 			this.showSettingsModal = !this.showSettingsModal;
-			if (this.showSettingsModal) this.fetchUsers();
+			if (this.showSettingsModal) {
+			    this.fetchUsers();
+			    this.$nextTick(() => this.$forceUpdate()); // Ensure the modal updates
+			}
 		},
 		
 		startCarousel() {
@@ -253,12 +257,15 @@ window.App = {
               </form>
               <p v-if="registrationMessage" class="mt-3">{{ registrationMessage }}</p>
               <h5 class="mt-4">📋 Existing Users</h5>
-              <ul class="list-group">
-                <li v-for="user in users" :key="user.id" class="list-group-item d-flex justify-content-between align-items-center">
-                  {{ user.username }} ({{ user.roles.join(\", \") }})
-                  <button class="btn btn-sm btn-danger" @click="deleteUser(user.id, user.username)">❌ Delete</button>
-                </li>
-              </ul>
+			  <ul class="list-group">
+			    <li v-if="users.length === 0" class="list-group-item text-muted">
+			      No users found.
+			    </li>
+			    <li v-for="user in users" :key="user.id" class="list-group-item d-flex justify-content-between align-items-center">
+			      {{ user.username }} ({{ user.roles.join(", ") }})
+			      <button class="btn btn-sm btn-danger" @click="deleteUser(user.id, user.username)">❌ Delete</button>
+			    </li>
+			  </ul>
             </div>
           </div>
         </div>

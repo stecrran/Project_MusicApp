@@ -1,14 +1,24 @@
 package com.tus.musicapp.model;
 
+import java.util.Set;
+
 import javax.persistence.*;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
 @Table(name = "music") 
 public class Music {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+    @Column(nullable = false, unique = true)
+    private String spotifyId; 
 
 	@Column(nullable = false)
 	private String album;
@@ -21,54 +31,27 @@ public class Music {
 
 	@Column(nullable = false)
 	private String title;
+	
+    @Column(nullable = false)
+    private int durationMs;
+
+    @Column(nullable = false)
+    private String spotifyUrl;
+	
+    @ManyToMany(mappedBy = "musicCollection")
+    private Set<User> users; // Users who have this song in their collection
 
 	public Music() {
 	}
 
-	public Music(String album, String artist, String genre, String title) {
-		this.album = album;
-		this.artist = artist;
-		this.genre = genre;
-		this.title = title;
-	}
+    public Music(String spotifyId, String title, String artist, String album, String genre, int durationMs, String spotifyUrl) {
+        this.spotifyId = spotifyId;
+        this.title = title;
+        this.artist = artist;
+        this.album = album;
+        this.genre = genre;
+        this.durationMs = durationMs;
+        this.spotifyUrl = spotifyUrl;
+    }
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getAlbum() {
-		return album;
-	}
-
-	public void setAlbum(String album) {
-		this.album = album;
-	}
-
-	public String getArtist() {
-		return artist;
-	}
-
-	public void setArtist(String artist) {
-		this.artist = artist;
-	}
-
-	public String getGenre() {
-		return genre;
-	}
-
-	public void setGenre(String genre) {
-		this.genre = genre;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
 }

@@ -1,7 +1,17 @@
 package com.tus.musicapp.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "music") 
 public class Song {
@@ -30,6 +40,10 @@ public class Song {
 
     @Column(nullable = false)
     private String spotifyUrl;
+    
+    @ManyToMany(mappedBy = "songCollection", fetch = FetchType.LAZY)
+    @JsonBackReference  // ✅ Prevents infinite recursion
+    private Set<User> users;
 
     // ✅ Default Constructor (Required by JPA)
     public Song() {}
@@ -45,63 +59,4 @@ public class Song {
         this.spotifyUrl = spotifyUrl;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getSpotifyId() {
-        return spotifyId;
-    }
-
-    public void setSpotifyId(String spotifyId) {
-        this.spotifyId = spotifyId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-    public String getAlbum() {
-        return album;
-    }
-
-    public void setAlbum(String album) {
-        this.album = album;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public int getDurationMs() {
-        return durationMs;
-    }
-
-    public void setDurationMs(int durationMs) {
-        this.durationMs = durationMs;
-    }
-
-    public String getSpotifyUrl() {
-        return spotifyUrl;
-    }
-
-    public void setSpotifyUrl(String spotifyUrl) {
-        this.spotifyUrl = spotifyUrl;
-    }
 }

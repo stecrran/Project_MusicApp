@@ -5,6 +5,7 @@ com\tus\musicapp\model\User.class
 com\tus\musicapp\service\SongService.class
 com\tus\musicapp\MusicApplication.class
 com\tus\musicapp\model\Music.class
+com\tus\musicapp\config\MapperConfig.class
 com\tus\musicapp\controller\MusicController.class
 com\tus\musicapp\util\JwtUtil.class
 com\tus\musicapp\repos\UserRepository.class
