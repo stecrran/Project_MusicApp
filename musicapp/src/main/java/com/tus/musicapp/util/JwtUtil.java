@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.*;
 import java.util.function.Function;
 
+// utility class for generating, validating, and extracting data from JWT
 @Component
 public class JwtUtil {
 
@@ -18,11 +19,11 @@ public class JwtUtil {
 
     public static final long JWT_EXPIRATION_MS = 3600000; // Token expires in 1 hour
 
-    // ✅ Generate JWT Token with roles properly encoded
+    // Generate JWT Token with roles properly encoded
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
 
-        // ✅ Convert authorities to a list of strings (fixing empty roles issue)
+        // Convert authorities to a list of strings (fixing empty roles issue)
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();

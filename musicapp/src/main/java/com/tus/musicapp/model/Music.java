@@ -7,6 +7,7 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+// JPA entity representing a music object stored in the database
 @Entity
 @Getter
 @Setter

@@ -1,4 +1,4 @@
-// ConcertList.js
+// ConcertList.js - Vue.js component for displaying upcoming concerts from Ticketmaster API
 window.ConcertList = {
   data: function () {
     return {
@@ -21,6 +21,7 @@ window.ConcertList = {
     };
   },
   computed: {
+	// Computes the full name of the selected country for display
     selectedCountryName: function () {
       var selected = this.countries.find(c => c.code === this.selectedCountry);
       return selected ? selected.name : '';
@@ -30,16 +31,17 @@ window.ConcertList = {
     this.fetchConcerts();
   },
   methods: {
+	// Fetches concerts from Ticketmaster API based on selected country
     fetchConcerts: function () {
       var self = this;
-      self.loading = true;
-      self.error = '';
-      self.concerts = [];
+      self.loading = true; // Show loading indicator
+      self.error = ''; // Clear previous errors
+      self.concerts = []; // Reset concerts list
 
       axios.get('https://app.ticketmaster.com/discovery/v2/events.json', {
         params: {
-          countryCode: self.selectedCountry,
-          apikey: 'FC5tck5lgQjuG3BQRByMyC4gU9TGdvz9'
+          countryCode: self.selectedCountry, // API parameter to filter by country
+          apikey: 'FC5tck5lgQjuG3BQRByMyC4gU9TGdvz9' // Ticketmaster API key for authentication
         }
       })
       .then(function (response) {
@@ -47,10 +49,10 @@ window.ConcertList = {
       })
       .catch(function (error) {
         console.error('Failed to load concerts:', error);
-        self.error = 'Failed to load concerts. Please try again later.';
+        self.error = 'Failed to load concerts. Please try again later.'; 
       })
       .finally(function () {
-        self.loading = false;
+        self.loading = false; // Hide loading indicator after API call completes
       });
     },
     getImageUrl: function (concert) {
@@ -59,6 +61,7 @@ window.ConcertList = {
       });
       return image ? image.url : '';
     },
+	// Formats a date string into a readable format
     getDate: function (dateStr) {
       var date = new Date(dateStr);
       return date.toLocaleDateString(undefined, {
@@ -67,6 +70,7 @@ window.ConcertList = {
         day: 'numeric'
       });
     },
+	// Triggers concert fetching when the user selects a different count
     onCountryChange: function () {
       this.fetchConcerts();
     }

@@ -25,7 +25,7 @@ public class StaticFilesController {
         }
 
         return Arrays.stream(folder.listFiles())
-                .filter(file -> file.isFile() && file.getName().matches(".*\\.(jpg|jpeg|png|gif)$")) // Only images
+                .filter(file -> file.isFile() && file.getName().matches(".*\\.(jpg|jpeg|png|gif)$")) // Allowed image types
                 .map(file -> "/assets/images/carousel/" + file.getName()) // Convert to URL path
                 .collect(Collectors.toList());
     }

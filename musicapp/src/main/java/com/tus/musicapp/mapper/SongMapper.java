@@ -13,6 +13,10 @@ import com.tus.musicapp.dto.SongDto;
 import com.tus.musicapp.model.Song;
 import com.tus.musicapp.model.User;
 
+/*
+ * Interface using MapStruct-based mapper. Used for converting between different representations 
+ * of a song entity in the application. It helps in mapping between database entities and DTOs
+ */
 @Mapper(componentModel = "spring")
 public interface SongMapper {
 
@@ -21,7 +25,7 @@ public interface SongMapper {
 
     Song toEntity(MusicCreationDto musicCreationDto);
     
-    // ✅ Custom mapping method to convert Set<User> to List<String> (usernames)
+    // Custom mapping method to convert Set<User> to List<String> (usernames)
     @Named("mapUsersToUsernames")
     default List<String> mapUsersToUsernames(Set<User> users) {
         if (users == null) {

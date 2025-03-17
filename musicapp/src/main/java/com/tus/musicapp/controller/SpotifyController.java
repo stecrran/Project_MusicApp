@@ -13,13 +13,13 @@ public class SpotifyController {
 
     private final SongRepository songRepository;
 
-    // ✅ Constructor Injection (Best Practice)
+    // Constructor Injection
     @Autowired
     public SpotifyController(SongRepository songRepository) {
         this.songRepository = songRepository;
     }
 
-    // ✅ Fetch all saved songs from the database
+    // Fetch all saved songs from the database
     @GetMapping("/all")
     public List<Song> getAllSongs() {
         return songRepository.findAll();

@@ -1,13 +1,14 @@
+// Vue.js component for displaying and managing the user's playlist
 window.MusicList = {
 	data() {
 		return {
-			musicList: [],
-			genreData: {},
-			genreChart: null,
-			genreUserData: {}, 
-			genreUserChart: null, 
-			jwtToken: localStorage.getItem("jwt"),
-			showChart: true
+			musicList: [], // Stores the fetched music list
+			genreData: {}, // Stores genre distribution data
+			genreChart: null, // Holds the genre chart instance
+			genreUserData: {}, // Stores genre vs. users data
+			genreUserChart: null, // Holds the genre-user chart instance
+			jwtToken: localStorage.getItem("jwt"), // Retrieves the JWT token from local storag
+			showChart: true // Controls the visibility of the genre chart
 		};
 	},
 
@@ -17,8 +18,8 @@ window.MusicList = {
 	},
 
 	methods: {
+		// Fetches all music tracks from the backend API
 		fetchMusic() {
-			console.log("🎵 Fetching music...");
 
 			$.ajax({
 				url: "http://localhost:9091/api/music",
@@ -29,16 +30,17 @@ window.MusicList = {
 				success: (data) => {
 					    this.musicList = data.map(song => ({
 					        ...song,
-					        users: song.users || [] // ✅ Ensure users array exists
+					        users: song.users || [] // Ensure users array exists
 					    }));
 					    this.refreshMusicTable();
 					},
 				error: (xhr) => {
-					console.error("❌ Error fetching music:", xhr.responseText);
+					console.error("Error fetching music:", xhr.responseText);
 				}
 			});
 		},
 
+		// Fetches genre distribution data from the API
 		fetchGenreCount() {
 			if (!this.showChart) return;
 
@@ -52,9 +54,9 @@ window.MusicList = {
 					this.genreData = data;
 
 					if (Object.keys(this.genreData).length === 0) {
-						this.clearGenreChart(); // ✅ Clear chart if no data
+						this.clearGenreChart(); // Clear chart if no data
 					} else {
-						this.renderGenreChart(); // ✅ Render updated chart
+						this.renderGenreChart(); // Render updated chart
 					}
 				},
 				error: (xhr) => {
@@ -63,13 +65,14 @@ window.MusicList = {
 			});
 		},
 
+		// Renders the genre distribution chart
 		renderGenreChart() {
-		  if (!this.showChart) return; // ✅ Do not render if chart is hidden
+		  if (!this.showChart) return; // Do not render if chart is hidden
 
 		  this.$nextTick(() => {
 		    const canvas = document.getElementById("genreChart");
 		    if (!canvas) {
-		      console.warn("⚠️ Chart canvas not found. Skipping chart rendering.");
+		      console.warn("Chart canvas not found. Skipping chart rendering.");
 		      return;
 		    }
 
@@ -81,8 +84,8 @@ window.MusicList = {
 		    }
 
 		    if (Object.keys(this.genreData).length === 0) {
-		      console.log("⚠️ No genre data. Clearing chart...");
-		      this.genreChart = null; // ✅ Remove reference to prevent re-use
+		      console.log("No genre data. Clearing chart...");
+		      this.genreChart = null; // Remove reference to prevent re-use
 		      return;
 		    }
 
@@ -113,16 +116,16 @@ window.MusicList = {
 		  });
 		},
 
+		// Clears the genre chart when there is no data
 		clearGenreChart() {
 			if (this.genreChart) {
 				this.genreChart.destroy();
 				this.genreChart = null;
-				console.log("🗑 Chart cleared.");
 			}
 		},
 		
+		// Fetches the genre vs. users data from the API
 		fetchGenreUserCount() {
-		    console.log("📊 Fetching Genre vs. Users data...");
 
 		    $.ajax({
 		        url: "http://localhost:9091/api/music/genre-users",
@@ -131,10 +134,10 @@ window.MusicList = {
 		            Authorization: `Bearer ${this.jwtToken}`
 		        },
 		        success: (data) => {
-		            console.log("✅ Received Genre vs. Users Data:", data);
+		            console.log("Received Genre vs. Users Data:", data);
 
 		            if (Object.keys(data).length === 0) {
-		                console.warn("⚠️ No data available for Genre vs. Users.");
+		                console.warn("No data available for Genre vs. Users.");
 		                return;
 		            }
 
@@ -142,34 +145,33 @@ window.MusicList = {
 		            this.renderGenreUserChart();
 		        },
 		        error: (xhr) => {
-		            console.error("❌ Error fetching genre-user count:", xhr.responseText);
+		            console.error("Error fetching genre-user count:", xhr.responseText);
 		        }
 		    });
 		},
 
+		// Renders the Genre vs. Users chart
 		renderGenreUserChart() {
 		    this.$nextTick(() => {
 		        const canvas = document.getElementById("genreUserChart");
 		        if (!canvas) {
-		            console.warn("⚠️ Chart canvas not found. Skipping chart rendering.");
+		            console.warn("Chart canvas not found. Skipping chart rendering.");
 		            return;
 		        }
 		
 		        const ctx = canvas.getContext("2d");
 		
-		        // ✅ Destroy the previous chart if it exists
+		        // Destroy the previous chart if it exists
 		        if (this.genreUserChart) {
 		            this.genreUserChart.destroy();
-		            console.log("🗑 Destroyed old Genre vs. Users Chart.");
 		        }
 		
 		        if (!this.genreUserData || Object.keys(this.genreUserData).length === 0) {
-		            console.warn("⚠️ No genre-user data available.");
+		            console.warn("No genre-user data available.");
 		            return;
 		        }
 		
-		        console.log("📊 Rendering Genre vs. Users Chart...");
-		
+		       		
 		        this.genreUserChart = new Chart(ctx, {
 		            type: "bar",
 		            data: {
@@ -194,17 +196,16 @@ window.MusicList = {
 		                }
 		            }
 		        });
-		
-		        console.log("✅ Genre vs. Users Chart rendered successfully.");
+;
 		    });
 		},
 
+		// Removes a song from the database
 		removeSong(songId) {
 			if (!confirm("Are you sure you want to delete this song?")) {
 				return;
 			}
 
-			console.log(`🗑 Removing song ID: ${songId}...`);
 
 			$.ajax({
 				url: `http://localhost:9091/api/music/${songId}`,
@@ -215,15 +216,16 @@ window.MusicList = {
 				success: () => {
 					console.log(`✅ Song ID: ${songId} deleted.`);
 					this.musicList = this.musicList.filter(song => song.id !== songId);
-					this.fetchGenreCount(); // ✅ Update chart before table refresh
+					this.fetchGenreCount(); // Update chart before table refresh
 					this.refreshMusicTable();
 				},
 				error: (xhr) => {
-					console.error("❌ Error deleting song:", xhr.responseText);
+					console.error("Error deleting song:", xhr.responseText);
 				}
 			});
 		},
 
+		// Refreshes the DataTable when new music data is fetched
 		refreshMusicTable() {
 			this.$nextTick(() => {
 				if ($.fn.DataTable.isDataTable("#musicTable")) {
@@ -240,7 +242,7 @@ window.MusicList = {
 						{ 
 						    data: "users",
 						    title: "Users",
-						    render: (data) => data ? data.join(", ") : "None" // ✅ Show users
+						    render: (data) => data ? data.join(", ") : "None" // Show users
 						},
 						{
 							data: "id",
@@ -263,16 +265,17 @@ window.MusicList = {
 			});
 		},
 
+		// Toggles the visibility of the genre chart
 		toggleChart() {
 		  this.showChart = !this.showChart;
-		  console.log("📊 Chart visibility toggled:", this.showChart);
+		  console.log("Chart visibility toggled:", this.showChart);
 
 		  if (this.showChart) {
 		    this.$nextTick(() => {
-		      this.fetchGenreCount(); // ✅ Re-fetch data **after** Vue updates the DOM
+		      this.fetchGenreCount(); // Re-fetch data **after** Vue updates the DOM
 		    });
 		  } else {
-		    this.clearGenreChart(); // ✅ Clear chart when hiding
+		    this.clearGenreChart(); // Clear chart when hiding
 		  }
 		}
 
@@ -295,14 +298,14 @@ window.MusicList = {
       <tbody></tbody>
     </table>
 	
-	<!-- ✅ Button to Fetch & Render Chart -->
+	<!-- Button to Fetch & Render Chart -->
 	<div class="mt-4">
 	    <button class="btn btn-primary" @click="fetchGenreUserCount">
 	        Show Genre vs. Users Chart
 	    </button>
 	</div>
 
-	<!-- ✅ Chart Container -->
+	<!-- Chart Container -->
 	<div class="mt-3">
 	    <h3>📊 Genre vs. Users</h3>
 	    <canvas id="genreUserChart"></canvas>
@@ -310,14 +313,14 @@ window.MusicList = {
 
 
 	
-	<!-- ✅ Chart Toggle Button -->
+	<!-- Chart Toggle Button -->
 	<div class="mt-4">
 	  <button class="btn btn-primary" @click="toggleChart">
 	    {{ showChart ? "Hide Chart" : "Show Chart" }}
 	  </button>
 	</div>
 
-    <!-- ✅ Chart Section -->
+    <!-- Chart Section -->
     <div v-if="showChart" class="mt-3">
       <h3>📊 Genre Distribution</h3>
       <canvas id="genreChart"></canvas>

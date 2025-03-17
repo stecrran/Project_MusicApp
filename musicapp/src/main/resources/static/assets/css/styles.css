@@ -1,4 +1,4 @@
-/* 🎨 General Page Styles */
+/* General Page Styles */
 body {
 	background-color: #F0F2F5;
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -6,10 +6,10 @@ body {
 	margin: 0;
 	padding: 0;
 	line-height: 1.6;
-	padding-top: 100px; /* ✅ Adjusted to match navbar height */
+	padding-top: 100px; /* Adjusted to match navbar height */
 }
 
-/* ✅ Login Page Background */
+/* Login Page Background */
 .login-container {
     background: url('/assets/images/concert.jpg') no-repeat center center fixed;
     background-size: cover;
@@ -26,7 +26,7 @@ body {
     margin: 0 auto; 
 }
 
-/* ✅ Modern Glassmorphism Login Card */
+/* Modern Glassmorphism Login Card */
 .login-card {
     width: 400px;
     max-width: 90%;
@@ -39,15 +39,15 @@ body {
 
 
 
-/* ✅ Fixed Navbar Logo */
+/* Fixed Navbar Logo */
 .logo-fixed {
-	height: 100px; /* ✅ Adjusted to fit inside navbar */
+	height: 100px; /* Adjusted to fit inside navbar */
 	width: auto;
 	position: relative;
 	object-fit: contain; /* Ensures no stretching */
 }
 
-/* 🎵 Navbar */
+/* Navbar */
 .navbar {
 	background-color: #1DB954 !important; /* Spotify Green */
 	background-image: url("/assets/images/navbar-bg.png");
@@ -59,14 +59,14 @@ body {
 	top: 0;
 	left: 0;
 	width: 100%;
-	height: 100px; /* ✅ Fixed height */
+	height: 100px; /* Fixed height */
 	z-index: 1000; /* Keeps it on top */
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 }
 
-/* ✅ Navbar Fixes */
+/* Navbar Fixes */
 .navbar-brand {
 	display: flex;
 	align-items: center;
@@ -76,7 +76,7 @@ body {
 	margin-left: 10px;
 }
 
-/* ✅ Burger Icon Fix (No White Background) */
+/* Burger Icon Fix (No White Background) */
 .navbar-toggler {
 	border: none !important;
 	background: none !important; /* Removes background */
@@ -86,13 +86,13 @@ body {
 	box-shadow: none !important; /* Removes outline */
 }
 
-/* ✅ Fix Burger Menu (Dropdown Buttons) */
+/* Fix Burger Menu (Dropdown Buttons) */
 @media (max-width: 992px) {
 	.custom-dropdown {
 		text-align: right !important;
 		position: absolute;
 		right: 10px;
-		top: 100px; /* ✅ Ensures dropdown appears directly below navbar */
+		top: 100px; /* Ensures dropdown appears directly below navbar */
 		background: transparent !important; /* Removes white background */
 		box-shadow: none !important;
 		border-radius: 0;
@@ -116,7 +116,7 @@ body {
 	}
 }
 
-/* ✅ Navbar Buttons */
+/* Navbar Buttons */
 .navbar-nav .btn {
 	background-color: lightgreen !important;
 	color: black !important;
@@ -143,7 +143,7 @@ body {
 	transform: scale(1.05);
 }
 
-/* ✅ Ensure Consistent Button Sizes */
+/* Ensure Consistent Button Sizes */
 .btn {
 	border-radius: 8px;
 	padding: 10px 20px;
@@ -152,7 +152,7 @@ body {
 	transition: all 0.3s ease-in-out;
 }
 
-/* ✅ Gear Cog Settings Button */
+/* Gear Cog Settings Button */
 .navbar-nav .btn-settings {
 	background: none !important;
 	border: none;
@@ -166,7 +166,7 @@ body {
 	transform: scale(1.2);
 }
 
-/* 📌 Footer */
+/* Footer */
 footer {
 	margin-top: 50px;
 	padding: 25px 0;
@@ -176,7 +176,7 @@ footer {
 	font-size: 1rem;
 }
 
-/* ✅ Utility */
+/* Utility */
 .container {
 	max-width: 1140px;
 }
@@ -184,7 +184,7 @@ footer {
 	color: #6c757d !important;
 }
 
-/* ✅ Smooth Hover Effects */
+/* Smooth Hover Effects */
 button, .btn {
 	transition: all 0.3s ease-in-out;
 }
@@ -192,7 +192,7 @@ button:hover, .btn:hover {
 	transform: scale(1.05);
 }
 
-/* 🎠 Carousel */
+/* Carousel */
 .carousel-img {
   height: 320px; /* Fixed height */
   width: 100%; /* Keeps full width */

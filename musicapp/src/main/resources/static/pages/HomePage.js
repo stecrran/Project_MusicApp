@@ -1,10 +1,12 @@
+// HomePage.js - Vue.js component for the front page of uMusicApp
 window.HomePage = {
   data() {
     return {
-      images: [],
-      error: null
+      images: [], // Stores the list of images for the carousel
+      error: null // Stores error messages if API requests fail
     };
   },
+  // Automatically loads images when the component is created
   created() {
     this.loadImages();
   },
@@ -12,14 +14,14 @@ window.HomePage = {
     loadImages() {
       console.log("🔄 Fetching carousel images...");
 
-      const token = localStorage.getItem("jwt"); // ✅ Get JWT token from localStorage
+      const token = localStorage.getItem("jwt"); // Get JWT token from localStorage
       if (!token) {
         console.error("❌ No JWT token found. User not authenticated.");
         this.error = "Unauthorized. Please log in.";
         return;
       }
 
-      // ✅ Use jQuery AJAX
+      // Use jQuery AJAX to fetch images from the backend
       $.ajax({
         url: "http://localhost:9091/api/carousel-images",
         type: "GET",
@@ -30,7 +32,7 @@ window.HomePage = {
       .done((response) => {
         console.log("✅ Carousel images fetched:", response);
 
-        // ✅ Shuffle images before setting them
+        // Shuffle images before setting them
         this.images = this.shuffleArray(response);
       })
       .fail((xhr) => {
@@ -43,7 +45,8 @@ window.HomePage = {
       });
     },
 	
-    // 🎲 Fisher-Yates Shuffle Algorithm to Randomize Images
+    // Fisher-Yates Shuffle Algorithm to Randomize Images
+	// https://www.freecodecamp.org/news/how-to-shuffle-an-array-of-items-using-javascript-or-typescript/
     shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));

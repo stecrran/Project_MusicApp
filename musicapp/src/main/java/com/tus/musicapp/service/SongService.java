@@ -14,6 +14,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/*
+ * Responsible for handling song-related operations in the application. 
+ * It provides methods for retrieving, saving, deleting, assigning songs to users, 
+ * and generating genre-based statistics
+ */
 @Service
 public class SongService {
 
@@ -55,11 +60,11 @@ public class SongService {
             .collect(Collectors.groupingBy(Song::getGenre, Collectors.counting()));
     }
     
+    // get songs associated with user
     public Set<Song> getUserSongs() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
         	    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-
 
         return user.getSongCollection();
     }

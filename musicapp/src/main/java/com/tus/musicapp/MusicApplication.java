@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.tus.musicapp") // ✅ Ensure all components are scanned
+@ComponentScan(basePackages = "com.tus.musicapp") // Ensure all components are scanned
 public class MusicApplication {
 
     public static void main(String[] args) {

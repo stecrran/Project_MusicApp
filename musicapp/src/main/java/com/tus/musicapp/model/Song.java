@@ -10,6 +10,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
+/* 
+ * JPA entity used for managing user song collections. 
+ * Establishes a Many-to-Many relationship with the User entity (songCollection)
+ */
 @Getter
 @Setter
 @Entity
@@ -42,13 +46,13 @@ public class Song {
     private String spotifyUrl;
     
     @ManyToMany(mappedBy = "songCollection", fetch = FetchType.LAZY)
-    @JsonBackReference  // ✅ Prevents infinite recursion
+    @JsonBackReference  // Prevents infinite recursion (songs have users, users have songs)
     private Set<User> users;
 
-    // ✅ Default Constructor (Required by JPA)
+    // Default Constructor (Required by JPA)
     public Song() {}
 
-    // ✅ Constructor Matching Expected Parameters
+    // Constructor Matching Expected Parameters
     public Song(String spotifyId, String title, String artist, String album, String genre, int durationMs, String spotifyUrl) {
         this.spotifyId = spotifyId;
         this.title = title;

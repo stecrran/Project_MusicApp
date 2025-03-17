@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/*
+ * Responsible for managing music-related operations. It interacts with the MusicRepository 
+ * and UserRepository to handle music retrieval, addition, and user-music associations
+ */
 @Service
 public class MusicService {
 
@@ -38,7 +42,7 @@ public class MusicService {
         return user.getMusicCollection();
     }
 
-    // ✅ Add a song to the database and associate it with the logged-in user
+    // Add a song to the database and associate it with the logged-in user
     public Music addMusic(Music music) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepo.findByUsername(username)
@@ -74,7 +78,7 @@ public class MusicService {
         userRepo.save(user);
     }
     
-    // ✅ Admin assigns a user to a song (via API)
+    // Admin assigns a user to a song (via API)
     public boolean assignUserToMusic(Long musicId, String username) {
         Optional<User> userOpt = userRepo.findByUsername(username);
         Optional<Music> musicOpt = musicRepo.findById(musicId);

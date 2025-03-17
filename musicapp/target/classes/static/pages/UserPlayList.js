@@ -1,37 +1,39 @@
+// Vue.js component for handling Spotify user playlists and track management
 window.UserPlayList = {
 	data() {
 		return {
-			playlists: [],
-			tracks: [],
-			selectedPlaylist: null,
-			selectedTrack: null,
-			selectedTrackUrl: null,
-			loading: false,
-			error: null,
-			accessToken: localStorage.getItem("spotify_token") || null,
-			fallbackImage: "/assets/images/music_640.png",
-			spotifyUrl: "https://open.spotify.com/"
+			playlists: [], // Stores the user's Spotify playlists
+			tracks: [], // Stores the tracks of the selected playlist
+			selectedPlaylist: null, // Stores the currently selected playlist
+			selectedTrack: null, // Stores the currently selected track for playback
+			selectedTrackUrl: null, // Stores the Spotify URL of the selected track
+			loading: false, // Indicates whether data is being loaded
+			error: null, // Stores error messages if API requests fail
+			accessToken: localStorage.getItem("spotify_token") || null, // Retrieves the Spotify access token from local storage
+			fallbackImage: "/assets/images/music_640.png", // Default image for playlists without covers
+			spotifyUrl: "https://open.spotify.com/" // Base URL for Spotify links
 		};
 	},
 	created() {
-		console.log("✅ UserPlayList component is created!");
 		this.handleSpotifyCallback();
 		this.checkSpotifyAuth();
 	},
+	// Watches for changes in the access token and fetches playlists when available
 	watch: {
 		accessToken(newToken) {
 			if (newToken) {
-				console.log("🔄 Token changed, fetching playlists...");
 				this.fetchUserPlaylists();
 			}
 		}
 	},
 
+	// Runs after the component is mounted
 	mounted() {
+		// Ensure proper modal behavior when opened or closed
 	  $('#playModal').on('hidden.bs.modal', function() {
 	    $(this).attr("aria-hidden", "true").attr("inert", ""); // Make modal non-interactive
 
-	    // ✅ Move focus back to the last active element (e.g., Playlist table)
+	    // Move focus back to the last active element (e.g., Playlist table)
 	    setTimeout(() => {
 	      $('#playlistTable').focus(); // Ensure focus is on an interactive, visible element
 	    }, 50);
@@ -40,67 +42,62 @@ window.UserPlayList = {
 	  $('#playModal').on('shown.bs.modal', function() {
 	    $(this).removeAttr("aria-hidden").removeAttr("inert"); // Make modal interactive again
 
-	    // ✅ Move focus to the first interactive element inside modal
+	    // Move focus to the first interactive element inside modal
 	    $(this).find('.btn-close').focus();
 	  });
 	},
 	
 	methods: {
+		// Checks if the Spotify authentication token is still valid
 		checkSpotifyAuth() {
 			const storedToken = localStorage.getItem("spotify_token");
 			const tokenExpiry = localStorage.getItem("spotify_token_expiry");
 
 			if (storedToken && tokenExpiry && Date.now() < parseInt(tokenExpiry)) {
-				console.log("🔑 Using stored access token:", storedToken);
 				this.accessToken = storedToken;
 				this.fetchUserPlaylists();
 			} else {
-				console.log("🔑 No valid token found. User must log in.");
 				localStorage.removeItem("spotify_token");
 				localStorage.removeItem("spotify_token_expiry");
 				this.accessToken = null;
 			}
 		},
 
+		// Redirects the user to Spotify's authentication page
 		authenticateWithSpotify() {
-			console.log("🟢 Starting Spotify Authentication...");
-			const clientId = "95ac7e92f6d2415d82a2992f37e23a5b";
+			const clientId = "95ac7e92f6d2415d82a2992f37e23a5b"; // Spotify Client ID
 			const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
 			const scope = encodeURIComponent("user-read-private playlist-read-private playlist-read-collaborative");
 
 			const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${redirectUri}&scope=${scope}`;
 
-			console.log("🔑 Redirecting to Spotify login:", authUrl);
 			window.location.assign(authUrl);
 		},
 
+		// Handles Spotify authentication callback and extracts the access token
 		handleSpotifyCallback() {
-			console.log("🔄 Checking for Spotify token in URL...");
-
 			if (window.location.hash.includes("access_token")) {
 				const urlParams = new URLSearchParams(window.location.hash.substring(1));
 				const newToken = urlParams.get("access_token");
 
 				if (newToken) {
-					console.log("✅ New token found:", newToken);
 					const expiresIn = 3600 * 1000;
 
 					localStorage.setItem("spotify_token", newToken);
 					localStorage.setItem("spotify_token_expiry", Date.now() + expiresIn);
 
-					console.log("✅ Token saved successfully!");
 					window.history.replaceState({}, document.title, window.location.pathname);
 
 					this.accessToken = newToken;
 					this.fetchUserPlaylists();
 				} else {
-					console.error("❌ No access token found in URL.");
+					console.error("No access token found in URL.");
 				}
 			}
 		},
 
+		// Logs out the user from Spotify by clearing stored tokens
 		logoutSpotify() {
-			console.log("🚪 Logging out from Spotify...");
 			localStorage.removeItem("spotify_token");
 			localStorage.removeItem("spotify_token_expiry");
 
@@ -110,17 +107,15 @@ window.UserPlayList = {
 			this.selectedPlaylist = null;
 			this.error = null;
 
-			console.log("🔴 Logged out successfully.");
 		},
 
+		// Fetches the user's playlists from Spotify
 		fetchUserPlaylists() {
 			if (!this.accessToken) {
-				console.error("❌ No valid Spotify access token.");
-				this.error = "❌ No valid Spotify access token.";
+				this.error = "No valid Spotify access token.";
 				return;
 			}
 
-			console.log("🎵 Fetching User Playlists...");
 			this.loading = true;
 
 			$.ajax({
@@ -161,7 +156,7 @@ window.UserPlayList = {
 					});
 				},
 				error: (xhr) => {
-					console.error("❌ Error Fetching Playlists:", xhr.responseText);
+					console.error("Error Fetching Playlists:", xhr.responseText);
 				},
 				complete: () => {
 					this.loading = false;
@@ -169,15 +164,14 @@ window.UserPlayList = {
 			});
 		},
 
+		// Fetches tracks from the selected playlist
 		fetchPlaylistTracks(playlistId) {
 			if (!this.accessToken) {
-				this.error = "❌ No valid Spotify access token.";
+				this.error = "No valid Spotify access token.";
 				return;
 			}
 
-			console.log(`🎵 Fetching tracks for playlist ID: ${playlistId}...`);
-
-			// ✅ Update selected playlist before fetching tracks
+			// Update selected playlist before fetching tracks
 			this.selectedPlaylist = this.playlists.find(p => p.id === playlistId);
 			this.tracks = [];
 
@@ -186,13 +180,13 @@ window.UserPlayList = {
 				method: "GET",
 				headers: { "Authorization": `Bearer ${this.accessToken}` },
 				success: (data) => {
-					console.log("✅ Tracks Data:", data);
+					console.log("Tracks Data:", data);
 
 					this.tracks = data.items.map(item => ({
 						id: item.track.id,
 						name: item.track.name,
 						artist: item.track.artists.map(a => a.name).join(", "),
-						artistId: item.track.artists[0]?.id || null,  // ✅ Ensure artistId is stored
+						artistId: item.track.artists[0]?.id || null,  // Ensure artistId is stored
 						album: item.track.album.name,
 						image: item.track.album.images?.[0]?.url || this.fallbackImage,
 						spotifyUrl: item.track.external_urls.spotify,
@@ -226,12 +220,12 @@ window.UserPlayList = {
 							responsive: true
 						});
 
-						// ✅ Bind Play Button Click Event
+						// Bind Play Button Click Event
 						$("#trackTable tbody").off("click").on("click", ".play-btn", (event) => {
 							const button = $(event.currentTarget);
 							const trackData = JSON.parse(button.attr("data-track"));
 
-							console.log("🎵 Selected track:", trackData);
+							console.log("Selected track:", trackData);
 
 							this.selectedTrack = trackData;
 							this.selectedTrackUrl = trackData.spotifyUrl;
@@ -243,18 +237,17 @@ window.UserPlayList = {
 
 				},
 				error: (xhr) => {
-					console.error("❌ Error Fetching Tracks:", xhr.responseText);
+					console.error("Error Fetching Tracks:", xhr.responseText);
 				}
 			});
 		},
 
+		// Fetch genre associated with Artist
 		fetchArtistGenre(artistId) {
 		    if (!artistId) {
-		        console.error("❌ Missing artistId. Cannot fetch genre.");
+		        console.error("Missing artistId. Cannot fetch genre.");
 		        return Promise.resolve("Unknown");
 		    }
-
-		    console.log("🎵 Fetching genre for artist ID:", artistId);
 
 		    return $.ajax({
 		        url: `https://api.spotify.com/v1/artists/${artistId}`,
@@ -263,22 +256,19 @@ window.UserPlayList = {
 		            "Authorization": `Bearer ${this.accessToken}`
 		        }
 		    }).then(response => {
-		        console.log("✅ Received artist data:", response);
 		        return response.genres.length > 0 ? response.genres.join(", ") : "Unknown";
 		    }).fail((xhr) => {
-		        console.error("❌ Failed to fetch artist genre:", xhr.responseText);
+		        console.error("Failed to fetch artist genre:", xhr.responseText);
 		        return "Unknown";
 		    });
 		},
 
+		// Saves a selected track to the database with the genre
 		saveSongToDatabase(track) {
-		    console.log("💾 Fetching genre for artist:", track.artist);
-
 		    const genrePromise = track.artistId ? this.fetchArtistGenre(track.artistId) : Promise.resolve("Unknown");
 
 		    genrePromise.then((genre) => {
 		        track.genre = genre;
-		        console.log("💾 Saving song with genre:", track.genre);
 
 		        $.ajax({
 		            url: "/api/music/save",
@@ -292,40 +282,43 @@ window.UserPlayList = {
 		                title: track.name,
 		                artist: track.artist,
 		                album: track.album,
-		                genre: track.genre, // ✅ Now correctly includes the fetched genre
+		                genre: track.genre, // Now correctly includes the fetched genre
 		                durationMs: track.durationMs || 0,
 		                spotifyUrl: track.spotifyUrl
 		            })
 		        }).done((response) => {
-		            console.log("✅ Song saved successfully:", response);
+		            console.log("Song saved successfully:", response);
 		        }).fail((xhr) => {
-		            console.error("❌ Failed to save song:", xhr.responseText);
+		            console.error("Failed to save song:", xhr.responseText);
 		        });
 		    });
 		},
 
+		// Opens the play modal and saves the track to the database
 		openPlayModal(track) {
 			this.selectedTrack = track;
 			this.selectedTrackUrl = track.spotifyUrl;
 			$("#playModal").modal("show");
 		},
 
+		// Two purposes: Play song on Spotify, save song to Database
 		playAndSaveTrack() {
 			if (!this.selectedTrack) {
-				console.error("❌ No track selected.");
+				console.error("No track selected.");
 				return;
 			}
 
 			this.saveSongToDatabase(this.selectedTrack);
-			// ✅ Close the modal before opening Spotify - using timeout instead of instant 'open Spotify url'
+			// Close the modal before opening Spotify - using timeout instead of instant 'open Spotify url'
 			$("#playModal").modal("hide");
-			//window.open(this.selectedTrack.spotifyUrl, "_blank");
+			//window.open(this.selectedTrack.spotifyUrl, "_blank"); 
 
 			setTimeout(() => {
 				window.open(this.selectedTrack.spotifyUrl, "_blank");
 			}, 300);
 		}
 	},
+	
 	template: `
   <div class="container mt-4">
 	  <!-- ✅ Center-aligned Spotify logo -->

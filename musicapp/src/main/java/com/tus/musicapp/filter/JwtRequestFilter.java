@@ -22,7 +22,7 @@ import org.springframework.http.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+// Intercepts HTTP requests and verifies using JWT before allowing access to secured end-points
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 	

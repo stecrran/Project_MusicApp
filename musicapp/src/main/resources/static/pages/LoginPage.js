@@ -1,3 +1,4 @@
+// Vue.js component for handling user authentication
 window.LoginPage = {
   template: `
   <div class="login-container">
@@ -33,37 +34,43 @@ window.LoginPage = {
     return {
       username: "",
       password: "",
-      isLoading: false,
+      isLoading: false, // Indicates whether login is in progress
       errorMessage: ""
     };
   },
   methods: {
+	// Handles user login when the form is submitted
     async handleLogin() {
       this.isLoading = true;
       this.errorMessage = "";
 
       try {
+		// Send a login request to the backend API
         const response = await fetch("/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: this.username, password: this.password })
         });
 
+		// If login request fails, throw an error
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           throw new Error(errorData.error || "Invalid username or password");
         }
 
+		// Parse the successful response
         const data = await response.json();
+		
+		// Store authentication details in localStorage
         localStorage.setItem("jwt", data.jwt);
         localStorage.setItem("username", data.username);
         localStorage.setItem("role", data.roles.join(", "));
         localStorage.setItem("currentRole", data.roles[0]);
         localStorage.setItem("currentView", "MusicList");
 
-        // 🔄 Redirect user after successful login
-        this.$emit("changeView", "MusicList");
-        window.location.reload();
+        // Redirect user after successful login
+        this.$emit("changeView", "MusicList"); // Notify component to change the view
+        window.location.reload(); // Refresh the page to apply changes
       } catch (error) {
         this.errorMessage = `${error.message}`;
       } finally {

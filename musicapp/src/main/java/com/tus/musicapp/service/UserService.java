@@ -19,6 +19,10 @@ import com.tus.musicapp.repos.UserRepository;
 
 import org.springframework.security.core.Authentication;
 
+/* 
+ * Service responsible for user management in the application. It handles user registration, 
+ * authentication, role assignments, deletion, and updating user details
+ */
 @Service
 public class UserService {
 
@@ -90,7 +94,7 @@ public class UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         
         /*
-         * FK Constraint on user_roles and users
+         * Note: FK Constraint on user_roles and users
          * First - clear roles before deleting the user
          */
         userToDelete.getRoles().clear();

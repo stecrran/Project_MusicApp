@@ -38,25 +38,26 @@ public class SecurityConfig {
         .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            // ✅ ALLOW STATIC FILES (Vue frontend)
+            // Allow static files - resources/static (Vue frontend)
             .antMatchers("/", "/index.html", "/js/**", "/pages/**", "/assets/**", "/favicon.ico").permitAll()
+            // Allow carousel images to be viewed
             .antMatchers("/api/carousel-images").authenticated()
-            // ✅ Allow Authentication & H2 Console
+            // Allow Authentication (and H2 Console, if required)
             .antMatchers("/api/auth/**").permitAll()
             .antMatchers("/api/music/**").permitAll()
             .antMatchers("/h2-console/**").permitAll()
 
-            // ✅ Restrict Admin Registration to Admins
+            // Restrict Admin Registration to Admins
             .antMatchers("/api/admin/register").hasAuthority("ADMIN") 
 
-            // ✅ Restrict Components by Role
+            // Restrict Components by Role (this can be managed in Vue components)
             //.antMatchers("/pages/admin/**").hasAuthority("ADMIN")
 
-            // ✅ Require authentication for everything else
+            // Require authentication for everything else
             .anyRequest().authenticated()
         );
 
-    // ✅ Ensure JWT filter is applied before username/password authentication
+    // Ensure JWT filter is applied before username/password authentication
     http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();

@@ -1,17 +1,18 @@
+// Main Vue.js application for uMusicApp
 window.App = {
 	data() {
 		return {
 			currentView: this.getInitialView(),
-			showSettingsModal: false,
+			showSettingsModal: false, // Controls the visibility of the user settings modal
 			userRole: this.extractUserRole(),
-			newUser: {
+			newUser: { // Stores new user details for registration
 				username: "",
 				password: "",
 				roles: []
 			},
 			availableRoles: ["SPOTIFY_USER", "ADMIN"],
-			registrationMessage: "",
-			users: []
+			registrationMessage: "", // Stores the registration status message
+			users: [] // Stores the list of registered users (only visible to Admins)
 		};
 	},
 
@@ -19,6 +20,7 @@ window.App = {
 		showNavbar() {
 			return this.currentView !== "LoginPage";
 		},
+		// Checks if the user is authenticated (based on JWT presence in local storage)
 		isAuthenticated() {
 			return !!localStorage.getItem("jwt");
 		},
@@ -31,13 +33,15 @@ window.App = {
 	},
 
 	methods: {
+		// Switches the current view and updates local storage
 		setView(viewName) {
-			console.log(`🔄 Switching view to: ${viewName}`);
+			console.log(`Switching view to: ${viewName}`);
 			this.currentView = viewName;
 			localStorage.setItem("currentView", viewName);
 
+			// If switching to UserPlayList, handle Spotify callback if needed
 			if (viewName === "UserPlayList") {
-				console.log("🔄 Ensuring Spotify callback processing...");
+				console.log("Ensuring Spotify callback processing...");
 				this.$nextTick(() => {
 					const userPlayList = this.$refs.userPlayList;
 					if (userPlayList && typeof userPlayList.handleSpotifyCallback === "function") {
@@ -46,11 +50,13 @@ window.App = {
 				});
 			}
 
+			// If switching to HomePage, start the carousel
 			if (viewName === "HomePage") {
 				this.startCarousel();
 			}
 		},
-
+		
+		// Extracts the user role from the stored JWT token
 		extractUserRole() {
 			const token = localStorage.getItem("jwt");
 			if (!token) return null;
@@ -71,29 +77,31 @@ window.App = {
 						? "SPOTIFY_USER"
 						: null;
 			} catch (error) {
-				console.error("❌ Error decoding JWT:", error);
+				console.error("X Error decoding JWT:", error);
 				return null;
 			}
 		},
 		
+		// Determines the initial view when the app loads
 		getInitialView() {
-			console.log("📌 Checking Initial View...");
+			console.log("Checking Initial View...");
 			const jwt = localStorage.getItem("jwt");
 			if (!jwt) {
-				console.log("🔴 No JWT found. Redirecting to LoginPage.");
+				console.log("No JWT found. Redirecting to LoginPage.");
 				return "LoginPage";
 			}
-			console.log("✅ User is logged in. Defaulting to UserPlayList.");
+			console.log("User is logged in. Defaulting to UserPlayList.");
 			return "UserPlayList";
 		},
 		
 		logoutUser() {
-			console.log("🔴 Logging out...");
+			console.log("Logging out...");
 			localStorage.clear();
 			this.setView("LoginPage");
 			window.location.reload();
 		},
 		
+		// Fetches all users from the admin API (only if the logged-in user is an Admin)
 		fetchUsers() {
 		    if (!this.isAdmin) return;
 		    const token = localStorage.getItem("jwt");
@@ -107,14 +115,15 @@ window.App = {
 					this.$forceUpdate(); // Ensure Vue updates the UI
 		        },
 		        error: (xhr) => {
-		            console.error("❌ Error loading users:", xhr.responseText);
+		            console.error("X Error loading users:", xhr.responseText);
 		        }
 		    });
 		},
 		
+		// Deletes a user account (Admins cannot delete themselves)
 		deleteUser(userId, username) {
 		    if (username === "Admin") {
-		        alert("❌ You cannot delete the 'Admin' user!");
+		        alert("X You cannot delete the 'Admin' user!");
 		        return;
 		    }
 		    if (!confirm("Are you sure you want to delete this user?")) return;
@@ -127,20 +136,20 @@ window.App = {
 		        headers: { Authorization: `Bearer ${token}` },
 		        success: () => {
 		            this.users = this.users.filter(user => user.id !== userId);
-		            alert(`✅ User '${username}' deleted successfully.`);
+		            alert(`User '${username}' deleted successfully.`);
 		        },
 		        error: (xhr) => {
-		            alert(`❌ Error deleting user: ${xhr.responseText}`);
-		            console.error("❌ Error deleting user:", xhr.responseText);
+		            alert(`X Error deleting user: ${xhr.responseText}`);
+		            console.error("X Error deleting user:", xhr.responseText);
 		        }
 		    });
 		},
 		
-
+		// Registers a new user via API
 		registerUser() {
 		    const token = localStorage.getItem("jwt");
 		    if (!token) {
-		        alert("❌ Unauthorized: No token found.");
+		        alert("X Unauthorized: No token found.");
 		        return;
 		    }
 
@@ -155,22 +164,22 @@ window.App = {
 		            roles: this.newUser.roles
 		        }),
 		        success: () => {
-		            this.registrationMessage = "✅ User registered successfully!";
+		            this.registrationMessage = "X User registered successfully!";
 		            this.newUser = { username: "", password: "", roles: [] };
 		            this.fetchUsers();
 		        },
 		        error: (xhr) => {
 		            if (xhr.status === 409) {
-		                alert("❌ User already exists. Enter new username.");
+		                alert("X User already exists. Enter new username.");
 		            } else {
-		                alert(`❌ Registration failed: ${xhr.responseText}`);
+		                alert(`X Registration failed: ${xhr.responseText}`);
 		            }
 		        }
 		    });
 		},
 		
+		// Toggle 'users' nmodal 
 		toggleSettingsModal() {
-			console.log("⚙️ Toggling Settings Modal...");
 			this.showSettingsModal = !this.showSettingsModal;
 			if (this.showSettingsModal) {
 			    this.fetchUsers();
@@ -178,19 +187,22 @@ window.App = {
 			}
 		},
 		
+		// Initializes the Bootstrap carousel for the homepage
 		startCarousel() {
-			console.log("🔄 Initializing Bootstrap Carousel...");
+			console.log("Initializing Bootstrap Carousel...");
 			setTimeout(() => {
 				$(".carousel").carousel("cycle");
 			}, 500);
 		}
 	},
 	
+	// Executes when the Vue instance is mounted
 	mounted() {
 		if (this.isAdmin) this.fetchUsers();
 		this.startCarousel();
 	},
 	
+	// Registers components for dynamic view rendering
 	components: {
 		LoginPage: window.LoginPage,
 		HomePage: window.HomePage,
@@ -285,5 +297,6 @@ window.App = {
   `
 };
 
-console.log("🔄 Mounting Vue App...");
+// Mount the Vue.js application
+console.log("Mounting Vue App...");
 window.appInstance = Vue.createApp(window.App).mount("#app");

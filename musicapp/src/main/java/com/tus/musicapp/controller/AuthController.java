@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tus.musicapp.service.UserDetailsServiceImpl;
 import com.tus.musicapp.util.JwtUtil;
 
+// Control authorisations
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -32,13 +33,13 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    // DTO for login requests
+    // login requests
     public static class AuthRequest {
         public String username;
         public String password;
     }
 
-    // DTO for responses
+    // responses
     public static class AuthResponse {
         public String jwt;
         public String username;
@@ -51,6 +52,7 @@ public class AuthController {
         }
     }
 
+    // Authorise login
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
         try {

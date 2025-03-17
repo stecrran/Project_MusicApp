@@ -6,12 +6,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+// Spring Data JPA repository. Interface responsible for handling database interactions related to the Song entity
 @Repository
 public interface SongRepository extends JpaRepository<Song, Long> {
 
-    // ✅ Check if a song exists by Spotify ID (Prevents duplicates)
+    // Check if a song exists by Spotify ID (Prevents duplicates)
     boolean existsBySpotifyId(String spotifyId);
 
-    // ✅ Retrieve a song by Spotify ID (Optional to handle non-existing cases)
+    // Retrieve a song by Spotify ID (Optional to handle non-existing cases)
     Optional<Song> findBySpotifyId(String spotifyId);
 }

@@ -1,8 +1,9 @@
+// Vue.js component for displaying Spotify Top 50 chart
 window.MusicCharts = {
   data() {
     return {
       playlistId: "37i9dQZEVXbMDoHDwVN2tF", // Spotify Global Top 50
-      spotifyUrl: "https://open.spotify.com/playlist/37i9dQZEVXbMDoHDwVN2tF"
+      spotifyUrl: "https://open.spotify.com/playlist/37i9dQZEVXbMDoHDwVN2tF" // playlist URL
     };
   },
   template: `

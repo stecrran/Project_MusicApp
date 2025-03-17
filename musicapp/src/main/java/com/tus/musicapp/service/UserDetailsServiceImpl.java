@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.tus.musicapp.model.User;
 import com.tus.musicapp.repos.UserRepository;
-
+// Service responsible for loading user details from the database for authentication and authorisation
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 

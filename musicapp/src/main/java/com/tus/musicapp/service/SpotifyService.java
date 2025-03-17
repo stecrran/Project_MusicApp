@@ -10,6 +10,10 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Collections;
 import java.util.List;
 
+/* 
+ * Service responsible for fetching song details from the Spotify API and saving them into the local database. 
+ * It interacts with Spotify's public API using RestTemplate to retrieve track metadata and artist genres
+ */
 @Service
 public class SpotifyService {
 
@@ -24,7 +28,7 @@ public class SpotifyService {
 
     public Song fetchAndSaveSong(String spotifyTrackId, String accessToken) {
         try {
-            // ✅ Fetch Track Details
+            // Fetch Track Details
             String trackUrl = SPOTIFY_TRACK_URL + spotifyTrackId;
             String trackResponse = fetchFromSpotify(trackUrl, accessToken);
             ObjectMapper mapper = new ObjectMapper();
@@ -37,7 +41,7 @@ public class SpotifyService {
             int durationMs = trackJson.has("duration_ms") ? trackJson.get("duration_ms").asInt() : 0;
             String spotifyUrl = trackJson.get("external_urls").get("spotify").asText();
 
-            // ✅ Fetch Artist Genre
+            // Fetch Artist Genre
             String artistUrl = SPOTIFY_ARTIST_URL + artistId;
             String artistResponse = fetchFromSpotify(artistUrl, accessToken);
             JsonNode artistJson = mapper.readTree(artistResponse);

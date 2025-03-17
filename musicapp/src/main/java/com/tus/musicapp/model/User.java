@@ -23,6 +23,7 @@ import javax.persistence.JoinColumn;
 import lombok.Getter;
 import lombok.Setter;
 
+// JPA Entity which manages authentication credentials, roles, and collections of songs and music
 @Getter
 @Setter
 @Entity
@@ -44,17 +45,17 @@ public class User {
 	private Set<Role> roles;
 
 
-    // ✅ Many-to-Many Relationship with Songs
+    // Many-to-Many Relationship with Songs
     @ManyToMany
     @JoinTable(
         name = "user_songs",
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "song_id")
     )
-    @JsonIgnore  // ✅ Prevents infinite recursion
+    @JsonIgnore  // Prevents infinite recursion (songs have users, users have songs)
     private Set<Song> songCollection = new HashSet<>();
 
-    // ✅ Many-to-Many Relationship with Music (General Collection)
+    // Many-to-Many Relationship with Music (General Collection)
     @ManyToMany
     @JoinTable(
         name = "user_music",
