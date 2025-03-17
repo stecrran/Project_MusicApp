@@ -164,7 +164,7 @@ window.App = {
 		            roles: this.newUser.roles
 		        }),
 		        success: () => {
-		            this.registrationMessage = "X User registered successfully!";
+		            this.registrationMessage = "User registered successfully!";
 		            this.newUser = { username: "", password: "", roles: [] };
 		            this.fetchUsers();
 		        },

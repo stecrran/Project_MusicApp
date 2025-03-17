@@ -112,6 +112,7 @@ window.UserPlayList = {
 		// Fetches the user's playlists from Spotify
 		fetchUserPlaylists() {
 			if (!this.accessToken) {
+				console.error("No valid Spotify access token.");
 				this.error = "No valid Spotify access token.";
 				return;
 			}

@@ -82,7 +82,7 @@ public class MusicController {
         try {
             if (songService.existsBySpotifyId(musicCreationDto.getSpotifyId())) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body("🎵 Song already exists in the database.");
+                        .body("Song already exists in the database.");
             }
 
             // Get the logged-in user
@@ -104,7 +104,7 @@ public class MusicController {
 
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
-                                 .body("❌ Error saving song: " + e.getMessage());
+                                 .body("Error saving song: " + e.getMessage());
         }
     }
     
@@ -122,14 +122,14 @@ public class MusicController {
             if (!user.getSongCollection().contains(song)) {
                 user.getSongCollection().add(song);
                 userRepository.save(user);
-                return ResponseEntity.ok("✅ User assigned to song successfully.");
+                return ResponseEntity.ok("User assigned to song successfully.");
             } else {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body("⚠️ User already has this song in their collection.");
+                        .body("User already has this song in their collection.");
             }
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("❌ User or song not found.");
+                .body("User or song not found.");
     }
     
     // Remove a song from the user's collection
@@ -145,15 +145,15 @@ public class MusicController {
             
             if (!user.getSongCollection().contains(song)) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("⚠️ You do not have this song in your collection.");
+                        .body("You do not have this song in your collection.");
             }
 
             user.getSongCollection().remove(song);
             userRepository.save(user);
-            return ResponseEntity.ok("✅ Song removed from your collection.");
+            return ResponseEntity.ok("Song removed from your collection.");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("❌ Song not found.");
+                .body("Song not found.");
     }
 
 
@@ -161,29 +161,20 @@ public class MusicController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSong(@PathVariable Long id) {
         try {
-            Optional<Song> songOpt = songRepository.findById(id);
-            if (!songOpt.isPresent()) {
+            Optional<Song> songOpt = songService.findById(id);
+            if (songOpt.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("❌ Song not found.");
+                        .body("Song not found.");
             }
 
-            Song song = songOpt.get();
-
-            // Remove song from all users' collections before deleting
-            List<User> usersWithSong = userRepository.findAll();
-            usersWithSong.forEach(user -> {
-                user.getSongCollection().remove(song);
-                userRepository.save(user);
-            });
-
             songService.deleteById(id);
-            return ResponseEntity.ok("✅ Song deleted successfully.");
-
+            return ResponseEntity.ok("Song deleted successfully.");
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
-                                 .body("❌ Error deleting song: " + e.getMessage());
+                    .body("Error deleting song: " + e.getMessage());
         }
     }
+
 
     
     // Get Genre Count (using 'SongService')

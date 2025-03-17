@@ -56,7 +56,6 @@ public class SpotifyService {
             return songRepository.save(song);
 
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
