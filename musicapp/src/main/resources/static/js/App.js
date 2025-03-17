@@ -217,9 +217,9 @@ window.App = {
               <button class="btn btn-outline-light mx-1" @click="setView('HomePage')">🏠 Home</button>
               <button class="btn btn-outline-light mx-1" v-if="isAuthenticated" @click="setView('ConcertList')">🎤 Gigs</button>
               <button class="btn btn-outline-light mx-1" v-if="isAuthenticated" @click="setView('MusicCharts')">⭐ Charts</button>
-              <button class="btn btn-outline-light mx-1" v-if="isAuthenticated" @click="setView('UserPlayList')">🎵 User PlayList</button>
-              <button class="btn btn-outline-light mx-1" v-if="isAuthenticated" @click="setView('MusicList')">🎼 PlayList</button>
-              <button class="btn btn-outline-light mx-1" v-if="isAdmin" @click="toggleSettingsModal">⚙️ Settings</button>
+              <button class="btn btn-outline-light mx-1" v-if="isAuthenticated" @click="setView('UserPlayList')">🎵 Spotify Connect</button>
+              <button class="btn btn-outline-light mx-1" v-if="isAuthenticated" @click="setView('MusicList')">🎼 User Playlist</button>
+              <button class="btn btn-outline-light mx-1" v-if="isAdmin" @click="toggleSettingsModal">⚙️ Users</button>
               <button class="btn btn-danger mx-1" v-if="isAuthenticated" @click="logoutUser">🚪 Logout</button>
             </div>
           </div>

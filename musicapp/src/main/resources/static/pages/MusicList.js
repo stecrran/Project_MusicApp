@@ -7,8 +7,7 @@ window.MusicList = {
 			genreUserData: {}, 
 			genreUserChart: null, 
 			jwtToken: localStorage.getItem("jwt"),
-			showGenreChart: false,
-			showUserChart: false,
+			showChart: true
 		};
 	},
 
@@ -40,9 +39,8 @@ window.MusicList = {
 			});
 		},
 
-		// ✅ Fetch Genre Distribution Data
 		fetchGenreCount() {
-			if (!this.showGenreChart) return;
+			if (!this.showChart) return;
 
 			$.ajax({
 				url: "http://localhost:9091/api/music/genre-count",
@@ -52,7 +50,7 @@ window.MusicList = {
 				},
 				success: (data) => {
 					this.genreData = data;
-					
+
 					if (Object.keys(this.genreData).length === 0) {
 						this.clearGenreChart(); // ✅ Clear chart if no data
 					} else {
@@ -65,13 +63,13 @@ window.MusicList = {
 			});
 		},
 
-		// ✅ Render Genre Distribution Chart
 		renderGenreChart() {
-		  if (!this.showGenreChart) return; // ✅ Do not render if chart is hidden
+		  if (!this.showChart) return; // ✅ Do not render if chart is hidden
 
 		  this.$nextTick(() => {
 		    const canvas = document.getElementById("genreChart");
 		    if (!canvas) {
+		      console.warn("⚠️ Chart canvas not found. Skipping chart rendering.");
 		      return;
 		    }
 
@@ -83,6 +81,7 @@ window.MusicList = {
 		    }
 
 		    if (Object.keys(this.genreData).length === 0) {
+		      console.log("⚠️ No genre data. Clearing chart...");
 		      this.genreChart = null; // ✅ Remove reference to prevent re-use
 		      return;
 		    }
@@ -113,28 +112,17 @@ window.MusicList = {
 		    });
 		  });
 		},
-		
-			toggleGenreChart() {
-			  this.showGenreChart = !this.showGenreChart;
-
-			  if (this.showGenreChart) {
-			    this.$nextTick(() => {
-			      this.fetchGenreCount(); // ✅ Re-fetch data **after** Vue updates the DOM
-			    });
-			  } else {
-			    this.clearGenreChart(); // ✅ Clear chart when hiding
-			  }
-			},
 
 		clearGenreChart() {
 			if (this.genreChart) {
 				this.genreChart.destroy();
 				this.genreChart = null;
+				console.log("🗑 Chart cleared.");
 			}
 		},
 		
-		// ✅ Fetch Genre vs. Users Data
 		fetchGenreUserCount() {
+		    console.log("📊 Fetching Genre vs. Users data...");
 
 		    $.ajax({
 		        url: "http://localhost:9091/api/music/genre-users",
@@ -143,8 +131,10 @@ window.MusicList = {
 		            Authorization: `Bearer ${this.jwtToken}`
 		        },
 		        success: (data) => {
+		            console.log("✅ Received Genre vs. Users Data:", data);
 
 		            if (Object.keys(data).length === 0) {
+		                console.warn("⚠️ No data available for Genre vs. Users.");
 		                return;
 		            }
 
@@ -157,11 +147,11 @@ window.MusicList = {
 		    });
 		},
 
-		// ✅ Render Genre vs. Users Chart
 		renderGenreUserChart() {
 		    this.$nextTick(() => {
 		        const canvas = document.getElementById("genreUserChart");
 		        if (!canvas) {
+		            console.warn("⚠️ Chart canvas not found. Skipping chart rendering.");
 		            return;
 		        }
 		
@@ -170,11 +160,15 @@ window.MusicList = {
 		        // ✅ Destroy the previous chart if it exists
 		        if (this.genreUserChart) {
 		            this.genreUserChart.destroy();
+		            console.log("🗑 Destroyed old Genre vs. Users Chart.");
 		        }
 		
 		        if (!this.genreUserData || Object.keys(this.genreUserData).length === 0) {
+		            console.warn("⚠️ No genre-user data available.");
 		            return;
 		        }
+		
+		        console.log("📊 Rendering Genre vs. Users Chart...");
 		
 		        this.genreUserChart = new Chart(ctx, {
 		            type: "bar",
@@ -200,25 +194,10 @@ window.MusicList = {
 		                }
 		            }
 		        });
+		
+		        console.log("✅ Genre vs. Users Chart rendered successfully.");
 		    });
 		},
-		
-			// ✅ Toggle Genre vs. Users Chart Visibility
-			toggleUserChart() {
-				this.showUserChart = !this.showUserChart;
-				if (this.showUserChart) {
-					this.fetchGenreUserCount();
-				} else {
-					this.clearGenreUserChart();
-				}
-			},
-
-			clearGenreUserChart() {
-				if (this.genreUserChart) {
-					this.genreUserChart.destroy();
-					this.genreUserChart = null;
-				}
-			},
 
 		removeSong(songId) {
 			if (!confirm("Are you sure you want to delete this song?")) {
@@ -283,6 +262,20 @@ window.MusicList = {
 				});
 			});
 		},
+
+		toggleChart() {
+		  this.showChart = !this.showChart;
+		  console.log("📊 Chart visibility toggled:", this.showChart);
+
+		  if (this.showChart) {
+		    this.$nextTick(() => {
+		      this.fetchGenreCount(); // ✅ Re-fetch data **after** Vue updates the DOM
+		    });
+		  } else {
+		    this.clearGenreChart(); // ✅ Clear chart when hiding
+		  }
+		}
+
 	},
 
 	template: `
@@ -302,32 +295,33 @@ window.MusicList = {
       <tbody></tbody>
     </table>
 	
-	<!-- ✅ Button to Toggle Genre vs. Users Chart -->
+	<!-- ✅ Button to Fetch & Render Chart -->
 	<div class="mt-4">
-	    <button class="btn btn-primary" @click="toggleUserChart">
-	        {{ showUserChart ? "Hide Genre vs. Users Chart" : "Show Genre vs. Users Chart" }}
+	    <button class="btn btn-primary" @click="fetchGenreUserCount">
+	        Show Genre vs. Users Chart
 	    </button>
 	</div>
 
-	    <!-- ✅ Genre vs. Users Chart Container -->
-	    <div v-if="showUserChart" class="mt-3">
-	        <h3>📊 Genre vs. Users</h3>
-	        <canvas id="genreUserChart"></canvas>
-	    </div>
-
-	    <!-- ✅ Button to Toggle Genre Distribution Chart -->
-	    <div class="mt-4">
-	        <button class="btn btn-primary" @click="toggleGenreChart">
-	            {{ showGenreChart ? "Hide Genre Distribution Chart" : "Show Genre Distribution Chart" }}
-	        </button>
-	    </div>
-
-	    <!-- ✅ Genre Distribution Chart Container -->
-	    <div v-if="showGenreChart" class="mt-3">
-	        <h3>📊 Genre Distribution</h3>
-	        <canvas id="genreChart"></canvas>
-	    </div>
+	<!-- ✅ Chart Container -->
+	<div class="mt-3">
+	    <h3>📊 Genre vs. Users</h3>
+	    <canvas id="genreUserChart"></canvas>
 	</div>
 
+
+	
+	<!-- ✅ Chart Toggle Button -->
+	<div class="mt-4">
+	  <button class="btn btn-primary" @click="toggleChart">
+	    {{ showChart ? "Hide Chart" : "Show Chart" }}
+	  </button>
+	</div>
+
+    <!-- ✅ Chart Section -->
+    <div v-if="showChart" class="mt-3">
+      <h3>📊 Genre Distribution</h3>
+      <canvas id="genreChart"></canvas>
+    </div>
+  </div>
   `
 };

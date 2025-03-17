@@ -328,7 +328,13 @@ window.UserPlayList = {
 	},
 	template: `
   <div class="container mt-4">
-      <h1 class="display-4 text-center">User Playlists</h1>
+	  <!-- ✅ Center-aligned Spotify logo -->
+	  <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg" 
+	       width="130" 
+	       class="d-block mx-auto mb-3">
+	
+	  <!-- ✅ Centered Title -->
+	  <h3 class="text-center fw-bold fs-3">Spotify Playlists</h3>
 
       <div class="text-center">
           <button v-if="!accessToken" class="btn btn-success btn-lg" @click="authenticateWithSpotify">
