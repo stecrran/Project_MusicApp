@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
 -- Host: localhost    Database: musicappdb
 -- ------------------------------------------------------
--- Server version	8.0.41
+-- Server version	8.0.39
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -26,9 +26,9 @@ CREATE TABLE `user_songs` (
   `user_id` bigint NOT NULL,
   `song_id` bigint NOT NULL,
   PRIMARY KEY (`user_id`,`song_id`),
-  KEY `song_id` (`song_id`),
-  CONSTRAINT `user_songs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `user_songs_ibfk_2` FOREIGN KEY (`song_id`) REFERENCES `music` (`id`) ON DELETE CASCADE
+  KEY `FK3punk2ouo8dsm236mdw1j947f` (`song_id`),
+  CONSTRAINT `FK3punk2ouo8dsm236mdw1j947f` FOREIGN KEY (`song_id`) REFERENCES `music` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FKbjhhb27qygfcq6kvl56m4a5p` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -38,7 +38,7 @@ CREATE TABLE `user_songs` (
 
 LOCK TABLES `user_songs` WRITE;
 /*!40000 ALTER TABLE `user_songs` DISABLE KEYS */;
-INSERT INTO `user_songs` VALUES (4,6),(9,7),(9,8),(9,9),(9,10);
+INSERT INTO `user_songs` VALUES (26,152),(26,153),(26,154),(26,155);
 /*!40000 ALTER TABLE `user_songs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-17  4:12:21
+-- Dump completed on 2025-03-18  1:59:04

@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
 -- Host: localhost    Database: musicappdb
 -- ------------------------------------------------------
--- Server version	8.0.41
+-- Server version	8.0.39
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,11 +24,11 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `UK_r43af9ap4edm43mmtq01oddj6` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=134 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +37,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (4,'Admin','$2a$10$/NfzoBSIqk9doMpga9hen.yk0BguRsB3CC2SND9jNO83X0FlpMsWy'),(7,'spotify_user','$2a$10$baX.U4Fm6BbS/pZQwFinl.7x.qScfDlDG1r2Wyoo0L0jtTMGhbkLa'),(8,'test','$2a$10$uVOwrc.bxJ7F/yoldPvkl.Rol9Kwa.KOBcGSHwerDkEEVCt0KAk5K'),(9,'lemon','$2a$10$TPbiZ14qefSyfSG50J/WKuH4WA31dDPFAK2Hlvh9YhYMqlfNyygk2');
+INSERT INTO `users` VALUES (26,'$2a$10$97aBtw/vGidN9XDWiJWcI.6EfnqPuFCvvSrelI3nDgrSjJU8wVVpK','Admin'),(50,'$2a$10$593Ak9PDt.x6woUvsm3kK.P/PNb3PslHP9UODY3UuTdTGWt2L/23K','spotify_user'),(132,'$2a$10$pgGslR091Kd4GXa.lIElIOnQYcqqxQmwcgxQ8sRB5eO3nG3jfd1.G','test4'),(133,'$2a$10$pOk/hxppNs64lHbWi3QLeebpgv9dPKAxp733FD7yg9m9tM6b85ZVy','test5');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-17  4:12:20
+-- Dump completed on 2025-03-18  1:59:05

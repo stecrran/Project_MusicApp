@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
 -- Host: localhost    Database: musicappdb
 -- ------------------------------------------------------
--- Server version	8.0.41
+-- Server version	8.0.39
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -28,12 +28,19 @@ CREATE TABLE `music` (
   `title` varchar(255) NOT NULL,
   `artist` varchar(255) NOT NULL,
   `album` varchar(255) NOT NULL,
-  `genre` varchar(255) NOT NULL,
-  `duration_ms` int NOT NULL,
+  `genre` varchar(255) DEFAULT NULL,
+  `release_date` date DEFAULT NULL,
+  `preview_url` varchar(512) DEFAULT NULL,
   `spotify_url` varchar(512) NOT NULL,
+  `duration_ms` int NOT NULL DEFAULT '0',
+  `popularity` int DEFAULT '0',
+  `username` varchar(255) DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `spotify_id` (`spotify_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `spotify_id` (`spotify_id`),
+  KEY `fk_music_user` (`user_id`),
+  CONSTRAINT `fk_music_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=156 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +49,7 @@ CREATE TABLE `music` (
 
 LOCK TABLES `music` WRITE;
 /*!40000 ALTER TABLE `music` DISABLE KEYS */;
-INSERT INTO `music` VALUES (6,'6noDJ06v7z8bCsBitjxFG2','The Sentinel','Judas Priest','Defenders Of The Faith','heavy metal, metal, hard rock, glam metal',302066,'https://open.spotify.com/track/6noDJ06v7z8bCsBitjxFG2'),(7,'43zdsphuZLzwA9k4DJhU0I','when the party\'s over','Billie Eilish','WHEN WE ALL FALL ASLEEP, WHERE DO WE GO?','Unknown',196077,'https://open.spotify.com/track/43zdsphuZLzwA9k4DJhU0I'),(8,'57P8gH8rjt4OqEoqzut1bL','Round and Round','Ratt','The Essentials: Ratt','glam metal, glam rock, hard rock',265893,'https://open.spotify.com/track/57P8gH8rjt4OqEoqzut1bL'),(9,'2g02rt0UFudctbAnmJsm22','Astronomy','Blue Öyster Cult','Secret Treaties','classic rock, hard rock',383973,'https://open.spotify.com/track/2g02rt0UFudctbAnmJsm22'),(10,'2xU2QWzGunslGXtJbmYbeE','Barrel of a Gun','Depeche Mode','Ultra (Deluxe)','new wave, synthpop, darkwave',336293,'https://open.spotify.com/track/2xU2QWzGunslGXtJbmYbeE');
+INSERT INTO `music` VALUES (152,'6J2LdBN97cDWn0MLxYh9HB','July','Noah Cyrus','THE END OF EVERYTHING','Unknown',NULL,NULL,'https://open.spotify.com/track/6J2LdBN97cDWn0MLxYh9HB',156106,0,NULL,NULL),(153,'2xU2QWzGunslGXtJbmYbeE','Barrel of a Gun','Depeche Mode','Ultra (Deluxe)','new wave, synthpop, darkwave',NULL,NULL,'https://open.spotify.com/track/2xU2QWzGunslGXtJbmYbeE',336293,0,NULL,NULL),(154,'4gUNTtPmsTzpTdJY3aZbLw','Fluff (2009 Remaster)','Black Sabbath','Sabbath Bloody Sabbath','metal, heavy metal, rock, stoner rock, doom metal, hard rock, classic rock',NULL,NULL,'https://open.spotify.com/track/4gUNTtPmsTzpTdJY3aZbLw',248013,0,NULL,NULL),(155,'6uU0Hu8oVk9gBihokcrDMH','One of These Days','Pink Floyd','Meddle','progressive rock, psychedelic rock, classic rock, symphonic rock, art rock, rock',NULL,NULL,'https://open.spotify.com/track/6uU0Hu8oVk9gBihokcrDMH',354613,0,NULL,NULL);
 /*!40000 ALTER TABLE `music` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +62,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-17  4:12:21
+-- Dump completed on 2025-03-18  1:59:04
