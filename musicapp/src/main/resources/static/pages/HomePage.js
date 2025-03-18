@@ -12,11 +12,9 @@ window.HomePage = {
   },
   methods: {
     loadImages() {
-      console.log("🔄 Fetching carousel images...");
-
       const token = localStorage.getItem("jwt"); // Get JWT token from localStorage
       if (!token) {
-        console.error("❌ No JWT token found. User not authenticated.");
+        console.error("No JWT token found. User not authenticated.");
         this.error = "Unauthorized. Please log in.";
         return;
       }
@@ -30,15 +28,15 @@ window.HomePage = {
         }
       })
       .done((response) => {
-        console.log("✅ Carousel images fetched:", response);
+        console.log("Carousel images fetched:", response);
 
         // Shuffle images before setting them
         this.images = this.shuffleArray(response);
       })
       .fail((xhr) => {
-        let errorMessage = "❌ API request failed.";
-        if (xhr.status === 401) errorMessage = "❌ Unauthorized. Please log in again.";
-        if (xhr.status === 403) errorMessage = "❌ Access forbidden.";
+        let errorMessage = "API request failed.";
+        if (xhr.status === 401) errorMessage = "Unauthorized. Please log in again.";
+        if (xhr.status === 403) errorMessage = "Access forbidden.";
         
         console.error(errorMessage, xhr.responseText);
         this.error = errorMessage;

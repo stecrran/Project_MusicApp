@@ -60,6 +60,22 @@ class AdminControllerTest {
         assertEquals("testuser", result.getUsername());
         verify(userService, times(1)).registerUser(any(User.class));
     }
+    
+    @Test
+    void registerUser_ShouldThrowException_WhenUsernameAlreadyExists() {
+        user.setRoles(Set.of(Role.ADMIN));
+
+        when(userService.registerUser(any(User.class)))
+                .thenThrow(new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken"));
+
+        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+            adminController.registerUser(user);
+        });
+
+        assertEquals(HttpStatus.CONFLICT, ((ResponseStatusException) exception).getStatus());
+        assertTrue(exception.getMessage().contains("Username already taken"),
+                "Exception message should indicate username conflict");
+    }
 
     @Test
     void getAllUsers_ShouldReturnUserList() {
@@ -79,5 +95,33 @@ class AdminControllerTest {
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         verify(userService, times(1)).deleteUser(1L);
+    }
+    
+    @Test
+    void deleteUser_ShouldThrowException_WhenUserNotFound() {
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"))
+                .when(userService).deleteUser(99L);
+
+        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+            adminController.deleteUser(99L);
+        });
+
+        assertEquals(HttpStatus.NOT_FOUND, ((ResponseStatusException) exception).getStatus());
+        assertTrue(exception.getMessage().contains("User not found"),
+                "Exception message should indicate user does not exist");
+    }
+    
+    @Test
+    void deleteUser_AdminCannotDeleteThemselves() {
+        doThrow(new ResponseStatusException(HttpStatus.FORBIDDEN, "Admins cannot delete themselves"))
+                .when(userService).deleteUser(2L);
+
+        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+            adminController.deleteUser(2L);
+        });
+
+        assertEquals(HttpStatus.FORBIDDEN, ((ResponseStatusException) exception).getStatus());
+        assertTrue(exception.getMessage().contains("Admins cannot delete themselves"),
+                "Exception message should indicate self-deletion restriction");
     }
 }

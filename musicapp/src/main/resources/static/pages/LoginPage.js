@@ -53,10 +53,18 @@ window.LoginPage = {
         });
 
 		// If login request fails, throw an error
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.error || "Invalid username or password");
-        }
+		if (!response.ok) {
+		    let errorMessage = "Invalid username or password";
+		    try {
+		        const errorData = await response.json();
+		        if (errorData && errorData.message) {
+		            errorMessage = errorData.message;
+		        }
+		    } catch (e) {
+		        // If response is not JSON (e.g., 500 error), use default message
+		    }
+		    throw new Error(errorMessage);
+		}
 
 		// Parse the successful response
         const data = await response.json();

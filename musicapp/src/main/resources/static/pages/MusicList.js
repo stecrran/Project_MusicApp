@@ -60,7 +60,7 @@ window.MusicList = {
 					}
 				},
 				error: (xhr) => {
-					console.error("❌ Error fetching genre count:", xhr.responseText);
+					console.error("Error fetching genre count:", xhr.responseText);
 				}
 			});
 		},
@@ -214,7 +214,7 @@ window.MusicList = {
 					Authorization: `Bearer ${this.jwtToken}`
 				},
 				success: () => {
-					console.log(`✅ Song ID: ${songId} deleted.`);
+					console.log(`Song ID: ${songId} deleted.`);
 					this.musicList = this.musicList.filter(song => song.id !== songId);
 					this.fetchGenreCount(); // Update chart before table refresh
 					this.refreshMusicTable();
