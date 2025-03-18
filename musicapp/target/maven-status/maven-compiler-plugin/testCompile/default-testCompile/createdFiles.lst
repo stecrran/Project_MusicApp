@@ -1,0 +1,3 @@
+com\tus\musicapp\controller\test\MusicControllerIT_AssignSong.class
+com\tus\musicapp\test\selenium\LoginConnectToSpotify.class
+com\tus\musicapp\test\selenium\LoginAdmin.class

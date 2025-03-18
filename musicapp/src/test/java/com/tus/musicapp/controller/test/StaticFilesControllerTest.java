@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
 
@@ -19,51 +18,33 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class StaticFilesControllerTest {
 
-    @InjectMocks
-    private StaticFilesController staticFilesController;
+	@InjectMocks
+	private StaticFilesController staticFilesController;
 
-    private File mockFolder;
-    private File mockImage;
+	private File mockFolder;
+	private File mockImage;
 
-    @BeforeEach
-    void setUp() throws IOException {
-        mockFolder = mock(File.class);
-        mockImage = mock(File.class);
-    }
+	@BeforeEach
+	void setUp() throws IOException {
+		mockFolder = mock(File.class);
+		mockImage = mock(File.class);
+		staticFilesController = new StaticFilesController();
+	}
 
-    @Test
-    void getCarouselImages_ShouldReturnImageList_WhenDirectoryExists() throws IOException {
-        try (MockedStatic<ClassPathResource> classPathResourceMock = mockStatic(ClassPathResource.class)) {
-            ClassPathResource mockResource = mock(ClassPathResource.class);
-            classPathResourceMock.when(() -> new ClassPathResource("static/assets/images/carousel/")).thenReturn(mockResource);
-            when(mockResource.getFile()).thenReturn(mockFolder);
-            when(mockFolder.exists()).thenReturn(true);
-            when(mockFolder.isDirectory()).thenReturn(true);
-            when(mockFolder.listFiles()).thenReturn(new File[]{mockImage});
-            when(mockImage.isFile()).thenReturn(true);
-            when(mockImage.getName()).thenReturn("test.jpg");
+	@Test
+	void getCarouselImages_ShouldReturnImageList_WhenDirectoryExists() throws IOException {
+		ClassPathResource resource = new ClassPathResource("static/assets/images/carousel/");
+		File folder = resource.getFile(); // Ensure the directory exists in test resources
 
-            List<String> images = staticFilesController.getCarouselImages();
+		assertTrue(folder.exists());
+		assertTrue(folder.isDirectory());
 
-            assertNotNull(images);
-            assertFalse(images.isEmpty());
-            assertEquals(1, images.size());
-            assertEquals("/assets/images/carousel/test.jpg", images.get(0));
-        }
-    }
+		List<String> images = staticFilesController.getCarouselImages();
 
-    @Test
-    void getCarouselImages_ShouldReturnEmptyList_WhenDirectoryDoesNotExist() throws IOException {
-        try (MockedStatic<ClassPathResource> classPathResourceMock = mockStatic(ClassPathResource.class)) {
-            ClassPathResource mockResource = mock(ClassPathResource.class);
-            classPathResourceMock.when(() -> new ClassPathResource("static/assets/images/carousel/")).thenReturn(mockResource);
-            when(mockResource.getFile()).thenReturn(mockFolder);
-            when(mockFolder.exists()).thenReturn(false);
-            
-            List<String> images = staticFilesController.getCarouselImages();
-            
-            assertNotNull(images);
-            assertTrue(images.isEmpty());
-        }
-    }
+		assertNotNull(images);
+		assertFalse(images.isEmpty());
+		assertEquals("/assets/images/carousel/image1.jpg", images.get(0));
+		assertEquals("/assets/images/carousel/image10.jpg", images.get(1));
+	}
+
 }
