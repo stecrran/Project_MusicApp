@@ -21,6 +21,8 @@ public class LoginAdminTest {
     @BeforeEach
     public void setUp() {
     	WebDriverManager.chromedriver().setup();
+    	WebDriverManager.chromedriver().clearDriverCache().setup();
+
         ChromeOptions options = new ChromeOptions();
         
         // Add Chrome stability flags

@@ -1,0 +1,7 @@
+-------------------------------------------------------------------------------
+Test set: com.tus.musicapp.test.karate.ManageUsersTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.018 s <<< FAILURE! - in com.tus.musicapp.test.karate.ManageUsersTest
+testManageUsers  Time elapsed: 0.018 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: no features or scenarios found: [classpath:features/manageUsers.feature]
+
