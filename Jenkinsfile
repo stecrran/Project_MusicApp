@@ -24,13 +24,14 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                dir("${PROJECT_DIR}") {
-                    bat './mvnw test'
-                }
-            }
-        }
+		stage('Run Tests') {
+			steps {
+				dir("${PROJECT_DIR}") {
+					bat './mvnw test -B -DtrimStackTrace=false'
+				}
+			}
+		}
+
 
         stage('Archive JAR Artifact') {
             steps {
