@@ -1,7 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.tus.musicapp.test.karate.LoginTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 5.675 s <<< FAILURE! - in com.tus.musicapp.test.karate.LoginTest
-testLogin  Time elapsed: 5.675 s  <<< FAILURE!
-org.opentest4j.AssertionFailedError: no features or scenarios found: [classpath:features/login.feature]
-
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.828 s - in com.tus.musicapp.test.karate.LoginTest

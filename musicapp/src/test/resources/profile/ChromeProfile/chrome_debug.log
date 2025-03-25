@@ -1,17 +1,23 @@
-[21848:3496:0321/224759.757:INFO:chrome_browser_cloud_management_controller.cc(196)] No machine level policy manager exists.
-[21848:3092:0321/224759.809:ERROR:token_service_table.cc(189)] Failed to decrypt token for service AccountId-113638574848877811551
-[22512:9152:0321/224800.045:WARNING:viz_main_impl.cc(85)] VizNullHypothesis is disabled (not a warning)
-[22512:9152:0321/224800.048:ERROR:direct_composition_support.cc(1122)] QueryInterface to IDCompositionDevice4 failed: No such interface supported (0x80004002)
-[21848:3496:0321/224800.827:INFO:CONSOLE(11083)] "You are running a development build of Vue.
+[13104:13296:0325/011410.456:INFO:chrome_browser_cloud_management_controller.cc(196)] No machine level policy manager exists.
+[13104:13304:0325/011410.500:ERROR:token_service_table.cc(189)] Failed to decrypt token for service AccountId-113638574848877811551
+[17620:13532:0325/011410.910:WARNING:viz_main_impl.cc(85)] VizNullHypothesis is disabled (not a warning)
+[17620:13532:0325/011410.914:ERROR:direct_composition_support.cc(1122)] QueryInterface to IDCompositionDevice4 failed: No such interface supported (0x80004002)
+[13104:13296:0325/011411.495:INFO:CONSOLE(11083)] "You are running a development build of Vue.
 Make sure to use the production build (*.prod.js) when deploying for production.", source: https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js (11083)
-[21848:3496:0321/224800.853:INFO:CONSOLE(301)] "Mounting Vue App...", source: http://localhost:9091/js/App.js (301)
-[21848:3496:0321/224800.865:INFO:CONSOLE(87)] "Checking Initial View...", source: http://localhost:9091/js/App.js (87)
-[21848:3496:0321/224800.866:INFO:CONSOLE(93)] "User is logged in. Defaulting to UserPlayList.", source: http://localhost:9091/js/App.js (93)
-[21848:3496:0321/224800.874:INFO:CONSOLE(192)] "Initializing Bootstrap Carousel...", source: http://localhost:9091/js/App.js (192)
-[21848:3496:0321/224801.845:INFO:CONSOLE(184)] "Tracks Data: [object Object]", source: http://localhost:9091/pages/UserPlayList.js (184)
-[21848:3496:0321/224802.295:INFO:CONSOLE(229)] "Selected track: [object Object]", source: http://localhost:9091/pages/UserPlayList.js (229)
-[21848:3496:0321/224803.107:INFO:CONSOLE(291)] "Song saved successfully: [object Object]", source: http://localhost:9091/pages/UserPlayList.js (291)
-[21848:9824:0321/224803.157:ERROR:registration_request.cc(291)] Registration response error message: DEPRECATED_ENDPOINT
-[21848:3496:0321/224804.434:INFO:CONSOLE(1)] "It is recommended that a robustness level be specified. Not specifying the robustness level could result in unexpected behavior.", source: https://open.spotifycdn.com/cdn/build/web-player/vendor~web-player.a822bed9.js (1)
-[21576:19236:0321/224804.766:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
-[21576:19236:0321/224804.766:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
+[13104:13296:0325/011411.540:INFO:CONSOLE(301)] "Mounting Vue App...", source: http://localhost:9091/js/App.js (301)
+[13104:13296:0325/011411.554:INFO:CONSOLE(87)] "Checking Initial View...", source: http://localhost:9091/js/App.js (87)
+[13104:13296:0325/011411.554:INFO:CONSOLE(93)] "User is logged in. Defaulting to UserPlayList.", source: http://localhost:9091/js/App.js (93)
+[13104:13296:0325/011411.560:INFO:CONSOLE(192)] "Initializing Bootstrap Carousel...", source: http://localhost:9091/js/App.js (192)
+[13104:13296:0325/011411.627:INFO:CONSOLE(118)] "X Error loading users: ", source: http://localhost:9091/js/App.js (118)
+[13104:1864:0325/011413.682:ERROR:registration_request.cc(291)] Registration response error message: DEPRECATED_ENDPOINT
+[13104:13296:0325/011421.053:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:5157
+[13104:13296:0325/011421.093:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:265059
+[13104:13296:0325/011421.582:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:883094
+[13104:13296:0325/011421.809:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:2200227
+[13104:13296:0325/011421.989:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:45165
+[13104:13296:0325/011422.653:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:2992963
+[13104:13296:0325/011422.997:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:4680
+[13104:13296:0325/011423.047:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:2747170
+[13104:13296:0325/011423.307:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:118577
+[18516:6980:0325/011427.173:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
+[18516:6980:0325/011427.173:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
