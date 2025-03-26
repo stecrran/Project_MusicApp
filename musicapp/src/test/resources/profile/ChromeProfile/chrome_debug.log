@@ -1,23 +1,30 @@
-[13104:13296:0325/011410.456:INFO:chrome_browser_cloud_management_controller.cc(196)] No machine level policy manager exists.
-[13104:13304:0325/011410.500:ERROR:token_service_table.cc(189)] Failed to decrypt token for service AccountId-113638574848877811551
-[17620:13532:0325/011410.910:WARNING:viz_main_impl.cc(85)] VizNullHypothesis is disabled (not a warning)
-[17620:13532:0325/011410.914:ERROR:direct_composition_support.cc(1122)] QueryInterface to IDCompositionDevice4 failed: No such interface supported (0x80004002)
-[13104:13296:0325/011411.495:INFO:CONSOLE(11083)] "You are running a development build of Vue.
+[20660:13184:0326/190317.349:INFO:browsing_data_lifetime_policy_handler.cc(90)] The policy ClearBrowsingDataOnExitList automatically disabled the following sync types: cookies
+[20660:13184:0326/190317.395:INFO:chrome_browser_cloud_management_controller.cc(196)] No machine level policy manager exists.
+[20660:13184:0326/190317.399:INFO:browsing_data_lifetime_policy_handler.cc(90)] The policy ClearBrowsingDataOnExitList automatically disabled the following sync types: cookies
+[20660:15708:0326/190317.408:ERROR:token_service_table.cc(189)] Failed to decrypt token for service AccountId-113638574848877811551
+[20392:21036:0326/190317.452:WARNING:viz_main_impl.cc(85)] VizNullHypothesis is disabled (not a warning)
+[21160:21156:0326/190317.454:INFO:cpu_info.cc(53)] Available number of cores: 20
+[18316:21240:0326/190317.454:INFO:cpu_info.cc(53)] Available number of cores: 20
+[20660:15708:0326/190317.489:WARNING:leveldb_database.cc(137)] Unable to open C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata: IO error: C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata/MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
+[20660:15708:0326/190317.490:WARNING:leveldb_database.cc(137)] Unable to open C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata: IO error: C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata/MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
+[20660:15708:0326/190317.493:WARNING:leveldb_database.cc(137)] Unable to open C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata: IO error: C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata/MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
+[20660:11820:0326/190317.495:WARNING:leveldb_database.cc(137)] Unable to open C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata: IO error: C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata/MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
+[20660:11820:0326/190317.532:WARNING:value_store_frontend.cc(47)] Reading ahfgeienlihckogmohjhadlkjgocpleb.alarms from  failed: IO error: .../MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
+[20660:11820:0326/190317.533:WARNING:value_store_frontend.cc(47)] Reading mhjfbmdgcfjbbpaeojofohoefgiehjai.alarms from  failed: IO error: .../MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
+[12488:5852:0326/190317.615:INFO:cpu_info.cc(53)] Available number of cores: 20
+[3056:16016:0326/190317.892:INFO:cpu_info.cc(53)] Available number of cores: 20
+[20660:13184:0326/190317.902:INFO:CONSOLE(11083)] "You are running a development build of Vue.
 Make sure to use the production build (*.prod.js) when deploying for production.", source: https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js (11083)
-[13104:13296:0325/011411.540:INFO:CONSOLE(301)] "Mounting Vue App...", source: http://localhost:9091/js/App.js (301)
-[13104:13296:0325/011411.554:INFO:CONSOLE(87)] "Checking Initial View...", source: http://localhost:9091/js/App.js (87)
-[13104:13296:0325/011411.554:INFO:CONSOLE(93)] "User is logged in. Defaulting to UserPlayList.", source: http://localhost:9091/js/App.js (93)
-[13104:13296:0325/011411.560:INFO:CONSOLE(192)] "Initializing Bootstrap Carousel...", source: http://localhost:9091/js/App.js (192)
-[13104:13296:0325/011411.627:INFO:CONSOLE(118)] "X Error loading users: ", source: http://localhost:9091/js/App.js (118)
-[13104:1864:0325/011413.682:ERROR:registration_request.cc(291)] Registration response error message: DEPRECATED_ENDPOINT
-[13104:13296:0325/011421.053:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:5157
-[13104:13296:0325/011421.093:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:265059
-[13104:13296:0325/011421.582:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:883094
-[13104:13296:0325/011421.809:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:2200227
-[13104:13296:0325/011421.989:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:45165
-[13104:13296:0325/011422.653:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:2992963
-[13104:13296:0325/011422.997:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:4680
-[13104:13296:0325/011423.047:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:2747170
-[13104:13296:0325/011423.307:WARNING:controller_impl.cc(1187)] Background download complete, client: 6, completion type: 0, file size:118577
-[18516:6980:0325/011427.173:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
-[18516:6980:0325/011427.173:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
+[20660:13184:0326/190317.910:INFO:CONSOLE(301)] "Mounting Vue App...", source: http://localhost:9091/js/App.js (301)
+[20660:13184:0326/190317.917:INFO:CONSOLE(87)] "Checking Initial View...", source: http://localhost:9091/js/App.js (87)
+[20660:13184:0326/190317.917:INFO:CONSOLE(90)] "No JWT found. Redirecting to LoginPage.", source: http://localhost:9091/js/App.js (90)
+[20660:13184:0326/190317.920:INFO:CONSOLE(192)] "Initializing Bootstrap Carousel...", source: http://localhost:9091/js/App.js (192)
+[20660:13184:0326/190317.932:INFO:CONSOLE(0)] "[DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o", source: http://localhost:9091/ (0)
+[20660:13184:0326/190318.207:INFO:CONSOLE(38)] "Switching view to: MusicList", source: http://localhost:9091/js/App.js (38)
+[20660:13184:0326/190318.246:INFO:CONSOLE(11083)] "You are running a development build of Vue.
+Make sure to use the production build (*.prod.js) when deploying for production.", source: https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js (11083)
+[20660:13184:0326/190318.252:INFO:CONSOLE(301)] "Mounting Vue App...", source: http://localhost:9091/js/App.js (301)
+[20660:13184:0326/190318.255:INFO:CONSOLE(87)] "Checking Initial View...", source: http://localhost:9091/js/App.js (87)
+[20660:13184:0326/190318.255:INFO:CONSOLE(93)] "User is logged in. Defaulting to UserPlayList.", source: http://localhost:9091/js/App.js (93)
+[20660:13184:0326/190318.258:INFO:CONSOLE(192)] "Initializing Bootstrap Carousel...", source: http://localhost:9091/js/App.js (192)
+[20660:21432:0326/190319.855:ERROR:registration_request.cc(291)] Registration response error message: DEPRECATED_ENDPOINT

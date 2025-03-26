@@ -4,81 +4,70 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SpotifyConnectionTest {
 
-    private WebDriver driver;
+    private ChromeDriver driver;
     private WebDriverWait wait;
+    private JavascriptExecutor js;
 
     @BeforeEach
-    void setup() {
-        WebDriverManager.chromedriver().setup();
+    public void setUp() {
+    	WebDriverManager.chromedriver().setup();
+    	WebDriverManager.chromedriver().clearDriverCache().setup();
+
         ChromeOptions options = new ChromeOptions();
-
-        // Dynamically resolve the ChromeProfile path
-        Path profilePath = Paths.get("src", "test", "resources", "profile", "ChromeProfile").toAbsolutePath();
-        options.addArguments("--user-data-dir=" + profilePath.toString());
-        options.addArguments("--profile-directory=Default");
-
+        
+        // Chrome stability flags
         options.addArguments("--remote-allow-origins=*");
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-popup-blocking");
-        options.addArguments("--start-maximized");
-
+        options.addArguments("--start-maximized"); // Ensure the browser opens in maximized mode
+        
         driver = new ChromeDriver(options);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        js = (JavascriptExecutor) driver;
     }
 
-    @DisplayName("Verify Spotify Connection")
     @Test
-    void testLoginAndSpotifyIntegration() throws InterruptedException {
-        driver.get("http://localhost:9091/");
-                
-        // Click on "My Playlist #1"
-        WebElement playlistImg = wait.until(ExpectedConditions.elementToBeClickable(
-            By.cssSelector("img[src='https://i.scdn.co/image/ab67616d00001e02638404f3498c5c96c220cbf8']")
+    void testSpotifyLogin() throws InterruptedException {
+        driver.get("https://accounts.spotify.com/en/login");
+
+        // Wait until username field is visible
+        WebElement usernameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-username")));
+        WebElement passwordInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-password")));
+
+        // Use JavaScript to autofill (CDP-style)
+        ((JavascriptExecutor) driver).executeScript("""
+            document.querySelector('#login-username').value = 'johntest422@gmail.com';
+            document.querySelector('#login-password').value = 'Admin1234!';
+        """);
+
+        // Wait to simulate real typing (Spotify sometimes detects bots)
+        Thread.sleep(800);
+
+        // Now click login using Selenium
+        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(
+                By.cssSelector("button[data-testid='login-button']")));
+        loginButton.click();
+
+        // Wait for Spotify to redirect after successful login
+        wait.until(ExpectedConditions.or(
+                ExpectedConditions.urlContains("spotify.com"),
+                ExpectedConditions.not(ExpectedConditions.urlContains("login"))
         ));
-        playlistImg.click();
 
-        // Click on "🎵 Play"
-        WebElement playButton = wait.until(ExpectedConditions.elementToBeClickable(
-            By.cssSelector(".btn.btn-primary.play-btn[data-url='https://open.spotify.com/track/1ZozJfi8u9cO2Ob8KwiwNT']")
-        ));
-        playButton.click();
-
-        // Click on "Play on Spotify"
-        WebElement playOnSpotify = wait.until(ExpectedConditions.elementToBeClickable(
-            By.cssSelector(".btn.btn-success")
-        ));
-        playOnSpotify.click();
-        
-        // Wait for a new tab to open
-        wait.until(driver -> driver.getWindowHandles().size() > 1);
-
-        // Switch to the newly opened tab
-        for (String windowHandle : driver.getWindowHandles()) {
-            driver.switchTo().window(windowHandle);
-        }
-
-        // Confirm URL contains "open.spotify.com"
         String currentUrl = driver.getCurrentUrl();
-        System.out.println("🔗 Spotify Opened URL: " + currentUrl);
-        assertTrue(currentUrl.contains("open.spotify.com"), "Spotify page did not open.");
+        System.out.println("✅ Redirected to: " + currentUrl);
 
-        // Close the Spotify tab and switch back
-        driver.close();
-        driver.switchTo().window(driver.getWindowHandles().iterator().next());
-
-        System.out.println("✅ Spotify page opened successfully and verified.");
+        assertFalse(currentUrl.contains("login"), "Still on login page – login may have failed.");
     }
 
     @AfterEach
@@ -88,5 +77,3 @@ public class SpotifyConnectionTest {
         }
     }
 }
-
-

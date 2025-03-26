@@ -1,3 +1,2 @@
-2025/03/25-01:12:16.575 ecc Reusing MANIFEST C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\Session Storage/MANIFEST-000001
-2025/03/25-01:12:16.582 ecc Recovering log #3
-2025/03/25-01:12:16.588 ecc Reusing old log C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\Session Storage/000003.log 
+2025/03/26-19:03:33.231 1670 Creating DB C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\Session Storage__tmp_for_rebuild since it was missing.
+2025/03/26-19:03:33.242 1670 Reusing MANIFEST C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\Session Storage__tmp_for_rebuild/MANIFEST-000001

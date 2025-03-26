@@ -1,3 +1,2 @@
-2025/03/25-01:12:16.611 ecc Reusing MANIFEST C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\Local Storage\leveldb/MANIFEST-000001
-2025/03/25-01:12:16.612 ecc Recovering log #7
-2025/03/25-01:12:16.619 ecc Reusing old log C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\Local Storage\leveldb/000007.log 
+2025/03/26-19:03:33.231 51ac Creating DB C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\Local Storage\leveldb__tmp_for_rebuild since it was missing.
+2025/03/26-19:03:33.239 51ac Reusing MANIFEST C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\Local Storage\leveldb__tmp_for_rebuild/MANIFEST-000001

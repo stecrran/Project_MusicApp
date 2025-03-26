@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-03-25T01:13:07+0000",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.12 (Oracle Corporation)"
+    date = "2025-03-26T18:46:36+0000",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.40.0.v20241112-0530, environment: Java 21.0.6 (Eclipse Adoptium)"
 )
 @Component
 public class SongMapperImpl implements SongMapper {
@@ -23,14 +23,14 @@ public class SongMapperImpl implements SongMapper {
         SongDto songDto = new SongDto();
 
         songDto.setUsers( mapUsersToUsernames( song.getUsers() ) );
+        songDto.setAlbum( song.getAlbum() );
+        songDto.setArtist( song.getArtist() );
+        songDto.setDurationMs( song.getDurationMs() );
+        songDto.setGenre( song.getGenre() );
         songDto.setId( song.getId() );
         songDto.setSpotifyId( song.getSpotifyId() );
-        songDto.setTitle( song.getTitle() );
-        songDto.setArtist( song.getArtist() );
-        songDto.setAlbum( song.getAlbum() );
-        songDto.setGenre( song.getGenre() );
-        songDto.setDurationMs( song.getDurationMs() );
         songDto.setSpotifyUrl( song.getSpotifyUrl() );
+        songDto.setTitle( song.getTitle() );
 
         return songDto;
     }
@@ -43,15 +43,15 @@ public class SongMapperImpl implements SongMapper {
 
         Song song = new Song();
 
-        song.setSpotifyId( musicCreationDto.getSpotifyId() );
-        song.setTitle( musicCreationDto.getTitle() );
-        song.setArtist( musicCreationDto.getArtist() );
         song.setAlbum( musicCreationDto.getAlbum() );
-        song.setGenre( musicCreationDto.getGenre() );
+        song.setArtist( musicCreationDto.getArtist() );
         if ( musicCreationDto.getDurationMs() != null ) {
             song.setDurationMs( musicCreationDto.getDurationMs() );
         }
+        song.setGenre( musicCreationDto.getGenre() );
+        song.setSpotifyId( musicCreationDto.getSpotifyId() );
         song.setSpotifyUrl( musicCreationDto.getSpotifyUrl() );
+        song.setTitle( musicCreationDto.getTitle() );
 
         return song;
     }

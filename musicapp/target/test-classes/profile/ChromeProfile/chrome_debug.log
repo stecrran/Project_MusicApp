@@ -1,9 +1,30 @@
-[15952:17860:0325/011215.766:INFO:chrome_browser_cloud_management_controller.cc(196)] No machine level policy manager exists.
-[15952:18504:0325/011215.816:ERROR:token_service_table.cc(189)] Failed to decrypt token for service AccountId-113638574848877811551
-[16328:18672:0325/011216.226:WARNING:viz_main_impl.cc(85)] VizNullHypothesis is disabled (not a warning)
-[16328:18672:0325/011216.266:ERROR:direct_composition_support.cc(1122)] QueryInterface to IDCompositionDevice4 failed: No such interface supported (0x80004002)
-[15952:17860:0325/011216.259:ERROR:account_info_fetcher.cc(62)] OnGetTokenFailure: Invalid credentials (credentials missing).
-[15952:17860:0325/011216.367:WARNING:account_fetcher_service.cc(416)] Failed to get UserInfo for 113638574848877811551
-[15952:13072:0325/011218.988:ERROR:registration_request.cc(291)] Registration response error message: DEPRECATED_ENDPOINT
-[16980:2260:0325/011219.659:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
-[16980:2260:0325/011219.659:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
+[21252:4428:0326/190139.550:INFO:browsing_data_lifetime_policy_handler.cc(90)] The policy ClearBrowsingDataOnExitList automatically disabled the following sync types: cookies
+[21252:4428:0326/190139.581:INFO:chrome_browser_cloud_management_controller.cc(196)] No machine level policy manager exists.
+[21252:4428:0326/190139.586:INFO:browsing_data_lifetime_policy_handler.cc(90)] The policy ClearBrowsingDataOnExitList automatically disabled the following sync types: cookies
+[21252:21360:0326/190139.594:ERROR:token_service_table.cc(189)] Failed to decrypt token for service AccountId-113638574848877811551
+[16628:19720:0326/190139.639:INFO:cpu_info.cc(53)] Available number of cores: 20
+[5032:19076:0326/190139.640:INFO:cpu_info.cc(53)] Available number of cores: 20
+[17132:21004:0326/190139.657:WARNING:viz_main_impl.cc(85)] VizNullHypothesis is disabled (not a warning)
+[21252:21364:0326/190139.677:WARNING:leveldb_database.cc(137)] Unable to open C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata: IO error: C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata/MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
+[21252:21364:0326/190139.681:WARNING:leveldb_database.cc(137)] Unable to open C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata: IO error: C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata/MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
+[21252:21364:0326/190139.683:WARNING:leveldb_database.cc(137)] Unable to open C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata: IO error: C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata/MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
+[21252:21364:0326/190139.685:WARNING:leveldb_database.cc(137)] Unable to open C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata: IO error: C:\Users\a00325351\Documents\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\shared_proto_db\metadata/MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
+[21252:21308:0326/190139.722:WARNING:value_store_frontend.cc(47)] Reading ahfgeienlihckogmohjhadlkjgocpleb.alarms from  failed: IO error: .../MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
+[21252:21308:0326/190139.723:WARNING:value_store_frontend.cc(47)] Reading mhjfbmdgcfjbbpaeojofohoefgiehjai.alarms from  failed: IO error: .../MANIFEST-000001: Unable to create sequential file (ChromeMethodBFE: 7::NewSequentialFile::1)
+[18180:13768:0326/190139.811:INFO:cpu_info.cc(53)] Available number of cores: 20
+[2592:7432:0326/190140.077:INFO:cpu_info.cc(53)] Available number of cores: 20
+[21252:4428:0326/190140.080:INFO:CONSOLE(11083)] "You are running a development build of Vue.
+Make sure to use the production build (*.prod.js) when deploying for production.", source: https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js (11083)
+[21252:4428:0326/190140.089:INFO:CONSOLE(301)] "Mounting Vue App...", source: http://localhost:9091/js/App.js (301)
+[21252:4428:0326/190140.096:INFO:CONSOLE(87)] "Checking Initial View...", source: http://localhost:9091/js/App.js (87)
+[21252:4428:0326/190140.097:INFO:CONSOLE(90)] "No JWT found. Redirecting to LoginPage.", source: http://localhost:9091/js/App.js (90)
+[21252:4428:0326/190140.100:INFO:CONSOLE(192)] "Initializing Bootstrap Carousel...", source: http://localhost:9091/js/App.js (192)
+[21252:4428:0326/190140.111:INFO:CONSOLE(0)] "[DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o", source: http://localhost:9091/ (0)
+[21252:21420:0326/190142.171:ERROR:registration_request.cc(291)] Registration response error message: DEPRECATED_ENDPOINT
+[21252:4428:0326/190148.889:INFO:CONSOLE(38)] "Switching view to: MusicList", source: http://localhost:9091/js/App.js (38)
+[21252:4428:0326/190148.932:INFO:CONSOLE(11083)] "You are running a development build of Vue.
+Make sure to use the production build (*.prod.js) when deploying for production.", source: https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js (11083)
+[21252:4428:0326/190148.938:INFO:CONSOLE(301)] "Mounting Vue App...", source: http://localhost:9091/js/App.js (301)
+[21252:4428:0326/190148.942:INFO:CONSOLE(87)] "Checking Initial View...", source: http://localhost:9091/js/App.js (87)
+[21252:4428:0326/190148.942:INFO:CONSOLE(93)] "User is logged in. Defaulting to UserPlayList.", source: http://localhost:9091/js/App.js (93)
+[21252:4428:0326/190148.945:INFO:CONSOLE(192)] "Initializing Bootstrap Carousel...", source: http://localhost:9091/js/App.js (192)
