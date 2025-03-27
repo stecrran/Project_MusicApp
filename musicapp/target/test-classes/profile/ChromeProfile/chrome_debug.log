@@ -1,11 +1,16 @@
-[10780:17680:0326/233802.264:INFO:chrome_browser_cloud_management_controller.cc(196)] No machine level policy manager exists.
-[21700:11812:0326/233802.543:WARNING:viz_main_impl.cc(85)] VizNullHypothesis is disabled (not a warning)
-[21700:11812:0326/233802.547:ERROR:direct_composition_support.cc(1122)] QueryInterface to IDCompositionDevice4 failed: No such interface supported (0x80004002)
-[10780:17680:0326/233803.204:INFO:CONSOLE(11083)] "You are running a development build of Vue.
+[12152:7520:0326/235453.427:INFO:chrome_browser_cloud_management_controller.cc(196)] No machine level policy manager exists.
+[2680:10552:0326/235453.731:WARNING:viz_main_impl.cc(85)] VizNullHypothesis is disabled (not a warning)
+[2680:10552:0326/235453.734:ERROR:direct_composition_support.cc(1122)] QueryInterface to IDCompositionDevice4 failed: No such interface supported (0x80004002)
+[12152:7520:0326/235454.653:INFO:CONSOLE(11083)] "You are running a development build of Vue.
 Make sure to use the production build (*.prod.js) when deploying for production.", source: https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js (11083)
-[10780:17680:0326/233803.238:INFO:CONSOLE(301)] "Mounting Vue App...", source: http://localhost:9091/js/App.js (301)
-[10780:17680:0326/233803.250:INFO:CONSOLE(87)] "Checking Initial View...", source: http://localhost:9091/js/App.js (87)
-[10780:17680:0326/233803.251:INFO:CONSOLE(93)] "User is logged in. Defaulting to UserPlayList.", source: http://localhost:9091/js/App.js (93)
-[10780:17680:0326/233803.260:INFO:CONSOLE(192)] "Initializing Bootstrap Carousel...", source: http://localhost:9091/js/App.js (192)
-[19736:10016:0326/233806.513:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
-[19736:10016:0326/233806.513:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
+[12152:7520:0326/235454.689:INFO:CONSOLE(301)] "Mounting Vue App...", source: http://localhost:9091/js/App.js (301)
+[12152:7520:0326/235454.702:INFO:CONSOLE(87)] "Checking Initial View...", source: http://localhost:9091/js/App.js (87)
+[12152:7520:0326/235454.702:INFO:CONSOLE(93)] "User is logged in. Defaulting to UserPlayList.", source: http://localhost:9091/js/App.js (93)
+[12152:7520:0326/235454.713:INFO:CONSOLE(192)] "Initializing Bootstrap Carousel...", source: http://localhost:9091/js/App.js (192)
+[12152:8944:0326/235454.911:WARNING:content_hash.cc(264)] Fetched verified_contents.json with size: 7780 bytes for extension id: nmmhkkegccagdldgiimedpiccmgmieda version: 1.0.0.6
+[12152:7520:0326/235455.606:INFO:CONSOLE(184)] "Tracks Data: [object Object]", source: http://localhost:9091/pages/UserPlayList.js (184)
+[12152:7520:0326/235456.083:INFO:CONSOLE(229)] "Selected track: [object Object]", source: http://localhost:9091/pages/UserPlayList.js (229)
+[12152:13608:0326/235456.874:ERROR:registration_request.cc(291)] Registration response error message: DEPRECATED_ENDPOINT
+[12152:7520:0326/235457.018:INFO:CONSOLE(291)] "Song saved successfully: [object Object]", source: http://localhost:9091/pages/UserPlayList.js (291)
+[8776:7084:0326/235459.210:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
+[8776:7084:0326/235459.210:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.

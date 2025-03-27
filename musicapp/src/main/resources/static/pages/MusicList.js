@@ -264,6 +264,15 @@ window.MusicList = {
 				});
 			});
 		},
+		
+		// adding Share playlist button
+		sharePlaylist() {
+			if (!this.musicList.length) return alert("Your playlist is empty! Add songs to share.");
+			const details = this.musicList.map(song => `${song.title} by ${song.artist} [Album: ${song.album}]`).join("\n");
+			navigator.clipboard.writeText(details)
+				.then(() => alert("Playlist copied to clipboard!"))
+				.catch(() => alert("Couldn't copy playlist."));
+		},
 
 		// Toggles the visibility of the genre chart
 		toggleChart() {
@@ -284,6 +293,9 @@ window.MusicList = {
 	template: `
   <div class="container mt-5">
     <h2>🎼 PlayList</h2>
+	<div class="d-flex justify-content-end mb-2">
+	  <button class="btn btn-success" @click="sharePlaylist">🔗 Share Playlist</button>
+	</div>
     <table id="musicTable" class="display table table-striped" style="width:100%">
       <thead>
         <tr>

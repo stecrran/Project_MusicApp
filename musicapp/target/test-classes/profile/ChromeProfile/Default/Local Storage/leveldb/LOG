@@ -1,3 +1,5 @@
-2025/03/26-23:38:02.633 4c7c Reusing MANIFEST C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\Local Storage\leveldb/MANIFEST-000001
-2025/03/26-23:38:02.637 4c7c Recovering log #3
-2025/03/26-23:38:02.644 4c7c Reusing old log C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\Local Storage\leveldb/000003.log 
+2025/03/26-23:54:53.938 2220 Reusing MANIFEST C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\Local Storage\leveldb/MANIFEST-000001
+2025/03/26-23:54:53.940 2220 Recovering log #4
+2025/03/26-23:54:53.941 2220 Level-0 table #7: started
+2025/03/26-23:54:54.076 2220 Level-0 table #7: 51337 bytes OK
+2025/03/26-23:54:54.096 2220 Delete type=0 #4
