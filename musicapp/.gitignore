@@ -1,2 +1,3 @@
-"/target/" 
-"*.jar" 
+/target/
+/target/test-classes/profile/
+*.jar

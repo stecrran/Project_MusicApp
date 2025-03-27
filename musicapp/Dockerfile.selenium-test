@@ -1,0 +1,20 @@
+# Dockerfile.selenium-test — for running Selenium tests
+FROM maven:3.8.5-openjdk-17-slim AS builder
+
+WORKDIR /app
+COPY . .
+
+# Build the project but skip test execution
+RUN mvn clean package -DskipTests
+
+# Second stage: only for running tests
+FROM maven:3.8.5-openjdk-17-slim
+
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
+COPY --from=builder /app/target/test-classes /app/test-classes
+COPY --from=builder /app/target/classes /app/classes
+COPY --from=builder /app/pom.xml .
+
+# Default command runs only Selenium tests
+CMD ["mvn", "test", "-Dtest=**/selenium/**"]
