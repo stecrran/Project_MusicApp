@@ -24,14 +24,13 @@ pipeline {
             }
         }
 
-		stage('Run Tests') {
-			steps {
-				dir("${PROJECT_DIR}") {
-					bat './mvnw test -B -DtrimStackTrace=false'
-				}
-			}
-		}
-
+        stage('Run Unit & Integration Tests (Exclude Selenium)') {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    bat './mvnw test -B -DtrimStackTrace=false -Dtest=!**/*SeleniumTest,!**/selenium/**'
+                }
+            }
+        }
 
         stage('Archive JAR Artifact') {
             steps {

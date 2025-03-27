@@ -1,3 +1,2 @@
-2025/03/21-19:57:22.756 33cc Reusing MANIFEST C:\MySeleniumProfile\Default\GCM Store\Encryption/MANIFEST-000001
-2025/03/21-19:57:22.757 33cc Recovering log #3
-2025/03/21-19:57:22.758 33cc Reusing old log C:\MySeleniumProfile\Default\GCM Store\Encryption/000003.log 
+2025/03/26-23:51:12.055 4e20 Creating DB C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\GCM Store\Encryption since it was missing.
+2025/03/26-23:51:12.240 4e20 Reusing MANIFEST C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\GCM Store\Encryption/MANIFEST-000001

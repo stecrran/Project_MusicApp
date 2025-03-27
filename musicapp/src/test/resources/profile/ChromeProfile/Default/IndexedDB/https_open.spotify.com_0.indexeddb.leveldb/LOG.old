@@ -1,0 +1,6 @@
+2025/03/26-23:54:12.636 300 Reusing MANIFEST C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\IndexedDB\https_open.spotify.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/03/26-23:54:12.637 300 Recovering log #4
+2025/03/26-23:54:12.638 300 Reusing old log C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\test\resources\profile\ChromeProfile\Default\IndexedDB\https_open.spotify.com_0.indexeddb.leveldb/000004.log 
+2025/03/26-23:54:35.724 245c Level-0 table #8: started
+2025/03/26-23:54:35.761 245c Level-0 table #8: 3877704 bytes OK
+2025/03/26-23:54:35.770 245c Delete type=0 #4
