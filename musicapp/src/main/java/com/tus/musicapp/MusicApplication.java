@@ -28,6 +28,8 @@ public class MusicApplication {
         
         // run application
         SpringApplication.run(MusicApplication.class, args);
+        System.out.println("Logger: " + java.util.logging.Logger.getLogger("org.apache.hc.client5.http.wire").getLevel());
+
     }
     
     @PostConstruct

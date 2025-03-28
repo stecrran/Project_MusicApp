@@ -164,6 +164,12 @@
 			<version>23.1.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-logging</artifactId>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -228,6 +234,15 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<jvmArguments>
+						-Djava.util.logging.config.file=src/main/resources/logging.properties</jvmArguments>
+				</configuration>
 			</plugin>
 
 			<plugin>
