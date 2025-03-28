@@ -1,0 +1,5 @@
+# Ignore all target contents by default
+target/
+
+# ...except the JAR we need for the Docker build
+!target/MusicApp-0.0.1-SNAPSHOT.jar
