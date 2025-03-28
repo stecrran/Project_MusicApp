@@ -3,12 +3,24 @@ package com.tus.musicapp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import java.util.logging.LogManager;
+
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.tus.musicapp") // Ensure all components are scanned
+@ComponentScan(basePackages = "com.tus.musicapp") 
 public class MusicApplication {
 
     public static void main(String[] args) {
+    	// remove HTTP wire logging
+        LogManager.getLogManager().reset();
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
+        
+        // run application
         SpringApplication.run(MusicApplication.class, args);
     }
+
 }
+
+

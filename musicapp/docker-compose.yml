@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: musicappdb
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - musicapp-net
+
+  musicapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: musicapp
+    ports:
+      - "9091:9091"
+    depends_on:
+      - mysql
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - musicapp-net
+
+  selenium-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.selenium-test
+    container_name: selenium-tests
+    depends_on:
+      - musicapp
+    networks:
+      - musicapp-net
+
+volumes:
+  mysql-data:
+
+networks:
+  musicapp-net:
