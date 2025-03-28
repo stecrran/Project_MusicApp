@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataInitializer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Music Application</a> &gt; <a href="index.source.html" class="el_package">com.tus.musicapp.config</a> &gt; <span class="el_source">DataInitializer.java</span></div><h1>DataInitializer.java</h1><pre class="source lang-java linenums">package com.tus.musicapp.config;
+
+import com.tus.musicapp.model.Role;
+import com.tus.musicapp.model.User;
+import com.tus.musicapp.repos.UserRepository;
+
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+// initialise a user with each user type
+@Component
+<span class="nc" id="L15">public class DataInitializer implements CommandLineRunner {</span>
+
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+<span class="nc" id="L23">    private String declareAdmin = &quot;admin&quot;;</span>
+<span class="nc" id="L24">    private String declareSpotifyUser = &quot;spotify_user&quot;;</span>
+    
+    @Override
+    public void run(String... args) throws Exception {
+        // Check if an admin already exists
+<span class="nc bnc" id="L29" title="All 2 branches missed.">        if (userRepository.findByUsername(declareAdmin).isEmpty()) {</span>
+<span class="nc" id="L30">            User admin = new User();</span>
+<span class="nc" id="L31">            admin.setUsername(declareAdmin);</span>
+            // Change the default password as needed for your environment
+<span class="nc" id="L33">            admin.setPassword(passwordEncoder.encode(declareAdmin));</span>
+<span class="nc" id="L34">            admin.setRoles(Set.of(Role.ADMIN, Role.SPOTIFY_USER));</span>
+            
+<span class="nc" id="L36">            userRepository.save(admin);</span>
+        }
+
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (userRepository.findByUsername(declareSpotifyUser).isEmpty()) {</span>
+<span class="nc" id="L40">            User spotifyUser = new User();</span>
+<span class="nc" id="L41">            spotifyUser.setUsername(declareSpotifyUser);</span>
+            // Change the default password as needed for your environment
+<span class="nc" id="L43">            spotifyUser.setPassword(passwordEncoder.encode(declareSpotifyUser));</span>
+<span class="nc" id="L44">            spotifyUser.setRoles(Set.of(Role.SPOTIFY_USER));</span>
+            
+<span class="nc" id="L46">            userRepository.save(spotifyUser);</span>
+        }
+<span class="nc" id="L48">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

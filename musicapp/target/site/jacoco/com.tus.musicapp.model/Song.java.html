@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Song.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Music Application</a> &gt; <a href="index.source.html" class="el_package">com.tus.musicapp.model</a> &gt; <span class="el_source">Song.java</span></div><h1>Song.java</h1><pre class="source lang-java linenums">package com.tus.musicapp.model;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/* 
+ * JPA entity used for managing user song collections. 
+ * Establishes a Many-to-Many relationship with the User entity (songCollection)
+ */
+@Getter
+@Setter
+@Entity
+@Table(name = &quot;music&quot;) 
+public class Song {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String spotifyId;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String artist;
+
+    @Column(nullable = false)
+    private String album;
+
+    @Column(nullable = false)
+    private String genre;
+
+    @Column(nullable = false)
+    private int durationMs;
+
+    @Column(nullable = false)
+    private String spotifyUrl;
+    
+    @ManyToMany(mappedBy = &quot;songCollection&quot;, fetch = FetchType.LAZY)
+    @JsonBackReference  // Prevents infinite recursion (songs have users, users have songs)
+    private Set&lt;User&gt; users;
+
+    // Default Constructor (Required by JPA)
+<span class="fc" id="L53">    public Song() {}</span>
+
+    // Constructor Matching Expected Parameters
+<span class="fc" id="L56">    public Song(String spotifyId, String title, String artist, String album, String genre, int durationMs, String spotifyUrl) {</span>
+<span class="fc" id="L57">        this.spotifyId = spotifyId;</span>
+<span class="fc" id="L58">        this.title = title;</span>
+<span class="fc" id="L59">        this.artist = artist;</span>
+<span class="fc" id="L60">        this.album = album;</span>
+<span class="fc" id="L61">        this.genre = genre;</span>
+<span class="fc" id="L62">        this.durationMs = durationMs;</span>
+<span class="fc" id="L63">        this.spotifyUrl = spotifyUrl;</span>
+<span class="fc" id="L64">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

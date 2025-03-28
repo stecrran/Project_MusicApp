@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Music Application</a> &gt; <a href="index.source.html" class="el_package">com.tus.musicapp.model</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package com.tus.musicapp.model;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.JoinColumn;
+
+import lombok.Getter;
+import lombok.Setter;
+
+// JPA Entity which manages authentication credentials, roles, and collections of songs and music
+@Getter
+@Setter
+@Entity
+@Table(name = &quot;users&quot;)
+<span class="fc" id="L31">public class User {</span>
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(unique = true, nullable = false)
+	private String username;
+
+	@Column(nullable = false)
+	private String password;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Enumerated(EnumType.STRING)
+	private Set&lt;Role&gt; roles;
+
+
+    // Many-to-Many Relationship with Songs
+<span class="fc" id="L49">    @ManyToMany</span>
+    @JoinTable(
+        name = &quot;user_songs&quot;,
+        joinColumns = @JoinColumn(name = &quot;user_id&quot;),
+        inverseJoinColumns = @JoinColumn(name = &quot;song_id&quot;)
+    )
+    @JsonIgnore  // Prevents infinite recursion (songs have users, users have songs)
+    private Set&lt;Song&gt; songCollection = new HashSet&lt;&gt;();
+
+    // Many-to-Many Relationship with Music (General Collection)
+<span class="fc" id="L59">    @ManyToMany</span>
+    @JoinTable(
+        name = &quot;user_music&quot;,
+        joinColumns = @JoinColumn(name = &quot;user_id&quot;),
+        inverseJoinColumns = @JoinColumn(name = &quot;music_id&quot;)
+    )
+    private Set&lt;Music&gt; musicCollection = new HashSet&lt;&gt;(); // General music collection
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

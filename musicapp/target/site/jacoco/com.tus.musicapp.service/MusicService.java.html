@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MusicService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Music Application</a> &gt; <a href="index.source.html" class="el_package">com.tus.musicapp.service</a> &gt; <span class="el_source">MusicService.java</span></div><h1>MusicService.java</h1><pre class="source lang-java linenums">package com.tus.musicapp.service;
+
+import com.tus.musicapp.model.Music;
+import com.tus.musicapp.model.User;
+import com.tus.musicapp.repos.MusicRepository;
+import com.tus.musicapp.repos.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+/*
+ * Responsible for managing music-related operations. It interacts with the MusicRepository 
+ * and UserRepository to handle music retrieval, addition, and user-music associations
+ */
+@Service
+public class MusicService {
+
+    private final MusicRepository musicRepo;
+    private final UserRepository userRepo;
+
+<span class="fc" id="L26">    public MusicService(MusicRepository musicRepo, UserRepository userRepo) {</span>
+<span class="fc" id="L27">        this.musicRepo = musicRepo;</span>
+<span class="fc" id="L28">        this.userRepo = userRepo;</span>
+<span class="fc" id="L29">    }</span>
+
+    // Get all songs (publicly available)
+    public List&lt;Music&gt; getAllMusic() {
+<span class="fc" id="L33">        return musicRepo.findAll();</span>
+    }
+
+    // Get music added by the logged-in user
+    public Set&lt;Music&gt; getUserMusic() {
+<span class="fc" id="L38">        String username = SecurityContextHolder.getContext().getAuthentication().getName();</span>
+<span class="fc" id="L39">        User user = userRepo.findByUsername(username)</span>
+<span class="pc" id="L40">                .orElseThrow(() -&gt; new UsernameNotFoundException(&quot;User not found&quot;));</span>
+
+<span class="fc" id="L42">        return user.getMusicCollection();</span>
+    }
+
+    // Add a song to the database and associate it with the logged-in user
+    public Music addMusic(Music music) {
+<span class="fc" id="L47">        String username = SecurityContextHolder.getContext().getAuthentication().getName();</span>
+<span class="fc" id="L48">        User user = userRepo.findByUsername(username)</span>
+<span class="pc" id="L49">                .orElseThrow(() -&gt; new UsernameNotFoundException(&quot;User not found&quot;));</span>
+
+        // Save music first
+<span class="fc" id="L52">        Music savedMusic = musicRepo.save(music);</span>
+
+        // Associate the logged-in user with the music
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (user.getMusicCollection() == null) {</span>
+<span class="nc" id="L56">            user.setMusicCollection(new HashSet&lt;&gt;());</span>
+        }
+<span class="fc" id="L58">        user.getMusicCollection().add(savedMusic);</span>
+<span class="fc" id="L59">        userRepo.save(user);</span>
+
+<span class="fc" id="L61">        return savedMusic;</span>
+    }
+
+    // Add a song to the logged-in user's collection
+    public void addMusicToUser(Long musicId) {
+<span class="fc" id="L66">        String username = SecurityContextHolder.getContext().getAuthentication().getName();</span>
+<span class="fc" id="L67">        User user = userRepo.findByUsername(username)</span>
+<span class="pc" id="L68">                .orElseThrow(() -&gt; new UsernameNotFoundException(&quot;User not found&quot;));</span>
+
+<span class="fc" id="L70">        Music music = musicRepo.findById(musicId)</span>
+<span class="pc" id="L71">                .orElseThrow(() -&gt; new RuntimeException(&quot;Music not found&quot;));</span>
+
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if (user.getMusicCollection() == null) {</span>
+<span class="nc" id="L74">            user.setMusicCollection(new HashSet&lt;&gt;());</span>
+        }
+<span class="fc" id="L76">        user.getMusicCollection().add(music);</span>
+
+<span class="fc" id="L78">        userRepo.save(user);</span>
+<span class="fc" id="L79">    }</span>
+    
+    // Admin assigns a user to a song (via API)
+    public boolean assignUserToMusic(Long musicId, String username) {
+<span class="fc" id="L83">        Optional&lt;User&gt; userOpt = userRepo.findByUsername(username);</span>
+<span class="fc" id="L84">        Optional&lt;Music&gt; musicOpt = musicRepo.findById(musicId);</span>
+
+<span class="pc bpc" id="L86" title="1 of 4 branches missed.">        if (userOpt.isPresent() &amp;&amp; musicOpt.isPresent()) {</span>
+<span class="fc" id="L87">            User user = userOpt.get();</span>
+<span class="fc" id="L88">            Music music = musicOpt.get();</span>
+
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">            if (!user.getMusicCollection().contains(music)) {</span>
+<span class="fc" id="L91">                user.getMusicCollection().add(music);</span>
+<span class="fc" id="L92">                userRepo.save(user);</span>
+<span class="fc" id="L93">                return true;</span>
+            }
+        }
+<span class="fc" id="L96">        return false; // User or music not found</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Music Application</a> &gt; <a href="index.source.html" class="el_package">com.tus.musicapp.service</a> &gt; <span class="el_source">UserService.java</span></div><h1>UserService.java</h1><pre class="source lang-java linenums">package com.tus.musicapp.service;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.tus.musicapp.model.Role;
+import com.tus.musicapp.model.User;
+import com.tus.musicapp.repos.UserRepository;
+
+import org.springframework.security.core.Authentication;
+
+/* 
+ * Service responsible for user management in the application. It handles user registration, 
+ * authentication, role assignments, deletion, and updating user details
+ */
+@Service
+<span class="fc" id="L27">public class UserService {</span>
+
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    @PostConstruct
+    public void ensureAdminExists() {
+<span class="nc" id="L37">        String adminUsername = &quot;Admin&quot;;</span>
+<span class="nc" id="L38">        String adminPassword = &quot;Admin&quot;;</span>
+
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (!userRepository.existsByUsername(adminUsername)) {</span>
+<span class="nc" id="L41">            User adminUser = new User();</span>
+<span class="nc" id="L42">            adminUser.setUsername(adminUsername);</span>
+<span class="nc" id="L43">            adminUser.setPassword(passwordEncoder.encode(adminPassword));</span>
+<span class="nc" id="L44">            Set&lt;Role&gt; adminRoles = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L45">            adminRoles.add(Role.ADMIN);</span>
+<span class="nc" id="L46">            adminRoles.add(Role.SPOTIFY_USER); // Admins always get SPOTIFY_USER</span>
+
+<span class="nc" id="L48">            adminUser.setRoles(adminRoles);</span>
+<span class="nc" id="L49">            userRepository.save(adminUser);</span>
+<span class="nc" id="L50">            System.out.println(&quot;✅ Default Admin User Created: &quot; + adminUsername);</span>
+<span class="nc" id="L51">        } else {</span>
+<span class="nc" id="L52">            System.out.println(&quot;✅ Admin User Already Exists: &quot; + adminUsername);</span>
+        }
+<span class="nc" id="L54">    }</span>
+    
+    public User registerUser(User user) {
+<span class="fc" id="L57">        user.setUsername(user.getUsername().toLowerCase());</span>
+
+        // Check if username already exists
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (userRepository.existsByUsername(user.getUsername())) {</span>
+<span class="fc" id="L61">            throw new ResponseStatusException(HttpStatus.CONFLICT, &quot;Username already taken&quot;);</span>
+        }
+
+        // Encrypt the password
+<span class="fc" id="L65">        user.setPassword(passwordEncoder.encode(user.getPassword()));</span>
+
+        // Validate roles
+<span class="pc bpc" id="L68" title="1 of 4 branches missed.">        if (user.getRoles() == null || user.getRoles().isEmpty()) {</span>
+<span class="fc" id="L69">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;At least one role must be assigned.&quot;);</span>
+        }
+
+        // Assign valid roles
+<span class="fc" id="L73">        user.setRoles(assignRoles(user.getRoles()));</span>
+
+<span class="fc" id="L75">        return userRepository.save(user);</span>
+    }
+
+    // Retrieve all users
+    public List&lt;User&gt; getAllUsers() {
+<span class="fc" id="L80">        return userRepository.findAll();</span>
+    }
+
+    public void deleteUser(Long id) {
+<span class="fc" id="L84">        Authentication auth = SecurityContextHolder.getContext().getAuthentication();</span>
+<span class="fc" id="L85">        String currentUsername = auth.getName();</span>
+<span class="fc" id="L86">        User currentUser = userRepository.findByUsername(currentUsername)</span>
+<span class="pc" id="L87">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Current user not found&quot;));</span>
+
+<span class="pc bpc" id="L89" title="1 of 4 branches missed.">        if (currentUser.getRoles().contains(Role.ADMIN) &amp;&amp; currentUser.getId().equals(id)) {</span>
+<span class="fc" id="L90">            throw new ResponseStatusException(HttpStatus.FORBIDDEN, &quot;Admins cannot delete themselves.&quot;);</span>
+        }
+
+<span class="fc" id="L93">        User userToDelete = userRepository.findById(id)</span>
+<span class="fc" id="L94">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;User not found&quot;));</span>
+        
+        /*
+         * Note: FK Constraint on user_roles and users
+         * First - clear roles before deleting the user
+         */
+<span class="fc" id="L100">        userToDelete.getRoles().clear();</span>
+<span class="fc" id="L101">        userRepository.save(userToDelete);</span>
+
+        // Then - delete the user
+<span class="fc" id="L104">        userRepository.delete(userToDelete);</span>
+<span class="fc" id="L105">    }</span>
+
+    // Update user details
+    public User updateUser(Long id, User updatedUser) {
+<span class="fc" id="L109">        User existingUser = userRepository.findById(id)</span>
+<span class="pc" id="L110">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;User not found&quot;));</span>
+    
+<span class="fc" id="L112">        Authentication auth = SecurityContextHolder.getContext().getAuthentication();</span>
+<span class="fc" id="L113">        String currentUsername = auth.getName();</span>
+<span class="fc" id="L114">        User currentUser = userRepository.findByUsername(currentUsername)</span>
+<span class="pc" id="L115">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Current user not found&quot;));</span>
+
+        // Prevent admin from removing their own admin role
+<span class="pc bpc" id="L118" title="1 of 4 branches missed.">        if (currentUser.getId().equals(id) &amp;&amp; currentUser.getRoles().contains(Role.ADMIN) &amp;&amp; </span>
+<span class="pc bpc" id="L119" title="2 of 4 branches missed.">            (updatedUser.getRoles() == null || !updatedUser.getRoles().contains(Role.ADMIN))) {</span>
+<span class="fc" id="L120">            throw new ResponseStatusException(HttpStatus.FORBIDDEN, &quot;Admins cannot remove their own admin role.&quot;);</span>
+        }
+
+        // Update password if provided
+<span class="pc bpc" id="L124" title="2 of 4 branches missed.">        if (updatedUser.getPassword() != null &amp;&amp; !updatedUser.getPassword().isEmpty()) {</span>
+<span class="fc" id="L125">            existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));</span>
+        }
+
+        // Update roles
+<span class="pc bpc" id="L129" title="2 of 4 branches missed.">        if (updatedUser.getRoles() != null &amp;&amp; !updatedUser.getRoles().isEmpty()) {</span>
+<span class="fc" id="L130">            existingUser.setRoles(assignRoles(updatedUser.getRoles()));</span>
+        }
+
+<span class="fc" id="L133">        return userRepository.save(existingUser);</span>
+    }
+
+    // Assign roles while ensuring only valid values
+    private Set&lt;Role&gt; assignRoles(Set&lt;Role&gt; selectedRoles) {
+<span class="fc" id="L138">        Set&lt;Role&gt; validRoles = new HashSet&lt;&gt;();</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        for (Role role : selectedRoles) {</span>
+<span class="pc bpc" id="L140" title="2 of 4 branches missed.">            if (role == Role.ADMIN || role == Role.SPOTIFY_USER) {</span>
+<span class="fc" id="L141">                validRoles.add(role);</span>
+            }
+<span class="fc" id="L143">        }</span>
+<span class="fc" id="L144">        return validRoles;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

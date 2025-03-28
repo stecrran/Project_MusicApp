@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Music Application</a> &gt; <a href="index.source.html" class="el_package">com.tus.musicapp.controller</a> &gt; <span class="el_source">AdminController.java</span></div><h1>AdminController.java</h1><pre class="source lang-java linenums">package com.tus.musicapp.controller;
+
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.access.prepost.PreAuthorize;
+
+import com.tus.musicapp.model.User;
+import com.tus.musicapp.service.UserService;
+
+@RestController
+@RequestMapping(&quot;/api/admin&quot;)
+<span class="fc" id="L16">public class AdminController {</span>
+
+    @Autowired
+    private UserService userService;
+
+    // Register a new user (secured for ADMIN)
+    @PreAuthorize(&quot;hasAuthority('ADMIN')&quot;)
+    @PostMapping(&quot;/register&quot;)
+    public User registerUser(@RequestBody User user) {
+<span class="pc bpc" id="L25" title="1 of 4 branches missed.">        if (user.getRoles() == null || user.getRoles().isEmpty()) {</span>
+<span class="fc" id="L26">            throw new ResponseStatusException(</span>
+                HttpStatus.BAD_REQUEST, &quot;User roles must be provided in the JSON body.&quot;
+            );
+        }
+<span class="fc" id="L30">        return userService.registerUser(user);</span>
+    }
+
+    // Get all users (secured for ADMIN)
+    @PreAuthorize(&quot;hasAuthority('ADMIN')&quot;)
+    @GetMapping(&quot;/users&quot;)
+    public List&lt;User&gt; getAllUsers() {
+<span class="fc" id="L37">        return userService.getAllUsers();</span>
+    }
+
+    // Delete a user by ID (secured for ADMIN)
+    @PreAuthorize(&quot;hasAuthority('ADMIN')&quot;)
+    @DeleteMapping(&quot;/users/{id}&quot;)
+    public ResponseEntity&lt;?&gt; deleteUser(@PathVariable Long id) {
+<span class="fc" id="L44">        userService.deleteUser(id);</span>
+<span class="fc" id="L45">        return ResponseEntity.noContent().build();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

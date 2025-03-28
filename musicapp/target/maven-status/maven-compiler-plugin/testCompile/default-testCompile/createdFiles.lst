@@ -1,0 +1,15 @@
+com\tus\musicapp\service\test\UserServiceTest.class
+com\tus\musicapp\controller\test\MusicControllerIT.class
+com\tus\musicapp\controller\test\AdminControllerTest.class
+com\tus\musicapp\controller\test\StaticFilesControllerTest.class
+com\tus\musicapp\controller\test\MusicControllerIT_AssignSong.class
+com\tus\musicapp\controller\test\SpotifyControllerTest.class
+com\tus\musicapp\controller\test\AuthControllerTest.class
+com\tus\musicapp\test\karate\ManageUsersTest.class
+com\tus\musicapp\mapper\test\SongMapperTest.class
+com\tus\musicapp\service\test\MusicServiceTest.class
+com\tus\musicapp\test\karate\LoginTest.class
+com\tus\musicapp\service\test\UserDetailsServiceImplTest.class
+com\tus\musicapp\service\test\SpotifyServiceTest.class
+com\tus\musicapp\service\test\SongServiceTest.class
+com\tus\musicapp\controller\test\MusicControllerTest.class
