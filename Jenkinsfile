@@ -7,6 +7,7 @@ pipeline {
 
     environment {
         PROJECT_DIR = 'musicapp'
+        SONAR_TOKEN = credentials('sonarqube-token') // <- your secure SonarQube token ID in Jenkins
     }
 
     stages {
@@ -31,6 +32,24 @@ pipeline {
                 }
             }
         }
+
+		stage('SonarQube Code Analysis') {
+			steps {
+				echo "DEBUG: Entering SonarQube Analysis Stage"
+				dir("${PROJECT_DIR}") {
+					withSonarQubeEnv('SonarQube') {
+						bat """
+							echo DEBUG: Running mvnw sonar scan...
+							./mvnw sonar:sonar ^
+							-Dsonar.projectKey=musicapp ^
+							-Dsonar.host.url=http://localhost:9000 ^
+							-Dsonar.login=%SONAR_TOKEN%
+						"""
+					}
+				}
+			}
+		}
+
 
         stage('Archive JAR Artifact') {
             steps {
