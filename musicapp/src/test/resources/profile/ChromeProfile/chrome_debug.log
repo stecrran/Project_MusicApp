@@ -1,5 +1,7 @@
-[16484:14380:0328/164954.110:INFO:chrome_browser_cloud_management_controller.cc(196)] No machine level policy manager exists.
-[2564:12608:0328/164954.518:WARNING:viz_main_impl.cc(85)] VizNullHypothesis is disabled (not a warning)
-[2564:12608:0328/164954.521:ERROR:direct_composition_support.cc(1122)] QueryInterface to IDCompositionDevice4 failed: No such interface supported (0x80004002)
-[19132:16760:0328/164958.535:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
-[19132:16760:0328/164958.537:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
+[15504:9948:0328/215233.355:INFO:chrome_browser_cloud_management_controller.cc(196)] No machine level policy manager exists.
+[6648:14692:0328/215233.680:WARNING:viz_main_impl.cc(85)] VizNullHypothesis is disabled (not a warning)
+[6648:14692:0328/215233.683:ERROR:direct_composition_support.cc(1122)] QueryInterface to IDCompositionDevice4 failed: No such interface supported (0x80004002)
+[15504:9948:0328/215237.115:ERROR:new_tab_page_handler.cc(1341)] NewTabPage loaded into a non-browser-tab context
+[15504:19992:0328/215237.156:ERROR:registration_request.cc(291)] Registration response error message: DEPRECATED_ENDPOINT
+[19852:4692:0328/215237.359:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
+[19852:4692:0328/215237.359:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
