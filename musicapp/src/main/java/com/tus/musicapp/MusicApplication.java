@@ -1,9 +1,15 @@
 package com.tus.musicapp;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.env.Environment;
+
+import java.util.Arrays;
 import java.util.logging.LogManager;
+
+import javax.annotation.PostConstruct;
 
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
@@ -11,6 +17,9 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 @ComponentScan(basePackages = "com.tus.musicapp") 
 public class MusicApplication {
 
+    @Autowired
+    private Environment environment;
+    
     public static void main(String[] args) {
     	// remove HTTP wire logging
         LogManager.getLogManager().reset();
@@ -19,6 +28,11 @@ public class MusicApplication {
         
         // run application
         SpringApplication.run(MusicApplication.class, args);
+    }
+    
+    @PostConstruct
+    public void logActiveProfiles() {
+        System.out.println("✅ ACTIVE PROFILES: " + Arrays.toString(environment.getActiveProfiles()));
     }
 
 }

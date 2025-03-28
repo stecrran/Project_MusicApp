@@ -39,12 +39,13 @@ pipeline {
 				dir("${PROJECT_DIR}") {
 					withSonarQubeEnv('SonarQube') {
 						bat """
-							echo DEBUG: Running mvnw sonar scan...
 							./mvnw sonar:sonar ^
 							-Dsonar.projectKey=musicapp ^
 							-Dsonar.host.url=http://localhost:9000 ^
-							-Dsonar.login=%SONAR_TOKEN%
+							-Dsonar.login=%SONAR_TOKEN% ^
+							-Dsonar.java.binaries=target/classes
 						"""
+
 					}
 				}
 			}

@@ -7,8 +7,4 @@ Feature: Get All Songs
     Given url 'http://localhost:9091/api/music'
     When method GET
     Then status 200
-    And match response == []  # Validates response is an array
-
-
-
-    
+    And match response == []

@@ -1,5 +1,14 @@
-[17672:5612:0328/013153.211:INFO:chrome_browser_cloud_management_controller.cc(196)] No machine level policy manager exists.
-[13332:18220:0328/013153.641:WARNING:viz_main_impl.cc(85)] VizNullHypothesis is disabled (not a warning)
-[13332:18220:0328/013153.644:ERROR:direct_composition_support.cc(1122)] QueryInterface to IDCompositionDevice4 failed: No such interface supported (0x80004002)
-[13828:13768:0328/013156.694:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
-[13828:13768:0328/013156.694:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
+[1616:13224:0328/030550.111:INFO:chrome_browser_cloud_management_controller.cc(196)] No machine level policy manager exists.
+[14284:9312:0328/030550.492:WARNING:viz_main_impl.cc(85)] VizNullHypothesis is disabled (not a warning)
+[14284:9312:0328/030550.495:ERROR:direct_composition_support.cc(1122)] QueryInterface to IDCompositionDevice4 failed: No such interface supported (0x80004002)
+[18848:12808:0328/030551.062:WARNING:spdy_session.cc(2980)] Received HEADERS for invalid stream 1
+[1616:13224:0328/030551.097:INFO:CONSOLE(11083)] "You are running a development build of Vue.
+Make sure to use the production build (*.prod.js) when deploying for production.", source: https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js (11083)
+[1616:13224:0328/030551.138:INFO:CONSOLE(301)] "Mounting Vue App...", source: http://localhost:9091/js/App.js (301)
+[1616:13224:0328/030551.150:INFO:CONSOLE(87)] "Checking Initial View...", source: http://localhost:9091/js/App.js (87)
+[1616:13224:0328/030551.151:INFO:CONSOLE(93)] "User is logged in. Defaulting to UserPlayList.", source: http://localhost:9091/js/App.js (93)
+[1616:13224:0328/030551.159:INFO:CONSOLE(192)] "Initializing Bootstrap Carousel...", source: http://localhost:9091/js/App.js (192)
+[1616:13224:0328/030551.240:INFO:CONSOLE(118)] "X Error loading users: ", source: http://localhost:9091/js/App.js (118)
+[1616:1700:0328/030553.277:ERROR:registration_request.cc(291)] Registration response error message: DEPRECATED_ENDPOINT
+[18848:1452:0328/030606.763:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
+[18848:1452:0328/030606.763:WARNING:sqlite_persistent_store_backend_base.cc(198)] Failed to post task from FlushAndNotifyInBackground@net\extras\sqlite\sqlite_persistent_store_backend_base.cc:248 to client_task_runner_.
