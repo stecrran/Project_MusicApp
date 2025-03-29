@@ -27,6 +27,7 @@ pipeline {
                         docker stop sonar > nul 2>&1
                         docker rm sonar > nul 2>&1
                     )
+                    exit /b 0
                 '''
 
                 echo 'Starting SonarQube container...'
