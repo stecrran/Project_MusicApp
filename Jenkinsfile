@@ -23,7 +23,7 @@ pipeline {
             }
         }
 
-        stage('Start SonarQube (Docker)') {
+        stage('Start SonarQube (Docker, Persistent)') {
             steps {
                 echo 'Cleaning up any existing sonar container (if exists)...'
                 bat '''
@@ -41,10 +41,12 @@ pipeline {
                     exit /b 0
                 '''
 
-                echo 'Starting SonarQube container...'
+                echo 'Starting SonarQube container (with persistent volume)...'
                 bat '''
                     docker run -d --name sonar ^
                         -p 9000:9000 ^
+                        -v sonar_data:/opt/sonarqube/data ^
+                        -v sonar_logs:/opt/sonarqube/logs ^
                         -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true ^
                         sonarqube:latest
                 '''
@@ -124,14 +126,14 @@ pipeline {
         stage('SonarQube Code Analysis') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    bat """
+                    bat '''
                         call mvnw.cmd verify sonar:sonar ^
                             -Dsonar.projectKey=musicapp ^
                             -Dsonar.host.url=http://localhost:9000 ^
-                            -Dsonar.token=sqa_4cf958620c4daf9c6911d792ec3e77f489f0aa63 ^
+                            -Dsonar.token=sqa_00e432d7285ae2a4513c5e6f328b2d9ef4af34ba ^
                             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
                             -Dsonar.java.binaries=target/classes
-                    """
+                    '''
                 }
             }
         }
