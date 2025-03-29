@@ -28,7 +28,7 @@ pipeline {
             steps {
                 echo 'Cleaning up any existing sonar container (if exists)...'
                 bat '''
-                    FOR /F "tokens=*" %%i IN ('docker ps -a -q -f name=sonar') DO (
+                    FOR /F "tokens=*" %%i IN ('docker ps -a -q "-f name=sonar"') DO (
                         docker stop %%i > nul 2>&1
                         docker rm %%i > nul 2>&1
                     )
@@ -141,7 +141,7 @@ pipeline {
             }
 
             bat '''
-                FOR /F "tokens=*" %%i IN ('docker ps -a -q -f name=sonar') DO (
+                FOR /F "tokens=*" %%i IN ('docker ps -a -q "-f name=sonar"') DO (
                     docker stop %%i > nul 2>&1
                     docker rm %%i > nul 2>&1
                 )
