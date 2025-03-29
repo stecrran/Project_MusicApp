@@ -7,7 +7,6 @@ pipeline {
 
     environment {
         PROJECT_DIR = 'musicapp'
-        SONAR_TOKEN = credentials('sonarqube-token')
     }
 
     stages {
@@ -119,7 +118,7 @@ pipeline {
                             call mvnw.cmd verify sonar:sonar ^
                                 -Dsonar.projectKey=musicapp ^
                                 -Dsonar.host.url=http://localhost:9000 ^
-                                -Dsonar.token=%SONAR_TOKEN% ^
+                                -Dsonar.token=sqa_4cf958620c4daf9c6911d792ec3e77f489f0aa63 ^
                                 -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
                                 -Dsonar.java.binaries=target/classes
                         """
