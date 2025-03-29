@@ -141,10 +141,18 @@ pipeline {
             }
 
             bat '''
+                SETLOCAL
+                SET found=
                 FOR /F "tokens=*" %%i IN ('docker ps -a -q "-f name=sonar"') DO (
+                    SET found=true
                     docker stop %%i > nul 2>&1
                     docker rm %%i > nul 2>&1
                 )
+                IF NOT DEFINED found (
+                    echo No sonar container found to stop/remove.
+                )
+                ENDLOCAL
+                exit /b 0
             '''
         }
 
