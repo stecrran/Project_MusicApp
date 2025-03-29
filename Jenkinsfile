@@ -52,22 +52,21 @@ pipeline {
 
                 echo 'Waiting for SonarQube to be ready...'
                 bat '''
-                    powershell -NoProfile -Command "& {
-                        $i = 0;
-                        while ($i -lt 20) {
-                            try {
-                                $resp = Invoke-WebRequest http://localhost:9000/api/system/health -UseBasicParsing -TimeoutSec 5;
-                                if ($resp.StatusCode -eq 200 -and $resp.Content -match '\"status\":\"UP\"') {
-                                    Write-Host 'SonarQube is ready.';
-                                    exit 0
-                                }
-                            } catch {}
-                            Write-Host 'SonarQube not ready yet... waiting 5 seconds';
-                            Start-Sleep -Seconds 5;
-                            $i++
-                        }
-                        exit 1
-                    }"
+                    echo $i = 0; > waitForSonar.ps1
+                    echo while ($i -lt 20) { >> waitForSonar.ps1
+                    echo     try { >> waitForSonar.ps1
+                    echo         $resp = Invoke-WebRequest http://localhost:9000/api/system/health -UseBasicParsing -TimeoutSec 5 >> waitForSonar.ps1
+                    echo         if ($resp.StatusCode -eq 200 -and $resp.Content -match '"status":"UP"') { >> waitForSonar.ps1
+                    echo             Write-Host 'SonarQube is ready.'; exit 0 >> waitForSonar.ps1
+                    echo         } >> waitForSonar.ps1
+                    echo     } catch {} >> waitForSonar.ps1
+                    echo     Write-Host 'SonarQube not ready yet... waiting 5 seconds'; >> waitForSonar.ps1
+                    echo     Start-Sleep -Seconds 5 >> waitForSonar.ps1
+                    echo     $i++ >> waitForSonar.ps1
+                    echo } >> waitForSonar.ps1
+                    echo exit 1 >> waitForSonar.ps1
+                    powershell -ExecutionPolicy Bypass -File waitForSonar.ps1
+                    del waitForSonar.ps1
                 '''
             }
         }
