@@ -23,55 +23,6 @@ pipeline {
             }
         }
 
-        stage('Start SonarQube (Docker, Persistent)') {
-            steps {
-                echo 'Cleaning up any existing sonar container (if exists)...'
-                bat '''
-                    SETLOCAL
-                    SET found=
-                    FOR /F "tokens=*" %%i IN ('docker ps -a -q "-f name=sonar"') DO (
-                        SET found=true
-                        docker stop %%i > nul 2>&1
-                        docker rm %%i > nul 2>&1
-                    )
-                    IF NOT DEFINED found (
-                        echo No sonar container found to stop/remove.
-                    )
-                    ENDLOCAL
-                    exit /b 0
-                '''
-
-                echo 'Starting SonarQube container (with persistent volume)...'
-                bat '''
-                    docker run -d --name sonar ^
-                        -p 9000:9000 ^
-                        -v sonar_data:/opt/sonarqube/data ^
-                        -v sonar_logs:/opt/sonarqube/logs ^
-                        -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true ^
-                        sonarqube:latest
-                '''
-
-                echo 'Waiting for SonarQube to be ready...'
-                bat '''
-                    echo $i = 0; > waitForSonar.ps1
-                    echo while ($i -lt 20) { >> waitForSonar.ps1
-                    echo     try { >> waitForSonar.ps1
-                    echo         $resp = Invoke-WebRequest http://localhost:9000/api/system/health -UseBasicParsing -TimeoutSec 5 >> waitForSonar.ps1
-                    echo         if ($resp.StatusCode -eq 200 -and $resp.Content -match '"status":"UP"') { >> waitForSonar.ps1
-                    echo             Write-Host 'SonarQube is ready.'; exit 0 >> waitForSonar.ps1
-                    echo         } >> waitForSonar.ps1
-                    echo     } catch {} >> waitForSonar.ps1
-                    echo     Write-Host 'SonarQube not ready yet... waiting 5 seconds'; >> waitForSonar.ps1
-                    echo     Start-Sleep -Seconds 5 >> waitForSonar.ps1
-                    echo     $i++ >> waitForSonar.ps1
-                    echo } >> waitForSonar.ps1
-                    echo exit 1 >> waitForSonar.ps1
-                    powershell -ExecutionPolicy Bypass -File waitForSonar.ps1
-                    del waitForSonar.ps1
-                '''
-            }
-        }
-
         stage('Start MySQL & MusicApp via Docker Compose') {
             steps {
                 dir("${PROJECT_DIR}") {
@@ -157,21 +108,6 @@ pipeline {
                     )
                 '''
             }
-
-            bat '''
-                SETLOCAL
-                SET found=
-                FOR /F "tokens=*" %%i IN ('docker ps -a -q "-f name=sonar"') DO (
-                    SET found=true
-                    docker stop %%i > nul 2>&1
-                    docker rm %%i > nul 2>&1
-                )
-                IF NOT DEFINED found (
-                    echo No sonar container found to stop/remove.
-                )
-                ENDLOCAL
-                exit /b 0
-            '''
         }
 
         success {
