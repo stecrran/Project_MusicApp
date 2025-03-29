@@ -75,8 +75,25 @@ pipeline {
                 dir("${PROJECT_DIR}") {
                     bat 'docker-compose up -d mysql musicapp'
                 }
-                echo 'Waiting for MySQL + App to stabilize...'
-                sleep 30
+
+                echo 'Waiting for Spring Boot app to be ready on port 9091...'
+                bat '''
+                    echo $i = 0; > waitForApp.ps1
+                    echo while ($i -lt 30) { >> waitForApp.ps1
+                    echo     try { >> waitForApp.ps1
+                    echo         $resp = Invoke-WebRequest http://localhost:9091/api/auth/login -UseBasicParsing -TimeoutSec 5 >> waitForApp.ps1
+                    echo         if ($resp.StatusCode -eq 200) { >> waitForApp.ps1
+                    echo             Write-Host 'Spring Boot app is ready.'; exit 0 >> waitForApp.ps1
+                    echo         } >> waitForApp.ps1
+                    echo     } catch {} >> waitForApp.ps1
+                    echo     Write-Host 'App not ready yet... waiting 5s'; >> waitForApp.ps1
+                    echo     Start-Sleep -Seconds 5 >> waitForApp.ps1
+                    echo     $i++ >> waitForApp.ps1
+                    echo } >> waitForApp.ps1
+                    echo exit 1 >> waitForApp.ps1
+                    powershell -ExecutionPolicy Bypass -File waitForApp.ps1
+                    del waitForApp.ps1
+                '''
             }
         }
 
@@ -99,12 +116,6 @@ pipeline {
         stage('Run Unit & Integration Tests (Exclude Selenium)') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    echo 'Waiting for app to be ready on port 9091...'
-                    bat '''
-                        for /L %%i in (1,1,30) do (
-                            powershell -Command "try { Invoke-WebRequest http://localhost:9091/api/auth/login -UseBasicParsing } catch { Start-Sleep -Seconds 1 }"
-                        )
-                    '''
                     bat 'call mvnw.cmd test -B -DtrimStackTrace=false -Dtest=!**/*SeleniumTest,!**/selenium/**'
                 }
             }
@@ -162,11 +173,11 @@ pipeline {
         }
 
         success {
-            echo 'Spring Boot + Docker + SonarQube pipeline succeeded!'
+            echo '✅ Spring Boot + Docker + SonarQube pipeline succeeded!'
         }
 
         failure {
-            echo 'Pipeline failed.'
+            echo '❌ Pipeline failed.'
         }
     }
 }
