@@ -52,21 +52,22 @@ pipeline {
 
                 echo 'Waiting for SonarQube to be ready...'
                 bat '''
-                    powershell -NoProfile -Command ^
-                    "$i=0; ^
-                    while ($i -lt 20) { ^
-                      try { ^
-                        $resp = Invoke-WebRequest http://localhost:9000/api/system/health -UseBasicParsing -TimeoutSec 5; ^
-                        if ($resp.StatusCode -eq 200 -and $resp.Content -match '\"status\":\"UP\"') { ^
-                          Write-Host 'SonarQube is ready.'; ^
-                          exit 0 ^
-                        } ^
-                      } catch {} ^
-                      Write-Host 'SonarQube not ready yet... waiting 5 seconds'; ^
-                      Start-Sleep -Seconds 5; ^
-                      $i++ ^
-                    }; ^
-                    exit 1"
+                    powershell -NoProfile -Command "& {
+                        $i = 0;
+                        while ($i -lt 20) {
+                            try {
+                                $resp = Invoke-WebRequest http://localhost:9000/api/system/health -UseBasicParsing -TimeoutSec 5;
+                                if ($resp.StatusCode -eq 200 -and $resp.Content -match '\"status\":\"UP\"') {
+                                    Write-Host 'SonarQube is ready.';
+                                    exit 0
+                                }
+                            } catch {}
+                            Write-Host 'SonarQube not ready yet... waiting 5 seconds';
+                            Start-Sleep -Seconds 5;
+                            $i++
+                        }
+                        exit 1
+                    }"
                 '''
             }
         }
