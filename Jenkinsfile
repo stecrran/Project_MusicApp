@@ -22,32 +22,37 @@ pipeline {
             steps {
                 echo 'Cleaning up any existing sonar container (if exists)...'
                 bat '''
-                    docker ps -a -q -f name=sonar > nul
-                    IF %ERRORLEVEL% EQU 0 (
-                        docker stop sonar > nul 2>&1
-                        docker rm sonar > nul 2>&1
+                    FOR /F "tokens=*" %%i IN ('docker ps -a -q -f name=sonar') DO (
+                        docker stop %%i > nul 2>&1
+                        docker rm %%i > nul 2>&1
                     )
-                    exit /b 0
                 '''
 
                 echo 'Starting SonarQube container...'
                 bat '''
                     docker run -d --name sonar ^
-                    -p 9000:9000 ^
-                    -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true ^
-                    sonarqube:latest
+                        -p 9000:9000 ^
+                        -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true ^
+                        sonarqube:latest
                 '''
 
                 echo 'Waiting for SonarQube to be ready...'
                 bat '''
-                    :wait_loop
-                    powershell -Command "try { $resp = Invoke-WebRequest http://localhost:9000/api/system/health -UseBasicParsing -TimeoutSec 5; if ($resp.StatusCode -eq 200 -and $resp.Content -match '\"status\":\"UP\"') { exit 0 } else { exit 1 } } catch { exit 1 }"
-                    IF ERRORLEVEL 1 (
-                        echo SonarQube not ready yet... waiting 5 seconds
-                        timeout /t 5 >nul
-                        goto wait_loop
-                    )
-                    echo SonarQube is ready.
+                    powershell -NoProfile -Command ^
+                    "$i=0; ^
+                    while ($i -lt 20) { ^
+                      try { ^
+                        $resp = Invoke-WebRequest http://localhost:9000/api/system/health -UseBasicParsing -TimeoutSec 5; ^
+                        if ($resp.StatusCode -eq 200 -and $resp.Content -match '\"status\":\"UP\"') { ^
+                          Write-Host 'SonarQube is ready.'; ^
+                          exit 0 ^
+                        } ^
+                      } catch {} ^
+                      Write-Host 'SonarQube not ready yet... waiting 5 seconds'; ^
+                      Start-Sleep -Seconds 5; ^
+                      $i++ ^
+                    }; ^
+                    exit 1"
                 '''
             }
         }
@@ -98,11 +103,11 @@ pipeline {
                     withSonarQubeEnv('SonarQube') {
                         bat """
                             call mvnw.cmd verify sonar:sonar ^
-                            -Dsonar.projectKey=musicapp ^
-                            -Dsonar.host.url=http://localhost:9000 ^
-                            -Dsonar.token=%SONAR_TOKEN% ^
-                            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
-                            -Dsonar.java.binaries=target/classes
+                                -Dsonar.projectKey=musicapp ^
+                                -Dsonar.host.url=http://localhost:9000 ^
+                                -Dsonar.token=%SONAR_TOKEN% ^
+                                -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
+                                -Dsonar.java.binaries=target/classes
                         """
                     }
                 }
@@ -130,14 +135,10 @@ pipeline {
             }
 
             bat '''
-                docker ps -a -q -f name=sonar > nul
-                IF %ERRORLEVEL% EQU 0 (
-                    docker stop sonar > nul 2>&1
-                    docker rm sonar > nul 2>&1
-                ) ELSE (
-                    echo No running sonar container to clean up.
+                FOR /F "tokens=*" %%i IN ('docker ps -a -q -f name=sonar') DO (
+                    docker stop %%i > nul 2>&1
+                    docker rm %%i > nul 2>&1
                 )
-                exit /b 0
             '''
         }
 
