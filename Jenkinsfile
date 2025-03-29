@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         PROJECT_DIR = 'musicapp'
-        SONAR_TOKEN = credentials('sonarqube-token') // Jenkins credential ID
+        SONAR_TOKEN = credentials('sonarqube-token')
     }
 
     stages {
@@ -43,6 +43,16 @@ pipeline {
             }
         }
 
+        stage('Start MySQL & MusicApp via Docker Compose') {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    bat 'docker-compose up -d mysql musicapp'
+                }
+                echo 'Waiting for MySQL + App to stabilize...'
+                sleep 30
+            }
+        }
+
         stage('Build & Package Spring Boot App') {
             steps {
                 dir("${PROJECT_DIR}") {
@@ -62,24 +72,19 @@ pipeline {
         stage('Run Unit & Integration Tests (Exclude Selenium)') {
             steps {
                 dir("${PROJECT_DIR}") {
+                    echo 'Waiting for app to be ready on port 9091...'
+                    bat '''
+                        for /L %%i in (1,1,30) do (
+                            powershell -Command "try { Invoke-WebRequest http://localhost:9091/api/auth/login -UseBasicParsing } catch { Start-Sleep -Seconds 1 }"
+                        )
+                    '''
                     bat 'call mvnw.cmd test -B -DtrimStackTrace=false -Dtest=!**/*SeleniumTest,!**/selenium/**'
                 }
             }
         }
 
-        stage('Start MySQL & MusicApp via Docker Compose') {
-            steps {
-                dir("${PROJECT_DIR}") {
-                    bat 'docker-compose up -d mysql musicapp'
-                }
-                echo 'Waiting for services to stabilize...'
-                sleep 30
-            }
-        }
-
         stage('SonarQube Code Analysis') {
             steps {
-                echo "DEBUG: Entering SonarQube Analysis Stage"
                 dir("${PROJECT_DIR}") {
                     withSonarQubeEnv('SonarQube') {
                         bat """
@@ -105,7 +110,6 @@ pipeline {
     post {
         always {
             echo 'Cleaning up containers...'
-
             dir("${PROJECT_DIR}") {
                 bat '''
                     IF EXIST docker-compose.yml (
