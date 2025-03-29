@@ -2,25 +2,58 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.8.6'  
+        maven 'Maven 3.8.6'
     }
 
     environment {
         PROJECT_DIR = 'musicapp'
-        SONAR_TOKEN = credentials('sonarqube-token') // <- your secure SonarQube token ID in Jenkins
+        SONAR_TOKEN = credentials('sonarqube-token') // Jenkins credential ID
     }
 
     stages {
-        stage('Checkout') {
+
+        stage('Checkout Source') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Start SonarQube (Docker)') {
+            steps {
+                echo 'Cleaning up any existing sonar container (if exists)...'
+                bat '''
+                    docker ps -a -q -f name=sonar > nul
+                    IF %ERRORLEVEL% EQU 0 (
+                        docker stop sonar > nul 2>&1
+                        docker rm sonar > nul 2>&1
+                    )
+                '''
+
+                echo 'Starting SonarQube container...'
+                bat '''
+                    docker run -d --name sonar ^
+                    -p 9000:9000 ^
+                    -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true ^
+                    sonarqube:latest
+                '''
+
+                echo 'Waiting for SonarQube to be ready...'
+                sleep 30
             }
         }
 
         stage('Build & Package Spring Boot App') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    bat './mvnw clean package -DskipTests'
+                    bat 'call mvnw.cmd clean package -DskipTests'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    bat 'docker build -t musicapp:latest -f Dockerfile .'
                 }
             }
         }
@@ -28,31 +61,38 @@ pipeline {
         stage('Run Unit & Integration Tests (Exclude Selenium)') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    bat './mvnw test -B -DtrimStackTrace=false -Dtest=!**/*SeleniumTest,!**/selenium/**'
+                    bat 'call mvnw.cmd test -B -DtrimStackTrace=false -Dtest=!**/*SeleniumTest,!**/selenium/**'
                 }
             }
         }
 
-		stage('SonarQube Code Analysis') {
-			steps {
-				echo "DEBUG: Entering SonarQube Analysis Stage"
-				dir("${PROJECT_DIR}") {
-					withSonarQubeEnv('SonarQube') {
-						bat """
-							./mvnw verify sonar:sonar ^
-							-Dsonar.projectKey=musicapp ^
-							-Dsonar.host.url=http://localhost:9000 ^
-							-Dsonar.token=%SONAR_TOKEN% ^
-							-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
-							-Dsonar.java.binaries=target/classes
-						"""
+        stage('Start MySQL & MusicApp via Docker Compose') {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    bat 'docker-compose up -d mysql musicapp'
+                }
+                echo 'Waiting for services to stabilize...'
+                sleep 30
+            }
+        }
 
-
-					}
-				}
-			}
-		}
-
+        stage('SonarQube Code Analysis') {
+            steps {
+                echo "DEBUG: Entering SonarQube Analysis Stage"
+                dir("${PROJECT_DIR}") {
+                    withSonarQubeEnv('SonarQube') {
+                        bat """
+                            call mvnw.cmd verify sonar:sonar ^
+                            -Dsonar.projectKey=musicapp ^
+                            -Dsonar.host.url=http://localhost:9000 ^
+                            -Dsonar.token=%SONAR_TOKEN% ^
+                            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
+                            -Dsonar.java.binaries=target/classes
+                        """
+                    }
+                }
+            }
+        }
 
         stage('Archive JAR Artifact') {
             steps {
@@ -62,11 +102,37 @@ pipeline {
     }
 
     post {
-        success {
-            echo 'Spring Boot + Vue (static) build succeeded!'
+        always {
+            echo 'Cleaning up containers...'
+
+            dir("${PROJECT_DIR}") {
+                bat '''
+                    IF EXIST docker-compose.yml (
+                        docker-compose down --remove-orphans
+                    ) ELSE (
+                        echo docker-compose.yml not found. Skipping docker-compose down.
+                    )
+                '''
+            }
+
+            bat '''
+                docker ps -a -q -f name=sonar > nul
+                IF %ERRORLEVEL% EQU 0 (
+                    docker stop sonar > nul 2>&1
+                    docker rm sonar > nul 2>&1
+                ) ELSE (
+                    echo No running sonar container to clean up.
+                )
+                exit /b 0
+            '''
         }
+
+        success {
+            echo 'Spring Boot + Docker + SonarQube pipeline succeeded!'
+        }
+
         failure {
-            echo 'Build failed.'
+            echo 'Pipeline failed.'
         }
     }
 }
