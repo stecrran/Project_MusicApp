@@ -39,7 +39,16 @@ pipeline {
                 '''
 
                 echo 'Waiting for SonarQube to be ready...'
-                sleep 30
+                bat '''
+                    :wait_loop
+                    powershell -Command "try { $resp = Invoke-WebRequest http://localhost:9000/api/system/health -UseBasicParsing -TimeoutSec 5; if ($resp.StatusCode -eq 200 -and $resp.Content -match '\"status\":\"UP\"') { exit 0 } else { exit 1 } } catch { exit 1 }"
+                    IF ERRORLEVEL 1 (
+                        echo SonarQube not ready yet... waiting 5 seconds
+                        timeout /t 5 >nul
+                        goto wait_loop
+                    )
+                    echo SonarQube is ready.
+                '''
             }
         }
 
