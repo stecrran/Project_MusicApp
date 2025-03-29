@@ -1,1 +1,0 @@
-Get-ChildItem -Path . -Filter "*.JPG" | Rename-Item -NewName { $_.Name -replace ".JPG",".jpg" }

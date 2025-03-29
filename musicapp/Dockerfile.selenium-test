@@ -1,6 +1,13 @@
-FROM maven:3.8.5-openjdk-17-slim
+# Dockerfile.selenium-test
 
-WORKDIR /app
+FROM maven:3.9-eclipse-temurin-17 AS builder
+WORKDIR /tests
 COPY . .
-RUN mvn clean install -DskipTests
-CMD ["mvn", "test"]
+RUN mvn clean package -DskipTests
+
+FROM maven:3.9-eclipse-temurin-17
+WORKDIR /tests
+COPY --from=builder /tests /tests
+
+# Default to idle mode
+CMD ["tail", "-f", "/dev/null"]
