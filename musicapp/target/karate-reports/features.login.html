@@ -49,7 +49,7 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
     <div>Scenarios</div>
   </div>
   <div id="nav-date">
-    <div>2025-03-28 10:22:18 p.m.</div>
+    <div>2025-03-30 11:35:34 p.m.</div>
   </div>
 </div>
 
@@ -81,7 +81,7 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
               </div>
             </div>
             <div class="scenario-time passed">
-              <span>ms:</span>&nbsp;<span>150</span>
+              <span>ms:</span>&nbsp;<span>129</span>
             </div>
           </div>
           
@@ -114,7 +114,7 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
 
   
 
-  <div class="preformatted" data-parent="0.5">22:22:18.640 &lt;&lt; lock released, cached callSingle: classpath:features/login.feature
+  <div class="preformatted" data-parent="0.5">23:35:34.184 &lt;&lt; lock released, cached callSingle: classpath:features/login.feature
 </div>   
 
   <div>
@@ -125,7 +125,7 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
         <div class="step-indent"></div>
         <div class="step-cell passed">features.login</div>
       </div>
-      <div class="time-cell passed">922</div>
+      <div class="time-cell passed">766</div>
     </div>
     <div>
       <div><div>
@@ -148,7 +148,7 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
         <span>Given</span>&nbsp;<span>url baseUrl + &#39;/auth/login&#39;</span>
       </div>
     </div>
-    <div class="time-cell passed">25</div>
+    <div class="time-cell passed">20</div>
   </div>
 
    
@@ -157,7 +157,7 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
 
   
 
-  <div class="preformatted" data-parent="0.5.0.call.0.5">22:22:17.587 &gt;&gt; lock acquired, begin callSingle: classpath:features/login.feature
+  <div class="preformatted" data-parent="0.5.0.call.0.5">23:35:33.333 &gt;&gt; lock acquired, begin callSingle: classpath:features/login.feature
 </div>   
 
   
@@ -177,7 +177,7 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
         <span>And</span>&nbsp;<span>request { username: &quot;Admin&quot;, password: &quot;Admin&quot; }</span>
       </div>
     </div>
-    <div class="time-cell passed">91</div>
+    <div class="time-cell passed">5</div>
   </div>
 
    
@@ -205,7 +205,7 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
         <span>When</span>&nbsp;<span>method post</span>
       </div>
     </div>
-    <div class="time-cell passed">794</div>
+    <div class="time-cell passed">731</div>
   </div>
 
    
@@ -214,31 +214,7 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
 
   
 
-  <div class="preformatted" data-parent="0.5.0.call.0.7">22:22:18.392 request:
-1 &gt; POST http://localhost:9091/api/auth/login
-1 &gt; Content-Type: application/json; charset=UTF-8
-1 &gt; Content-Length: 39
-1 &gt; Host: localhost:9091
-1 &gt; Connection: Keep-Alive
-1 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.12)
-1 &gt; Accept-Encoding: gzip,deflate
-{&quot;username&quot;:&quot;Admin&quot;,&quot;password&quot;:&quot;Admin&quot;}
-
-22:22:18.624 response time in milliseconds: 227
-1 &lt; 200
-1 &lt; X-Content-Type-Options: nosniff
-1 &lt; X-XSS-Protection: 1; mode=block
-1 &lt; Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-1 &lt; Pragma: no-cache
-1 &lt; Expires: 0
-1 &lt; Content-Type: application/json
-1 &lt; Transfer-Encoding: chunked
-1 &lt; Date: Fri, 28 Mar 2025 22:22:18 GMT
-1 &lt; Keep-Alive: timeout=60
-1 &lt; Connection: keep-alive
-{&quot;jwt&quot;:&quot;eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbiIsInJvbGVzIjpbIkFETUlOIiwiU1BPVElGWV9VU0VSIl0sImV4cCI6MTc0MzIwNDEzOCwiaWF0IjoxNzQzMjAwNTM4fQ.WnyqPznVfTBf046C-TmeyK5k1pfhusk4vNLT0659kBhjHqJmGutiG3sf0dn5foC77gm2rjjXcwdqv75KOHGYZg&quot;,&quot;username&quot;:&quot;Admin&quot;,&quot;roles&quot;:[&quot;ADMIN&quot;,&quot;SPOTIFY_USER&quot;]}
-
-</div>   
+     
 
   
 
@@ -285,7 +261,7 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
         <span>*</span>&nbsp;<span>def jwt = response.jwt</span>
       </div>
     </div>
-    <div class="time-cell passed">12</div>
+    <div class="time-cell passed">10</div>
   </div>
 
    
@@ -346,7 +322,7 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
         <span>When</span>&nbsp;<span>method post</span>
       </div>
     </div>
-    <div class="time-cell passed">148</div>
+    <div class="time-cell passed">127</div>
   </div>
 
    
@@ -355,31 +331,7 @@ posthog.init('phc_M6fKk3dSX9HjglkqPSybauGas45NINb7EgsPGU8N9g1',{
 
   
 
-  <div class="preformatted" data-parent="0.7">22:22:18.649 request:
-1 &gt; POST http://localhost:9091/api/auth/login
-1 &gt; Content-Type: application/json; charset=UTF-8
-1 &gt; Content-Length: 39
-1 &gt; Host: localhost:9091
-1 &gt; Connection: Keep-Alive
-1 &gt; User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.12)
-1 &gt; Accept-Encoding: gzip,deflate
-{&quot;username&quot;:&quot;Admin&quot;,&quot;password&quot;:&quot;Admin&quot;}
-
-22:22:18.793 response time in milliseconds: 143
-1 &lt; 200
-1 &lt; X-Content-Type-Options: nosniff
-1 &lt; X-XSS-Protection: 1; mode=block
-1 &lt; Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-1 &lt; Pragma: no-cache
-1 &lt; Expires: 0
-1 &lt; Content-Type: application/json
-1 &lt; Transfer-Encoding: chunked
-1 &lt; Date: Fri, 28 Mar 2025 22:22:18 GMT
-1 &lt; Keep-Alive: timeout=60
-1 &lt; Connection: keep-alive
-{&quot;jwt&quot;:&quot;eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbiIsInJvbGVzIjpbIkFETUlOIiwiU1BPVElGWV9VU0VSIl0sImV4cCI6MTc0MzIwNDEzOCwiaWF0IjoxNzQzMjAwNTM4fQ.WnyqPznVfTBf046C-TmeyK5k1pfhusk4vNLT0659kBhjHqJmGutiG3sf0dn5foC77gm2rjjXcwdqv75KOHGYZg&quot;,&quot;username&quot;:&quot;Admin&quot;,&quot;roles&quot;:[&quot;ADMIN&quot;,&quot;SPOTIFY_USER&quot;]}
-
-</div>   
+     
 
   
 

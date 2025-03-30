@@ -34,24 +34,24 @@ import org.springframework.security.core.Authentication;
     
     @PostConstruct
     public void ensureAdminExists() {
-<span class="nc" id="L37">        String adminUsername = &quot;Admin&quot;;</span>
-<span class="nc" id="L38">        String adminPassword = &quot;Admin&quot;;</span>
+<span class="fc" id="L37">        String adminUsername = &quot;Admin&quot;;</span>
+<span class="fc" id="L38">        String adminPassword = &quot;Admin&quot;;</span>
 
-<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (!userRepository.existsByUsername(adminUsername)) {</span>
-<span class="nc" id="L41">            User adminUser = new User();</span>
-<span class="nc" id="L42">            adminUser.setUsername(adminUsername);</span>
-<span class="nc" id="L43">            adminUser.setPassword(passwordEncoder.encode(adminPassword));</span>
-<span class="nc" id="L44">            Set&lt;Role&gt; adminRoles = new HashSet&lt;&gt;();</span>
-<span class="nc" id="L45">            adminRoles.add(Role.ADMIN);</span>
-<span class="nc" id="L46">            adminRoles.add(Role.SPOTIFY_USER); // Admins always get SPOTIFY_USER</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">        if (!userRepository.existsByUsername(adminUsername)) {</span>
+<span class="fc" id="L41">            User adminUser = new User();</span>
+<span class="fc" id="L42">            adminUser.setUsername(adminUsername);</span>
+<span class="fc" id="L43">            adminUser.setPassword(passwordEncoder.encode(adminPassword));</span>
+<span class="fc" id="L44">            Set&lt;Role&gt; adminRoles = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L45">            adminRoles.add(Role.ADMIN);</span>
+<span class="fc" id="L46">            adminRoles.add(Role.SPOTIFY_USER); // Admins always get SPOTIFY_USER</span>
 
-<span class="nc" id="L48">            adminUser.setRoles(adminRoles);</span>
-<span class="nc" id="L49">            userRepository.save(adminUser);</span>
-<span class="nc" id="L50">            System.out.println(&quot;✅ Default Admin User Created: &quot; + adminUsername);</span>
-<span class="nc" id="L51">        } else {</span>
+<span class="fc" id="L48">            adminUser.setRoles(adminRoles);</span>
+<span class="fc" id="L49">            userRepository.save(adminUser);</span>
+<span class="fc" id="L50">            System.out.println(&quot;✅ Default Admin User Created: &quot; + adminUsername);</span>
+<span class="fc" id="L51">        } else {</span>
 <span class="nc" id="L52">            System.out.println(&quot;✅ Admin User Already Exists: &quot; + adminUsername);</span>
         }
-<span class="nc" id="L54">    }</span>
+<span class="fc" id="L54">    }</span>
     
     public User registerUser(User user) {
 <span class="fc" id="L57">        user.setUsername(user.getUsername().toLowerCase());</span>

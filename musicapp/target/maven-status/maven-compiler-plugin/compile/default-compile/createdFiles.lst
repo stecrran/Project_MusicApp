@@ -1,6 +1,5 @@
 com\tus\musicapp\dto\MusicCreationDto.class
 com\tus\musicapp\controller\AuthController$AuthRequest.class
-com\tus\musicapp\ApplicationContextProvider.class
 com\tus\musicapp\mapper\SongMapperImpl.class
 com\tus\musicapp\model\User.class
 com\tus\musicapp\service\SongService.class
@@ -17,7 +16,6 @@ com\tus\musicapp\service\UserService.class
 com\tus\musicapp\repos\MusicRepository.class
 com\tus\musicapp\config\DataInitializer.class
 com\tus\musicapp\service\MusicService.class
-com\tus\musicapp\util\ClearSongsRunner.class
 com\tus\musicapp\config\AppConfig.class
 com\tus\musicapp\config\JwtAuthenticationEntryPoint.class
 com\tus\musicapp\controller\GlobalExceptionHandler.class
@@ -32,6 +30,5 @@ com\tus\musicapp\controller\HomeController.class
 com\tus\musicapp\service\SpotifyService.class
 com\tus\musicapp\model\Song.class
 com\tus\musicapp\repos\SongRepository.class
-com\tus\musicapp\config\StartupLogger.class
 com\tus\musicapp\controller\StaticFilesController.class
 com\tus\musicapp\filter\JwtRequestFilter.class
