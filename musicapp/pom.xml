@@ -255,10 +255,6 @@
 						<configuration>
 							<destFile>${project.build.directory}/jacoco.exec</destFile>
 							<output>file</output>
-							<excludes>
-								<exclude>**/src/test/**</exclude>
-								<exclude>**/*.js</exclude>
-							</excludes>
 						</configuration>
 					</execution>
 					<!--  Generates JaCoCo reports after tests  -->
@@ -272,6 +268,12 @@
 							<dataFile>${project.build.directory}/jacoco.exec</dataFile>
 							<outputDirectory>
 								${project.build.directory}/site/jacoco</outputDirectory>
+							<excludes>
+								<exclude>com/tus/musicapp/MusicApplication*</exclude>
+								<exclude>com/tus/musicapp/config/**</exclude>
+								<exclude>com/tus/musicapp/filter/**</exclude>
+								<exclude>com/tus/musicapp/util/**</exclude>
+							</excludes>
 							<formats>
 								<format>HTML</format>
 								<format>XML</format>

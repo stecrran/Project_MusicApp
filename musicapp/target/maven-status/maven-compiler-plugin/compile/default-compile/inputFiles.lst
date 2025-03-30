@@ -1,6 +1,5 @@
 C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\main\java\com\tus\musicapp\controller\SpotifyController.java
 C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\main\java\com\tus\musicapp\controller\StaticFilesController.java
-C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\main\java\com\tus\musicapp\util\ClearSongsRunner.java
 C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\main\java\com\tus\musicapp\config\StartupLogger.java
 C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\main\java\com\tus\musicapp\mapper\SongMapper.java
 C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\main\java\com\tus\musicapp\service\UserService.java
@@ -29,7 +28,6 @@ C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\main\java\com\tus\music
 C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\main\java\com\tus\musicapp\dto\MusicCreationDto.java
 C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\main\java\com\tus\musicapp\model\Music.java
 C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\main\java\com\tus\musicapp\util\JwtUtil.java
-C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\main\java\com\tus\musicapp\ApplicationContextProvider.java
 C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\main\java\com\tus\musicapp\config\SecurityConfig.java
 C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\main\java\com\tus\musicapp\repos\UserRepository.java
 C:\Program Files\Git\repos\Project_MusicApp\musicapp\src\main\java\com\tus\musicapp\model\Role.java
