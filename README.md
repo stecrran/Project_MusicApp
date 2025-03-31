@@ -37,3 +37,4 @@ Once connected, any Spotify playlists will be displayed on the Spotify Connect p
 Upcoming concerts can be accessed by country on the Gigs page. Click on event to be directed to Tickmaster page.
 Spotify Top 50 Chart is dispayed on the Charts page.
 Click the Home button or uMusicApp logo to go to Homepage.
+" " 
