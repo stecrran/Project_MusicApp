@@ -66,13 +66,16 @@ pipeline {
         stage('SonarQube Code Analysis') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    withSonarQubeEnv('SonarQube') {
-                        bat """
-                            call mvnw.cmd verify sonar:sonar ^
-                                -Dsonar.projectKey=musicapp ^
-                                -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
-                                -Dsonar.java.binaries=target/classes
-                        """
+                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                        withSonarQubeEnv('SonarQube') {
+                            bat """
+                                call mvnw.cmd verify sonar:sonar ^
+                                    -Dsonar.projectKey=musicapp ^
+                                    -Dsonar.login=%SONAR_TOKEN% ^
+                                    -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
+                                    -Dsonar.java.binaries=target/classes
+                            """
+                        }
                     }
                 }
             }
