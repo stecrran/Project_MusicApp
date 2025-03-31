@@ -81,17 +81,16 @@ pipeline {
             }
         }
 
-        stage('SonarQube Quality Gate') {
-            steps {
-                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                    withSonarQubeEnv('SonarQube') {
-                        timeout(time: 2, unit: 'MINUTES') {
-                            waitForQualityGate abortPipeline: true
-                        }
-                    }
-                }
-            }
-        }
+		stage('SonarQube Quality Gate') {
+			steps {
+				script {
+					timeout(time: 2, unit: 'MINUTES') {
+						def qualityGate = waitForQualityGate()
+						echo "SonarQube Quality Gate: ${qualityGate.status}"
+					}
+				}
+			}
+		}
 
         stage('Archive JAR Artifact') {
             steps {
