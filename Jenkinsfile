@@ -66,6 +66,7 @@ pipeline {
         stage('SonarQube Code Analysis') {
             steps {
                 dir("${PROJECT_DIR}") {
+				 withSonarQubeEnv('SonarQube') {
                     bat """
                         call mvnw.cmd verify sonar:sonar ^
                             -Dsonar.projectKey=musicapp ^
@@ -74,7 +75,8 @@ pipeline {
                             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
                             -Dsonar.java.binaries=target/classes
                     """
-                }
+					}
+				}
             }
         }
 		
