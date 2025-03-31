@@ -66,22 +66,19 @@ pipeline {
         stage('SonarQube Code Analysis') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                        withSonarQubeEnv('SonarQube') {
-                            bat """
-                                call mvnw.cmd verify sonar:sonar ^
-                                    -Dsonar.projectKey=musicapp ^
-                                    -Dsonar.token=%SONAR_TOKEN% ^
-                                    -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
-                                    -Dsonar.java.binaries=target/classes
-                            """
-                        }
-                    }
+                    bat """
+                        call mvnw.cmd verify sonar:sonar ^
+                            -Dsonar.projectKey=musicapp ^
+                            -Dsonar.host.url=http://localhost:9000 ^
+                            -Dsonar.token=squ_7ebc79991245b4410aeed54b1f9c41f26ecbe9fb ^
+                            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
+                            -Dsonar.java.binaries=target/classes
+                    """
                 }
             }
         }
-
-        stage('SonarQube Quality Gate') {
+		
+		stage('SonarQube Quality Gate') {
             steps {
                 timeout(time: 2, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
