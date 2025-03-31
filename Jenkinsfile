@@ -70,8 +70,6 @@ pipeline {
                         bat """
                             call mvnw.cmd verify sonar:sonar ^
                                 -Dsonar.projectKey=musicapp ^
-                                -Dsonar.host.url=http://localhost:9000 ^
-                                -Dsonar.token=sqa_4cf958620c4daf9c6911d792ec3e77f489f0aa63 ^
                                 -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
                                 -Dsonar.java.binaries=target/classes
                         """
