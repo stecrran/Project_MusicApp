@@ -71,7 +71,7 @@ pipeline {
                             bat """
                                 call mvnw.cmd verify sonar:sonar ^
                                     -Dsonar.projectKey=musicapp ^
-                                    -Dsonar.login=%SONAR_TOKEN% ^
+                                    -Dsonar.token=%SONAR_TOKEN% ^
                                     -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
                                     -Dsonar.java.binaries=target/classes
                             """
