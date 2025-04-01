@@ -10,6 +10,7 @@ pipeline {
     }
 
     stages {
+
         stage('Clean Workspace') {
             steps {
                 cleanWs()
@@ -96,17 +97,19 @@ pipeline {
 
         stage('Extract Built JAR from Docker Image') {
             steps {
-                script {
-                    def containerId = bat(script: 'docker create musicapp:latest', returnStdout: true).trim()
-                    bat "docker cp ${containerId}:/app/app.jar ${env.WORKSPACE}/${PROJECT_DIR}/target/musicapp.jar"
-                    bat "docker rm ${containerId}"
+                dir("${PROJECT_DIR}") {
+                    bat '''
+                        FOR /F %%i IN ('docker create musicapp:latest') DO (
+                            docker cp %%i:/app/app.jar target/musicapp.jar && docker rm %%i
+                        )
+                    '''
                 }
             }
         }
 
         stage('Archive JAR Artifact') {
             steps {
-                archiveArtifacts artifacts: "${PROJECT_DIR}/target/musicapp.jar", fingerprint: true
+                archiveArtifacts artifacts: "${PROJECT_DIR}/target/*.jar", fingerprint: true
             }
         }
     }
