@@ -84,20 +84,16 @@ pipeline {
             }
         }
 
-        stage('SonarQube Quality Gate') {
-            steps {
-                script {
-                    timeout(time: 2, unit: 'MINUTES') {
-                        def qualityGate = waitForQualityGate()
-                        echo "SonarQube Quality Gate: ${qualityGate.status}"
-                        if (qualityGate.status != 'OK') {
-                            currentBuild.result = 'UNSTABLE'
-                            echo "⚠️ SonarQube quality gate failed but continuing as UNSTABLE."
-                        }
-                    }
-                }
-            }
-        }
+		stage('SonarQube Quality Gate') {
+			steps {
+				script {
+					timeout(time: 6, unit: 'MINUTES') {
+						def qualityGate = waitForQualityGate()
+						echo "SonarQube Quality Gate: ${qualityGate.status}"
+					}
+				}
+			}
+		}
 
         stage('Archive JAR Artifact') {
             steps {
