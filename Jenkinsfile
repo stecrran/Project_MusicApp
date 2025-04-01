@@ -66,6 +66,7 @@ pipeline {
         stage('SonarQube Code Analysis') {
             steps {
                 dir("${PROJECT_DIR}") {
+                    bat 'IF EXIST .scannerwork (rd /s /q .scannerwork)'
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                         withSonarQubeEnv('SonarQube') {
                             bat """
@@ -89,6 +90,10 @@ pipeline {
                     timeout(time: 2, unit: 'MINUTES') {
                         def qualityGate = waitForQualityGate()
                         echo "SonarQube Quality Gate: ${qualityGate.status}"
+                        if (qualityGate.status != 'OK') {
+                            currentBuild.result = 'UNSTABLE'
+                            echo "⚠️ SonarQube quality gate failed but continuing as UNSTABLE."
+                        }
                     }
                 }
             }
@@ -117,6 +122,10 @@ pipeline {
 
         success {
             echo '✅ Spring Boot + Docker + SonarQube pipeline succeeded!'
+        }
+
+        unstable {
+            echo '⚠️ Pipeline marked as UNSTABLE due to SonarQube quality gate.'
         }
 
         failure {
