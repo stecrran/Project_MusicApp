@@ -68,15 +68,15 @@ pipeline {
                     bat 'IF EXIST .scannerwork (rd /s /q .scannerwork)'
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                         withSonarQubeEnv('SonarQube') {
-                            bat '''
+                            bat """
                                 call mvnw.cmd clean test jacoco:report sonar:sonar ^
-                                -Dsonar.projectKey=musicapp ^
-                                -Dsonar.login=%SONAR_TOKEN% ^
-                                -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
-                                -Dsonar.java.binaries=target/classes ^
-                                -Dsonar.exclusions=**/config/**,**/model/**,**/filter/**,**/util/**,**/MusicApplication.java ^
-                                -Dsonar.coverage.exclusions=src/test/**,**/*.js
-                            '''
+                                    -Dsonar.projectKey=musicapp ^
+                                    -Dsonar.login=%SONAR_TOKEN% ^
+                                    -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
+                                    -Dsonar.java.binaries=target/classes ^
+                                    -Dsonar.exclusions=**/config/**,**/model/**,**/filter/**,**/util/**,**/MusicApplication.java ^
+                                    -Dsonar.coverage.exclusions=src/test/**,**/*.js
+                            """
                         }
                     }
                 }
@@ -94,9 +94,19 @@ pipeline {
             }
         }
 
+        stage('Extract Built JAR from Docker Image') {
+            steps {
+                script {
+                    def containerId = bat(script: 'docker create musicapp:latest', returnStdout: true).trim()
+                    bat "docker cp ${containerId}:/app/app.jar ${env.WORKSPACE}/${PROJECT_DIR}/target/musicapp.jar"
+                    bat "docker rm ${containerId}"
+                }
+            }
+        }
+
         stage('Archive JAR Artifact') {
             steps {
-                archiveArtifacts artifacts: "${PROJECT_DIR}/target/*.jar", fingerprint: true
+                archiveArtifacts artifacts: "${PROJECT_DIR}/target/musicapp.jar", fingerprint: true
             }
         }
     }
