@@ -1,6 +1,7 @@
 com\tus\musicapp\service\test\UserServiceTest.class
 com\tus\musicapp\controller\test\MusicControllerIT.class
 com\tus\musicapp\controller\test\AdminControllerTest.class
+com\tus\musicapp\test\selenium\LoginAdminTest.class
 com\tus\musicapp\controller\test\StaticFilesControllerTest.class
 com\tus\musicapp\controller\test\MusicControllerIT_AssignSong.class
 com\tus\musicapp\controller\test\SpotifyControllerTest.class
