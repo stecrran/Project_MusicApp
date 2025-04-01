@@ -10,7 +10,6 @@ pipeline {
     }
 
     stages {
-
         stage('Clean Workspace') {
             steps {
                 cleanWs()
@@ -70,12 +69,12 @@ pipeline {
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                         withSonarQubeEnv('SonarQube') {
                             bat """
-                                call mvnw.cmd clean test jacoco:report sonar:sonar ^
-                                    -Dsonar.projectKey=musicapp ^
-                                    -Dsonar.login=%SONAR_TOKEN% ^
-                                    -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
-                                    -Dsonar.java.binaries=target/classes ^
-                                    -Dsonar.exclusions=**/config/**,**/model/**,**/filter/**,**/util/**,**/MusicApplication.java ^
+                                call mvnw.cmd clean test jacoco:report sonar:sonar ^ 
+                                    -Dsonar.projectKey=musicapp ^ 
+                                    -Dsonar.login=%SONAR_TOKEN% ^ 
+                                    -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^ 
+                                    -Dsonar.java.binaries=target/classes ^ 
+                                    -Dsonar.exclusions=**/config/**,**/model/**,**/filter/**,**/util/**,**/MusicApplication.java ^ 
                                     -Dsonar.coverage.exclusions=src/test/**,**/*.js
                             """
                         }
@@ -84,16 +83,16 @@ pipeline {
             }
         }
 
-		stage('SonarQube Quality Gate') {
-			steps {
-				script {
-					timeout(time: 5, unit: 'MINUTES') {
-						def qualityGate = waitForQualityGate()
-						echo "SonarQube Quality Gate: ${qualityGate.status}"
-					}
-				}
-			}
-		}
+        stage('SonarQube Quality Gate') {
+            steps {
+                script {
+                    timeout(time: 5, unit: 'MINUTES') {
+                        def qualityGate = waitForQualityGate()
+                        echo "SonarQube Quality Gate: ${qualityGate.status}"
+                    }
+                }
+            }
+        }
 
         stage('Archive JAR Artifact') {
             steps {
