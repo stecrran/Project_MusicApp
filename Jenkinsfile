@@ -68,15 +68,15 @@ pipeline {
                     bat 'IF EXIST .scannerwork (rd /s /q .scannerwork)'
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                         withSonarQubeEnv('SonarQube') {
-                            bat """
-                                call mvnw.cmd clean test jacoco:report sonar:sonar ^ 
-                                    -Dsonar.projectKey=musicapp ^ 
-                                    -Dsonar.login=%SONAR_TOKEN% ^ 
-                                    -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^ 
-                                    -Dsonar.java.binaries=target/classes ^ 
-                                    -Dsonar.exclusions=**/config/**,**/model/**,**/filter/**,**/util/**,**/MusicApplication.java ^ 
-                                    -Dsonar.coverage.exclusions=src/test/**,**/*.js
-                            """
+                            bat '''
+                                call mvnw.cmd clean test jacoco:report sonar:sonar ^
+                                -Dsonar.projectKey=musicapp ^
+                                -Dsonar.login=%SONAR_TOKEN% ^
+                                -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml ^
+                                -Dsonar.java.binaries=target/classes ^
+                                -Dsonar.exclusions=**/config/**,**/model/**,**/filter/**,**/util/**,**/MusicApplication.java ^
+                                -Dsonar.coverage.exclusions=src/test/**,**/*.js
+                            '''
                         }
                     }
                 }
